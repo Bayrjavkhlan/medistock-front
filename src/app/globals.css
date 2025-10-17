@@ -1,14 +1,25 @@
 @import "tailwindcss";
 
+/* 1️⃣ Load your font (self-hosted) */
+@font-face {
+  font-family: "Roboto Condensed";
+  src: url("/fonts/RobotoCondensed-Regular.woff2") format("woff2"),
+    url("/fonts/RobotoCondensed-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-sans: "Roboto Condensed", Arial, sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -19,8 +30,11 @@
   }
 }
 
+html,
 body {
+  scroll-behavior: smooth;
+  margin: 0 !important;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
