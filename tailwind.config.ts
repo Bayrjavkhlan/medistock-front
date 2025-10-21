@@ -18,6 +18,7 @@ const config: Config = {
         xl: "1280px",
         "2xl": "1440px",
       },
+      fontFamily: { display: `Roboto Condensed` },
       colors: {
         primary: {
           5: "#f5f9ff",
