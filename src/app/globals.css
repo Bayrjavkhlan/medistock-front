@@ -1,6 +1,7 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* 1️⃣ Load your font (self-hosted) */
 @font-face {
   font-family: "Roboto Condensed";
   src: url("/fonts/RobotoCondensed-Regular.woff2") format("woff2"),
@@ -13,14 +14,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-sans: "Roboto Condensed", Arial, sans-serif;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --primary-color: theme("colors.primary.500") !important;
+  --primary-100-color: theme("colors.primary.100") !important;
+  --primary-400-color: theme("colors.primary.400") !important;
+  --tertiary-color: theme("colors.tertiary.DEFAULT") !important;
+  --dark-color: theme("colors.dark.DEFAULT") !important;
+  --white-color: theme("colors.white.DEFAULT") !important;
+  --light-color: theme("colors.light.DEFAULT") !important;
+  --main-shadow: theme("boxShadow.main") !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,5 +37,5 @@ body {
   margin: 0 !important;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: "Roboto Condensed", Arial, sans-serif;
 }
