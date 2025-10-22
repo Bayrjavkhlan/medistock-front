@@ -14,6 +14,7 @@ export default function AppLayout({ children, role }: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const sidebarWidth = 300;
   const collapsedWidth = 100;
@@ -21,7 +22,13 @@ export default function AppLayout({ children, role }: Props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <SideBar role={role} collapsed={collapsed} setCollapsed={setCollapsed} />
+      <SideBar
+        role={role}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
 
       <Box
         sx={{
@@ -37,10 +44,12 @@ export default function AppLayout({ children, role }: Props) {
           minHeight: "100vh",
         }}
       >
-        {/* Fixed Header */}
-        <Header collapsed={collapsed} />
-
-        {/* Page Content */}
+        <Header
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          isMobileOpen={mobileOpen}
+          setMobileOpen={setMobileOpen}
+        />
         <Box sx={{ p: 3 }}>{children}</Box>
       </Box>
     </Box>

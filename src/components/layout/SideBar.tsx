@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Drawer,
   List,
@@ -13,26 +13,31 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useTheme } from "@mui/material/styles";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import GroupIcon from "@mui/icons-material/Group";
-import { useTheme } from "@mui/material/styles";
-import { sidebarItems } from "../../../dummydata";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { sidebarItems } from "../../../dummydata";
 
 type Props = {
   role: "admin" | "storeOwner" | "user";
   collapsed: boolean;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  mobileOpen: boolean;
+  setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function SideBar({ role, collapsed, setCollapsed }: Props) {
+export default function SideBar({
+  role,
+  collapsed,
+  setCollapsed,
+  mobileOpen,
+  setMobileOpen,
+}: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [open, setOpen] = useState(false);
-
   const filteredItems = sidebarItems.filter((item) =>
     item.roles.includes(role)
   );
@@ -44,7 +49,7 @@ export default function SideBar({ role, collapsed, setCollapsed }: Props) {
     Shop: <ShoppingCartIcon />,
   };
 
-  const DesktopSidebar = (
+  const content = (
     <Box
       sx={{
         width: collapsed ? 100 : 300,
@@ -89,7 +94,11 @@ export default function SideBar({ role, collapsed, setCollapsed }: Props) {
             Logo
           </Typography>
         )}
-        {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        {collapsed ? (
+          <ChevronRightIcon sx={{ fontSize: 32 }} />
+        ) : (
+          <ChevronLeftIcon sx={{ fontSize: 32 }} />
+        )}
       </IconButton>
 
       <List
@@ -130,7 +139,6 @@ export default function SideBar({ role, collapsed, setCollapsed }: Props) {
               >
                 {iconsMap[item.text]}
               </ListItemIcon>
-
               {!collapsed && <ListItemText primary={item.text} />}
             </ListItem>
           </Tooltip>
@@ -140,28 +148,24 @@ export default function SideBar({ role, collapsed, setCollapsed }: Props) {
   );
 
   return isMobile ? (
-    <>
-      <IconButton onClick={() => setOpen(true)}>
-        <MenuIcon />
-      </IconButton>
-      <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
-        <Box sx={{ width: 250 }} role="presentation">
-          <List>
-            {filteredItems.map((item) => (
-              <ListItem
-                key={item.text}
-                component="button"
-                onClick={() => setOpen(false)}
-              >
-                <ListItemIcon>{iconsMap[item.text]}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
-    </>
+    <Drawer
+      anchor="left"
+      open={mobileOpen}
+      onClose={() => setMobileOpen(false)}
+      ModalProps={{ keepMounted: true }}
+    >
+      {content}
+    </Drawer>
   ) : (
-    DesktopSidebar
+    <Box
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100vh",
+      }}
+    >
+      {content}
+    </Box>
   );
 }

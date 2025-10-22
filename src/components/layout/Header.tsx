@@ -3,19 +3,26 @@ import {
   AppBar,
   Toolbar,
   Typography,
+  IconButton,
   Box,
   Avatar,
   useTheme,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 type HeaderProps = {
   collapsed: boolean;
+  isMobileOpen: boolean;
+  setCollapsed?: (val: boolean) => void;
+  setMobileOpen?: (val: boolean) => void;
 };
 
-export default function Header({ collapsed }: HeaderProps) {
+export default function Header({
+  collapsed,
+  isMobileOpen,
+  setMobileOpen,
+}: HeaderProps) {
   const theme = useTheme();
-
-  // Sidebar widths should match your sidebar config
   const sidebarWidth = collapsed ? 100 : 300;
 
   return (
@@ -24,8 +31,8 @@ export default function Header({ collapsed }: HeaderProps) {
       color="inherit"
       elevation={0}
       sx={{
-        left: `${sidebarWidth}px`,
-        width: `calc(100% - ${sidebarWidth}px)`,
+        left: { xs: 0, sm: `${sidebarWidth}px` },
+        width: { xs: "100%", sm: `calc(100% - ${sidebarWidth}px)` },
         backgroundColor: theme.palette.background.paper,
         borderBottom: `1px solid ${theme.palette.divider}`,
         transition: "all 0.3s ease",
@@ -41,12 +48,23 @@ export default function Header({ collapsed }: HeaderProps) {
           minHeight: "80px !important",
         }}
       >
-        {/* Page Title */}
+        <IconButton
+          color="inherit"
+          edge="start"
+          onClick={() => setMobileOpen && setMobileOpen(!isMobileOpen)}
+          sx={{ mr: 2, display: { sm: "none" } }}
+        >
+          <MenuIcon
+            sx={{
+              fontSize: "32px",
+            }}
+          />
+        </IconButton>
+
         <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
-          Dashboard
+          Title
         </Typography>
 
-        {/* Profile Section */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Typography variant="body1">John Doe</Typography>
           <Avatar alt="John Doe" src="/dummy-profile.jpg" />
