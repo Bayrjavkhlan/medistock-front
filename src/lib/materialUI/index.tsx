@@ -1,9 +1,19 @@
+// MuiConfigProvider.tsx
 "use client";
-import React from "react";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./themeConfig";
+import React, { useMemo } from "react";
+import { ThemeProvider, CssBaseline, useMediaQuery } from "@mui/material";
+import { getTheme } from "./themeConfig";
 
 const MuiConfigProvider = ({ children }: { children: React.ReactNode }) => {
+  // Detect system preference
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  // Generate theme based on system preference
+  const theme = useMemo(
+    () => getTheme(prefersDarkMode ? "dark" : "light"),
+    [prefersDarkMode]
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
