@@ -1,6 +1,11 @@
+import MainGrid from "@/components/core/MainGrid";
+import CBox from "@/components/layout/Box";
+
 export default function AdminDashboardContainer() {
   return (
     <>
+      {/* <CBox component={"main"}>test</CBox> */}
+      <MainGrid />
       {/* TODO: Material UI ashiglad dashboardaa beldene */}
       {/* TODO2: Menu bar */}
       Admin Dashboard Container
