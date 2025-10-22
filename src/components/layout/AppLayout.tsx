@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import SideBar from "./SideBar";
 import Header from "./Header";
@@ -19,6 +19,10 @@ export default function AppLayout({ children, role }: Props) {
   const sidebarWidth = 300;
   const collapsedWidth = 100;
   const headerHeight = 80;
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
   return (
     <Box sx={{ display: "flex" }}>
