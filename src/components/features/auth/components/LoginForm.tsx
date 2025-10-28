@@ -1,10 +1,10 @@
 import { Button, Card, Checkbox, Input, Typography } from "@mui/material";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  //   const router = useRouter();
+  const router = useRouter();
   const onForgotPassword = () => {
-    // router.push("/forgot-password");
+    router.push("/forgot-password");
     console.log("Forgot Password Clicked");
   };
 
