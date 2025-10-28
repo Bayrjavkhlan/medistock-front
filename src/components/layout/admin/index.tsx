@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
-import SideBar from "./SideBar";
-import Header from "./Header";
+import SideBar from "./Sidebar/SideBar";
+import Header from "./Header/Header";
 
 type Props = {
   children: React.ReactNode;

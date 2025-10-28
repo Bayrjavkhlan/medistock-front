@@ -19,7 +19,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import GroupIcon from "@mui/icons-material/Group";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { sidebarItems } from "../../../dummydata";
+import { sidebarItems } from "../../../../../dummydata";
 
 type Props = {
   role: "admin" | "storeOwner" | "user";
