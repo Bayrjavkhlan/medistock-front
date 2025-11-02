@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+
 import AppLayout from "./admin";
 
 // Paths where we DO NOT want to show the sidebar/header

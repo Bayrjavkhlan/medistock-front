@@ -2,9 +2,9 @@ import { Button, Card, Input, Typography } from "@mui/material";
 
 export default function NewPasswordForm() {
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Card className="p-8 w-96 bg-gray-700 space-y-8">
-        <Typography variant="h5" className="text-center text-white font-bold">
+    <div className="flex min-h-screen items-center justify-center">
+      <Card className="w-96 space-y-8 bg-gray-700 p-8">
+        <Typography variant="h5" className="text-center font-bold text-white">
           Нууц үг шинэчлэх
         </Typography>
         <Input placeholder="Шинэ нууц үг" type="password" fullWidth />
@@ -14,7 +14,7 @@ export default function NewPasswordForm() {
           color="primary"
           fullWidth
           size="large"
-          className="rounded-[10px] "
+          className="rounded-[10px]"
           onClick={() => {
             console.log("Set New Password Clicked");
           }}

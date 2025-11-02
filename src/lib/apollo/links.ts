@@ -1,8 +1,9 @@
-import { ApolloLink, HttpLink } from "@apollo/client";
+import type { ApolloLink } from "@apollo/client";
+import { HttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
-import { getSession, signOut } from "next-auth/react";
 import type { GraphQLError } from "graphql";
+import { getSession, signOut } from "next-auth/react";
 
 import { env } from "@/constants/config";
 
@@ -44,7 +45,7 @@ export const errorLink = onError(
           }
           default:
             console.error(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
             );
         }
       }
@@ -54,5 +55,5 @@ export const errorLink = onError(
       console.error(`[Network error]: ${networkError}`);
       signOut({ redirect: true, callbackUrl: "/login" });
     }
-  }
+  },
 );

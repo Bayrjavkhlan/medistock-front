@@ -1,5 +1,4 @@
 import MainGrid from "@/components/core/MainGrid";
-import CBox from "@/components/core/Box";
 
 export default function AdminDashboardContainer() {
   return (

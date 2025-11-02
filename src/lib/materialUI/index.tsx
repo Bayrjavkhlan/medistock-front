@@ -1,12 +1,13 @@
 "use client";
-import React, { useMemo } from "react";
-import {
-  ThemeProvider,
-  CssBaseline,
-  useMediaQuery,
-  StyledEngineProvider,
-} from "@mui/material";
 import { CacheProvider } from "@emotion/react";
+import {
+  CssBaseline,
+  StyledEngineProvider,
+  ThemeProvider,
+  useMediaQuery,
+} from "@mui/material";
+import React, { useMemo } from "react";
+
 import createEmotionCache from "./emotionCache";
 import { getTheme } from "./themeConfig";
 
@@ -17,7 +18,7 @@ const MuiConfigProvider = ({ children }: { children: React.ReactNode }) => {
 
   const theme = useMemo(
     () => getTheme(prefersDarkMode ? "dark" : "light"),
-    [prefersDarkMode]
+    [prefersDarkMode],
   );
 
   return (

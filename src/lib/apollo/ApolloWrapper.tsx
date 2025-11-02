@@ -1,8 +1,10 @@
 "use client";
 import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client";
 import { ApolloProvider as ApolloClientProvider } from "@apollo/client/react";
+import type { ReactNode } from "react";
+import { useMemo } from "react";
+
 import { authLink, errorLink, httpLink } from "./links";
-import { ReactNode, useMemo } from "react";
 
 interface ApolloWrapperProps {
   children: ReactNode;

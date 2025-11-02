@@ -1,14 +1,14 @@
-import React from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
+  Avatar,
+  Box,
+  IconButton,
   Toolbar,
   Typography,
-  IconButton,
-  Box,
-  Avatar,
   useTheme,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import React from "react";
 
 type HeaderProps = {
   collapsed: boolean;

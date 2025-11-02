@@ -1,10 +1,12 @@
 "use client";
 
-import * as React from "react";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import StatCard, { StatCardProps } from "./StatCard";
+import * as React from "react";
+
+import type { StatCardProps } from "./StatCard";
+import StatCard from "./StatCard";
 
 const data: StatCardProps[] = [
   {

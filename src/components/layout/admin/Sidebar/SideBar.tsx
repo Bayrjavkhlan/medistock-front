@@ -1,24 +1,25 @@
 "use client";
 
-import React from "react";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import GroupIcon from "@mui/icons-material/Group";
+import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
+  Box,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  IconButton,
-  useMediaQuery,
-  Box,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import HomeIcon from "@mui/icons-material/Home";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import GroupIcon from "@mui/icons-material/Group";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import React from "react";
+
 import { sidebarItems } from "../../../../../dummydata";
 
 type Props = {
@@ -39,7 +40,7 @@ export default function SideBar({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const filteredItems = sidebarItems.filter((item) =>
-    item.roles.includes(role)
+    item.roles.includes(role),
   );
 
   const iconsMap: Record<string, React.ReactNode> = {

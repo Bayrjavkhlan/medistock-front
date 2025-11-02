@@ -1,5 +1,6 @@
-import CButton from "@/components/core/Button";
 import { Button } from "@mui/material";
+
+import CButton from "@/components/core/Button";
 
 export default function Home() {
   return (

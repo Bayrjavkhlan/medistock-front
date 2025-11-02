@@ -1,5 +1,6 @@
 // src/components/ui/CBox.tsx
-import { Box, BoxProps } from "@mui/material";
+import type { BoxProps } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 
 type CBoxProps = BoxProps & {
@@ -31,8 +32,8 @@ export default function CBox({
           typeof rounded === "number"
             ? `${rounded}px`
             : rounded
-            ? "12px"
-            : "0px",
+              ? "12px"
+              : "0px",
         boxShadow: shadow ? "0 4px 10px rgba(0,0,0,0.1)" : "none",
         transition: "all 0.2s ease-in-out",
         backgroundColor: background || "background.paper",

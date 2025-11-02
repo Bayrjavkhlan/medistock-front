@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
-import SideBar from "./Sidebar/SideBar";
+import React, { useEffect, useState } from "react";
+
 import Header from "./Header/Header";
+import SideBar from "./Sidebar/SideBar";
 
 type Props = {
   children: React.ReactNode;
@@ -41,8 +42,8 @@ export default function AppLayout({ children, role }: Props) {
           marginLeft: isMobile
             ? 0
             : collapsed
-            ? `${collapsedWidth}px`
-            : `${sidebarWidth}px`,
+              ? `${collapsedWidth}px`
+              : `${sidebarWidth}px`,
           paddingTop: `${headerHeight}px`,
           backgroundColor: theme.palette.background.default,
           minHeight: "100vh",

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
-import MuiConfigProvider from "@/lib/materialUI";
 import { RenderLayout } from "@/components/layout";
 import { ApolloWrapper } from "@/lib/apollo/ApolloWrapper";
+import MuiConfigProvider from "@/lib/materialUI";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

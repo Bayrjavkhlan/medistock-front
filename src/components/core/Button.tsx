@@ -1,5 +1,6 @@
+import type { ButtonProps } from "@mui/material/Button";
+import Button from "@mui/material/Button";
 import * as React from "react";
-import Button, { ButtonProps } from "@mui/material/Button";
 
 // Extend ButtonProps so your custom button works like a normal MUI Button
 type CustomButtonProps = ButtonProps & {
