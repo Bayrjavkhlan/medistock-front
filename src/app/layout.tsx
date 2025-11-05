@@ -5,6 +5,7 @@ import "./globals.css";
 import { RenderLayout } from "@/components/layout";
 import { ApolloWrapper } from "@/lib/apollo/ApolloWrapper";
 import MuiConfigProvider from "@/lib/materialUI";
+// import { QueryProvider } from "@/lib/tanStack/queryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ApolloWrapper>
+          {/* <QueryProvider> */}
           <MuiConfigProvider>
             <RenderLayout>{children}</RenderLayout>
           </MuiConfigProvider>
+          {/* </QueryProvider> */}
         </ApolloWrapper>
       </body>
     </html>
