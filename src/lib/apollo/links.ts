@@ -22,7 +22,7 @@ export const authLink = setContext(async (_, { headers }) => {
 });
 
 export const errorLink = new ErrorLink(
-  ({ graphQLErrors, networkError, operation, forward }) => {
+  ({ graphQLErrors, networkError, forward, operation }) => {
     if (graphQLErrors) {
       for (const { message, extensions, locations, path } of graphQLErrors) {
         console.log(`[GraphQL error]: Message: ${message}`);
@@ -36,7 +36,8 @@ export const errorLink = new ErrorLink(
             console.log("Signing out due to auth error...");
           }
           case "ACCESS_DENIED":
-            signOut({ redirect: true, callbackUrl: "/login" });
+            // signOut({ redirect: true, callbackUrl: "/login" });
+            window.location.href = "/login";
             return forward(operation);
           default:
             console.error(
