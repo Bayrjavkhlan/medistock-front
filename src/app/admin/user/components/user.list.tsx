@@ -10,14 +10,16 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
+import type { EnumUserRole } from "@/generated/graphql";
+
 type UserListTableProps = {
   users: {
-    id?: string | null;
-    name?: string | null;
-    email?: string | null;
-    phone?: string | null;
-    hospital?: { name?: string | null } | null;
-    roles?: ({ key?: string | null } | null)[] | null;
+    id: string | undefined;
+    name: string | undefined;
+    email: string | undefined;
+    phone: string | undefined;
+    hospital: { name: string | undefined } | undefined;
+    roles: ({ key: EnumUserRole | undefined } | undefined)[] | undefined;
   }[];
 };
 
@@ -74,7 +76,7 @@ export default function UserListTable({ users }: UserListTableProps) {
       </TableContainer>
 
       <TablePagination
-        rowsPerPageOptions={[2, 4, 6]}
+        rowsPerPageOptions={[5, 10, 20]}
         component="div"
         count={users.length}
         rowsPerPage={rowsPerPage}

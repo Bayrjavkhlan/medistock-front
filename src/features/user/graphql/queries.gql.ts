@@ -2,8 +2,13 @@
 import { gql } from "@apollo/client";
 
 export const USERS = gql`
-  query Users {
-    users {
+  query Users(
+    $where: UsersWhereInput
+    $take: Int!
+    $skip: Int!
+    $orderBy: UsersOrderByInput
+  ) {
+    users(where: $where, take: $take, skip: $skip, orderBy: $orderBy) {
       data {
         id
         name
@@ -14,9 +19,7 @@ export const USERS = gql`
           name
         }
         roles {
-          id
           key
-          name
         }
       }
       count
