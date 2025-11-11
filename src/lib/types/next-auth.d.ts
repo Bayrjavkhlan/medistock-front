@@ -1,12 +1,7 @@
 import type { DefaultUser } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 
-import type {
-  EnumUserRole,
-  EnumUsingStatus,
-  Permission,
-  Role,
-} from "@/generated";
+import type { EnumUserRole, Role } from "@/generated";
 
 declare module "next-auth" {
   interface Session {
@@ -16,11 +11,9 @@ declare module "next-auth" {
       email?: string;
       roleKey: EnumUserRole;
       roles: Role[];
-      permissions: Permission[];
+      // permissions: Permission[];
       resetPasswordToken?: string;
-      phoneNumber?: string;
-      image?: string;
-      status: EnumUsingStatus;
+      phone?: string;
     };
     accessToken?: string;
     accessTokenExpiresAt?: number;
@@ -33,11 +26,9 @@ declare module "next-auth" {
     email: string;
     roleKey: EnumUserRole;
     roles: Role[];
-    permissions: Permission[];
+    // permissions: Permission[];
     resetPasswordToken?: string;
-    phoneNumber?: string;
-    image?: string;
-    status: EnumUsingStatus;
+    phone?: string;
 
     accessToken?: string;
     refreshToken?: string;
@@ -52,11 +43,9 @@ declare module "next-auth/jwt" {
     email?: string;
     roleKey: EnumUserRole;
     roles: Role[];
-    permissions: Permission[];
+    // permissions: Permission[];
     resetPasswordToken?: string;
-    phoneNumber?: string;
-    image?: string;
-    status: EnumUsingStatus;
+    phone?: string;
 
     accessToken?: string;
     refreshToken?: string;
