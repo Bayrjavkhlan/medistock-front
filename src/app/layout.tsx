@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
+
 import { RenderLayout } from "@/components/layout";
 import { ApolloWrapper } from "@/lib/apollo/ApolloWrapper";
+import { AbilityProvider } from "@/lib/casl/AbilityProvider";
 import MuiConfigProvider from "@/lib/materialUI";
+import { NextAuthProvider } from "@/lib/next-auth";
 // import { QueryProvider } from "@/lib/tanStack/queryProvider";
 
 const geistSans = Geist({
@@ -27,17 +30,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const role = useSession().data?.user.roles[0].key as EnumUserRole | undefined;
+
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ApolloWrapper>
-          {/* <QueryProvider> */}
-          <MuiConfigProvider>
-            <RenderLayout>{children}</RenderLayout>
-          </MuiConfigProvider>
-          {/* </QueryProvider> */}
+          <NextAuthProvider>
+            <AbilityProvider>
+              {/* <QueryProvider> */}
+              <MuiConfigProvider>
+                <RenderLayout>{children}</RenderLayout>
+              </MuiConfigProvider>
+              {/* </QueryProvider> */}
+            </AbilityProvider>
+          </NextAuthProvider>
         </ApolloWrapper>
       </body>
     </html>

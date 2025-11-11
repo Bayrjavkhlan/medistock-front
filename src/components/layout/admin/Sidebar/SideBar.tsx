@@ -1,10 +1,8 @@
+// components/sidebar/Sidebar.tsx
 "use client";
 
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import GroupIcon from "@mui/icons-material/Group";
-import HomeIcon from "@mui/icons-material/Home";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
   Box,
   Drawer,
@@ -18,20 +16,19 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-import { sidebarItems } from "../../../../../dummydata";
+import { getSidebarOptions } from "./SideBarOptions";
 
 type Props = {
-  role: "admin" | "storeOwner" | "user";
   collapsed: boolean;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   mobileOpen: boolean;
   setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function SideBar({
-  role,
+export default function Sidebar({
   collapsed,
   setCollapsed,
   mobileOpen,
@@ -39,16 +36,10 @@ export default function SideBar({
 }: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const filteredItems = sidebarItems.filter((item) =>
-    item.roles.includes(role),
-  );
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  const iconsMap: Record<string, React.ReactNode> = {
-    Dashboard: <HomeIcon />,
-    Orders: <ShoppingCartIcon />,
-    "Manage Users": <GroupIcon />,
-    Shop: <ShoppingCartIcon />,
-  };
+  const sidebarItems = getSidebarOptions(session);
 
   const content = (
     <Box
@@ -64,8 +55,10 @@ export default function SideBar({
         position: "fixed",
         top: 0,
         left: 0,
+        zIndex: 1200,
       }}
     >
+      {/* Logo + Collapse */}
       <IconButton
         onClick={() => setCollapsed(!collapsed)}
         disableRipple
@@ -102,21 +95,29 @@ export default function SideBar({
         )}
       </IconButton>
 
+      {/* Menu Items */}
       <List
         sx={{
           paddingTop: 0,
           paddingBottom: 0,
         }}
       >
-        {filteredItems.map((item) => (
+        {sidebarItems.map((item) => (
           <Tooltip
-            key={item.text}
+            key={item.path}
             title={collapsed ? item.text : ""}
             placement="right"
           >
             <ListItem
-              component={"button"}
-              onClick={() => console.log(item.path)}
+              // button
+              onClick={() => {
+                if (item.path.startsWith("/api/auth")) {
+                  window.location.href = item.path;
+                } else {
+                  router.push(item.path);
+                  if (isMobile) setMobileOpen(false);
+                }
+              }}
               sx={{
                 px: collapsed ? 0 : 2,
                 py: 2,
@@ -138,7 +139,7 @@ export default function SideBar({
                   },
                 }}
               >
-                {iconsMap[item.text]}
+                {item.icon}
               </ListItemIcon>
               {!collapsed && <ListItemText primary={item.text} />}
             </ListItem>
@@ -154,18 +155,17 @@ export default function SideBar({
       open={mobileOpen}
       onClose={() => setMobileOpen(false)}
       ModalProps={{ keepMounted: true }}
+      sx={{
+        "& .MuiDrawer-paper": {
+          width: 280,
+          boxSizing: "border-box",
+        },
+      }}
     >
       {content}
     </Drawer>
   ) : (
-    <Box
-      sx={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        height: "100vh",
-      }}
-    >
+    <Box sx={{ position: "fixed", top: 0, left: 0, height: "100vh" }}>
       {content}
     </Box>
   );

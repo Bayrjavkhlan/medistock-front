@@ -8,10 +8,9 @@ import SideBar from "./Sidebar/SideBar";
 
 type Props = {
   children: React.ReactNode;
-  role: "admin" | "storeOwner" | "user";
 };
 
-export default function AppLayout({ children, role }: Props) {
+export default function AppLayout({ children }: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [collapsed, setCollapsed] = useState(false);
@@ -28,7 +27,6 @@ export default function AppLayout({ children, role }: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <SideBar
-        role={role}
         collapsed={collapsed}
         setCollapsed={setCollapsed}
         mobileOpen={mobileOpen}

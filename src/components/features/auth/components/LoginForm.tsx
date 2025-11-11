@@ -49,7 +49,7 @@ export default function LoginForm() {
           localStorage.removeItem("rememberedEmail");
         }
 
-        router.push("/dashboard");
+        router.push("/admin/dashboard");
         router.refresh();
       }
     } catch (err) {
