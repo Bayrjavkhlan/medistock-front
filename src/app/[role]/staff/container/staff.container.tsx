@@ -2,13 +2,9 @@
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 
-import { USER_SORT_FIELDS, type UserSortField } from "@/constants/types";
+import { type UserSortField } from "@/constants/types";
 import type { UsersOrderByInput } from "@/generated/graphql";
-import {
-  EnumSortOrder,
-  EnumUserRole,
-  useUsersQuery,
-} from "@/generated/graphql";
+import { EnumSortOrder, useUsersQuery } from "@/generated/graphql";
 
 import StaffListTable from "../components/staff.list";
 import StaffToolbar from "../components/staff.toolbox";
@@ -33,68 +29,53 @@ export default function StaffContainer() {
   }, [search]);
 
   const buildOrderBy = (): UsersOrderByInput => {
-    switch (sortBy.field) {
-      case "name":
-        return { name: sortBy.order };
-      case "email":
-        return { email: sortBy.order };
-      case "phone":
-        return { phone: sortBy.order };
-      default:
-        return { name: EnumSortOrder.ASC };
-    }
+    const order: Partial<Record<UserSortField, EnumSortOrder>> = {};
+    order[sortBy.field] = sortBy.order;
+    return order as UsersOrderByInput;
   };
 
   const { data, loading, error } = useUsersQuery({
     variables: {
       where: {
         search: debouncedSearch || undefined,
-        roleKey: EnumUserRole.STAFF,
+        roleKey: undefined,
       },
       orderBy: buildOrderBy(),
       take: rowsPerPage,
-      skip: page * rowsPerPage,
+      skip: page,
     },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "no-cache",
   });
 
-  if (loading) return <div>Уншиж байна...</div>;
+  // if (loading) return <div>Уншиж байна...</div>;
   if (error) return <div>Алдаа: {error.message}</div>;
+
+  console.log("Staff data:", data);
 
   const users = data?.users?.data ?? [];
   const totalCount = data?.users?.count ?? 0;
 
   return (
     <>
-      <StaffToolbar
-        search={search}
-        onSearchChange={setSearch}
-        sortBy={`${sortBy.field}_${sortBy.order.toLowerCase()}`}
-        onSortChange={(value) => {
-          const [field, orderStr] = value.split("_") as [string, string];
-
-          if (!USER_SORT_FIELDS.includes(field as any)) return;
-
-          const order =
-            orderStr === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC;
-
-          setSortBy({
-            field: field as UserSortField,
-            order,
-          });
-          setPage(0);
-        }}
-      />
+      <StaffToolbar search={search} onSearchChange={setSearch} />
       <StaffListTable
         users={users}
         totalCount={totalCount}
         page={page}
         rowsPerPage={rowsPerPage}
-        onPageChange={setPage}
+        onPageChange={(newPage) => {
+          setPage(newPage);
+        }}
         onRowsPerPageChange={(newRows) => {
           setRowsPerPage(newRows);
           setPage(0);
         }}
+        sortBy={sortBy}
+        onSort={(field, order) => {
+          setSortBy({ field, order });
+          setPage(0);
+        }}
+        loading={loading}
       />
     </>
   );

@@ -153,7 +153,7 @@ export type UserCreateInput = {
 };
 
 export type UserObjectType = {
-  count: Maybe<Scalars["Int"]["output"]>;
+  count: Scalars["Int"]["output"];
   data: Maybe<Array<User>>;
 };
 
@@ -244,7 +244,7 @@ export type UsersQueryVariables = Exact<{
 export type UsersQuery = {
   users:
     | {
-        count: number | undefined;
+        count: number;
         data:
           | Array<{
               id: string | undefined;

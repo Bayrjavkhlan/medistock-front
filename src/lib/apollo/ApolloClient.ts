@@ -13,7 +13,7 @@ const createClient = () => {
         Query: {
           fields: {
             items: {
-              keyArgs: false,
+              keyArgs: ["where", "orderBy", "take", "skip"],
               merge(existing = [], incoming: unknown[]) {
                 return [...existing, ...incoming];
               },

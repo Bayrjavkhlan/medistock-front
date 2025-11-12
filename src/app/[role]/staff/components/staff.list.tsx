@@ -1,3 +1,4 @@
+// components/staff.list.tsx
 import {
   Paper,
   Table,
@@ -9,6 +10,12 @@ import {
   TableRow,
 } from "@mui/material";
 
+import TableSkeleton from "@/components/forms/table/tableSkeleton";
+import type { UserSortField } from "@/constants/types";
+import { EnumSortOrder } from "@/generated/graphql";
+
+import SortableTableHeader from "./staff.head";
+
 type StaffListTableProps = {
   users: any[];
   totalCount: number;
@@ -16,6 +23,9 @@ type StaffListTableProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  sortBy: { field: UserSortField; order: EnumSortOrder };
+  onSort: (field: UserSortField, order: EnumSortOrder) => void;
+  loading: boolean;
 };
 
 export default function StaffListTable({
@@ -25,32 +35,73 @@ export default function StaffListTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  sortBy,
+  onSort,
+  loading,
 }: StaffListTableProps) {
+  const columnCount = 5; // Name, Email, Phone, Hospital, Role
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 600 }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
+              <SortableTableHeader
+                field="name"
+                label="Name"
+                currentSort={{
+                  field: sortBy.field,
+                  order: sortBy.order === EnumSortOrder.ASC ? "asc" : "desc",
+                }}
+                onSort={(field, order) => {
+                  onSort(
+                    field as UserSortField,
+                    order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
+                  );
+                }}
+              />
+              {/* <TableCell>Email</TableCell> */}
+              <SortableTableHeader
+                field="email"
+                label="Email"
+                currentSort={{
+                  field: sortBy.field,
+                  order: sortBy.order === EnumSortOrder.ASC ? "asc" : "desc",
+                }}
+                onSort={(field, order) => {
+                  onSort(
+                    field as UserSortField,
+                    order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
+                  );
+                }}
+              />
               <TableCell>Phone</TableCell>
               <TableCell>Hospital</TableCell>
               <TableCell>Role</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name ?? "-"}</TableCell>
-                <TableCell>{user.email ?? "-"}</TableCell>
-                <TableCell>{user.phone ?? "-"}</TableCell>
-                <TableCell>{user.hospital?.name ?? "-"}</TableCell>
-                <TableCell>
-                  {user.roles?.map((r: any) => r?.key).join(", ") ?? "-"}
+            {loading ? (
+              <TableSkeleton rows={rowsPerPage} columns={columnCount} />
+            ) : users.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columnCount} align="center" sx={{ py: 4 }}>
+                  Хэрэглэгч олдсонгүй
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.name ?? "-"}</TableCell>
+                  <TableCell>{user.email ?? "-"}</TableCell>
+                  <TableCell>{user.phone ?? "-"}</TableCell>
+                  <TableCell>{user.hospital?.name ?? "-"}</TableCell>
+                  <TableCell>
+                    {user.roles?.map((r: any) => r?.key).join(", ") ?? "-"}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -66,9 +117,7 @@ export default function StaffListTable({
           onRowsPerPageChange(parseInt(e.target.value, 10))
         }
         labelRowsPerPage="Хуудасны тоо:"
-        labelDisplayedRows={({ from, to, count }) =>
-          `${from}–${to} of ${count}`
-        }
+        labelDisplayedRows={({ from, to, count }) => `${from}–${to} / ${count}`}
       />
     </Paper>
   );
