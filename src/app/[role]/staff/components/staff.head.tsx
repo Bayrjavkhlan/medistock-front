@@ -1,4 +1,3 @@
-// components/table/SortableTableHeader.tsx
 import { Box, TableCell, TableSortLabel } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 

@@ -1,5 +1,4 @@
-// components/table/TableSkeleton.tsx
-import { Skeleton, TableBody, TableCell, TableRow } from "@mui/material";
+import { Skeleton, TableCell, TableRow } from "@mui/material";
 
 type TableSkeletonProps = {
   rows: number;
@@ -8,18 +7,17 @@ type TableSkeletonProps = {
 
 export default function TableSkeleton({ rows, columns }: TableSkeletonProps) {
   return (
-    <TableBody>
+    <>
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <TableRow key={rowIndex}>
           {Array.from({ length: columns }).map((_, colIndex) => (
-            <TableCell key={colIndex}>
+            <TableCell key={colIndex} sx={{ py: 1.25 }}>
               <Skeleton
                 variant="rectangular"
                 width="100%"
-                height={36}
+                height={28}
                 sx={{
-                  borderRadius: 1,
-                  bgcolor: "grey.200",
+                  borderRadius: 0.5,
                   animation: "pulse 1.5s ease-in-out infinite",
                   "@keyframes pulse": {
                     "0%, 100%": { opacity: 1 },
@@ -31,6 +29,6 @@ export default function TableSkeleton({ rows, columns }: TableSkeletonProps) {
           ))}
         </TableRow>
       ))}
-    </TableBody>
+    </>
   );
 }

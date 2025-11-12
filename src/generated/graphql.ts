@@ -158,6 +158,7 @@ export type UserObjectType = {
 };
 
 export type UsersOrderByInput = {
+  email: InputMaybe<EnumSortOrder>;
   name: InputMaybe<EnumSortOrder>;
 };
 

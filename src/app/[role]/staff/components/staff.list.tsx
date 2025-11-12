@@ -1,4 +1,3 @@
-// components/staff.list.tsx
 import {
   Paper,
   Table,
