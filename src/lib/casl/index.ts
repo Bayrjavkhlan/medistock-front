@@ -24,7 +24,7 @@ export const defineAbilityFor = (session: Session | null): AppAbility => {
       [
         "Admin_Dashboard",
         "Admin_Staff",
-        "Admin_Hospitals",
+        "Admin_Hospital",
         "Admin_Equipment",
         "Admin_EquipmentLog",
         "Admin_Profile",

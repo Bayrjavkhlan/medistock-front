@@ -9,7 +9,7 @@ export type Subject =
   | "Admin_Profile"
   | "Admin_Dashboard"
   | "Admin_Staff"
-  | "Admin_Hospitals"
+  | "Admin_Hospital"
   | "Admin_Equipment"
   | "Admin_EquipmentLog"
   // Hospital Admin
@@ -154,28 +154,28 @@ export const Routes: RouteType = {
       (a) => `/admin/staff/update/${a?.id}`,
     ),
   },
-  Admin_Hospitals: {
+  Admin_Hospital: {
     key: "/admin/hospitals",
     Index: createRoute(
       "Эмнэлгүүд",
-      "/admin/hospitals",
-      "Admin_Hospitals",
+      "/admin/hospital",
+      "Admin_Hospital",
       "read",
       "/",
       true,
     ),
     Create: createRoute(
       "Эмнэлэг нэмэх",
-      "/admin/hospitals/create",
-      "Admin_Hospitals",
+      "/admin/hospital/create",
+      "Admin_Hospital",
       "create",
       "/",
       true,
     ),
     Detail: createRoute(
       "Дэлгэрэнгүй",
-      "/admin/hospitals/detail",
-      "Admin_Hospitals",
+      "/admin/hospital/detail",
+      "Admin_Hospital",
       "read",
       "/",
       true,

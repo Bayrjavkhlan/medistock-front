@@ -2,20 +2,20 @@
 
 import React from "react";
 
-interface UserToolbarProps {
+interface StaffToolbarProps {
   search: string;
   onSearchChange: (value: string) => void;
   sortBy: string;
   onSortChange: (value: string) => void;
 }
 
-export default function UserToolbar(
+export default function StaffToolbar(
   {
     //   search,
     //   onSearchChange,
     //   sortBy,
     //   onSortChange,
-  }: UserToolbarProps,
+  }: StaffToolbarProps,
 ) {
   return (
     <div className="mb-4 flex flex-row items-center justify-between gap-3">

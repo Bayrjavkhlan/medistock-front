@@ -12,7 +12,7 @@ import { useState } from "react";
 
 import type { EnumUserRole } from "@/generated/graphql";
 
-type UserListTableProps = {
+type StaffListTableProps = {
   users: {
     id: string | undefined;
     name: string | undefined;
@@ -23,7 +23,7 @@ type UserListTableProps = {
   }[];
 };
 
-export default function UserListTable({ users }: UserListTableProps) {
+export default function StaffListTable({ users }: StaffListTableProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 

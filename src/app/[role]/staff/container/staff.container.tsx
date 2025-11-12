@@ -6,10 +6,10 @@ import { useState } from "react";
 
 import { EnumSortOrder, useUsersQuery } from "@/generated/graphql";
 
-import UserListTable from "../components/user.list";
-import UserToolbar from "../components/user.toolbox";
+import StaffListTable from "../components/staff.list";
+import StaffToolbar from "../components/staff.toolbox";
 
-export default function AdminUserContainer() {
+export default function StaffContainer() {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("name_asc");
 
@@ -66,13 +66,13 @@ export default function AdminUserContainer() {
 
   return (
     <>
-      <UserToolbar
+      <StaffToolbar
         search={search}
         onSearchChange={setSearch}
         sortBy={sortBy}
         onSortChange={setSortBy}
       />
-      <UserListTable users={users} />
+      <StaffListTable users={users} />
     </>
   );
 }
