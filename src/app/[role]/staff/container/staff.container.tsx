@@ -6,10 +6,12 @@ import { type UserSortField } from "@/constants/types";
 import type { UsersOrderByInput } from "@/generated/graphql";
 import { EnumSortOrder, useUsersQuery } from "@/generated/graphql";
 
+import CreateStaffModal from "../components/modal/staff.modal";
 import StaffListTable from "../components/staff.list";
 import StaffToolbar from "../components/staff.toolbox";
 
 export default function StaffContainer() {
+  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<{
     field: UserSortField;
@@ -34,7 +36,7 @@ export default function StaffContainer() {
     return order as UsersOrderByInput;
   };
 
-  const { data, loading, error } = useUsersQuery({
+  const { data, loading, error, refetch } = useUsersQuery({
     variables: {
       where: {
         search: debouncedSearch || undefined,
@@ -57,7 +59,19 @@ export default function StaffContainer() {
 
   return (
     <>
-      <StaffToolbar search={search} onSearchChange={setSearch} />
+      <StaffToolbar
+        search={search}
+        onSearchChange={setSearch}
+        onCreateClick={() => setOpen(true)}
+      />
+      <CreateStaffModal
+        open={open}
+        onClose={() => setOpen(false)}
+        onSuccess={() => {
+          setOpen(false);
+          refetch();
+        }}
+      />
       <StaffListTable
         users={users}
         totalCount={totalCount}
