@@ -1,3 +1,3 @@
 export default function EquipmentLogContainer() {
-  return <>Equipment Log Container</>;
+  return <>Equipment Log page</>;
 }

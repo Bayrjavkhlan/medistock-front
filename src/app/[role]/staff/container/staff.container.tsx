@@ -1,78 +1,101 @@
 "use client";
+import { debounce } from "lodash";
+import { useEffect, useState } from "react";
 
-import { useState } from "react";
-
-// import { useUsersQuery } from "@/features/user/graphql/queries.gql.generated";
-
-import { EnumSortOrder, useUsersQuery } from "@/generated/graphql";
+import { USER_SORT_FIELDS, type UserSortField } from "@/constants/types";
+import type { UsersOrderByInput } from "@/generated/graphql";
+import {
+  EnumSortOrder,
+  EnumUserRole,
+  useUsersQuery,
+} from "@/generated/graphql";
 
 import StaffListTable from "../components/staff.list";
 import StaffToolbar from "../components/staff.toolbox";
 
 export default function StaffContainer() {
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("name_asc");
+  const [sortBy, setSortBy] = useState<{
+    field: UserSortField;
+    order: EnumSortOrder;
+  }>({
+    field: "name",
+    order: EnumSortOrder.ASC,
+  });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const handler = debounce(() => setDebouncedSearch(search), 500);
+    handler();
+    return () => handler.cancel();
+  }, [search]);
+
+  const buildOrderBy = (): UsersOrderByInput => {
+    switch (sortBy.field) {
+      case "name":
+        return { name: sortBy.order };
+      case "email":
+        return { email: sortBy.order };
+      case "phone":
+        return { phone: sortBy.order };
+      default:
+        return { name: EnumSortOrder.ASC };
+    }
+  };
 
   const { data, loading, error } = useUsersQuery({
     variables: {
       where: {
-        roleKey: undefined,
-        search: search,
+        search: debouncedSearch || undefined,
+        roleKey: EnumUserRole.STAFF,
       },
-      take: 5,
-      skip: 0,
-      orderBy: {
-        name: EnumSortOrder.ASC,
-      },
+      orderBy: buildOrderBy(),
+      take: rowsPerPage,
+      skip: page * rowsPerPage,
     },
-    onError: (err) => {
-      console.error("GraphQL Error:", err);
-    },
-    errorPolicy: "all",
+    fetchPolicy: "cache-and-network",
   });
-  console.log("data:\t", error);
-  // const { data, loading, error } = useQuery<UsersQuery>(USERS, {
-  //   variables: {
-  //     where: {
-  //       roleKey: null,
-  //       search: null,
-  //     },
-  //     take: 5,
-  //     skip: 1,
-  //     orderBy: {
-  //       name: "asc",
-  //     },
-  //   },
-  //   errorPolicy: "all",
-  // });
-  // console.log("User error:\t", error);
-  // if (error && CombinedGraphQLErrors.is(error)) {
-  //   for (const gqlErr of error.errors) {
-  //     const code = gqlErr.extensions?.code;
-  //     const message = gqlErr.message;
-
-  //     if (code === "ACCESS_DENIED") {
-  //       console.error("Access denied:", message);
-  //     } else {
-  //       console.error(`GraphQL Error [${code}]:`, message);
-  //     }
-  //   }
-  // }
 
   if (loading) return <div>Уншиж байна...</div>;
-  if (error) return <div>{error.message}</div>;
+  if (error) return <div>Алдаа: {error.message}</div>;
 
   const users = data?.users?.data ?? [];
+  const totalCount = data?.users?.count ?? 0;
 
   return (
     <>
       <StaffToolbar
         search={search}
         onSearchChange={setSearch}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
+        sortBy={`${sortBy.field}_${sortBy.order.toLowerCase()}`}
+        onSortChange={(value) => {
+          const [field, orderStr] = value.split("_") as [string, string];
+
+          if (!USER_SORT_FIELDS.includes(field as any)) return;
+
+          const order =
+            orderStr === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC;
+
+          setSortBy({
+            field: field as UserSortField,
+            order,
+          });
+          setPage(0);
+        }}
       />
-      <StaffListTable users={users} />
+      <StaffListTable
+        users={users}
+        totalCount={totalCount}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={setPage}
+        onRowsPerPageChange={(newRows) => {
+          setRowsPerPage(newRows);
+          setPage(0);
+        }}
+      />
     </>
   );
 }

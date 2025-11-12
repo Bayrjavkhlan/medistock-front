@@ -1,3 +1,3 @@
 export default function AdminProfileContainer() {
-  return <>Admin Profile Container</>;
+  return <>Profile Page</>;
 }

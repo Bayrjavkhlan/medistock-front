@@ -1,3 +1,3 @@
 export default function EquipmentContainer() {
-  return <>Equipment Container</>;
+  return <>Equipment page</>;
 }
