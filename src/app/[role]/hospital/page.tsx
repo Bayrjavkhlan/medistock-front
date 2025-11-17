@@ -1,3 +1,5 @@
+import HospitalContainer from "./container/hospital.container";
+
 export default function HospitalHomePage() {
-  return <>Hospital page</>;
+  return <HospitalContainer />;
 }

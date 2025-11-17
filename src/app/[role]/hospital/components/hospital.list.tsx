@@ -9,42 +9,38 @@ import {
   TableRow,
 } from "@mui/material";
 
-import SortableTableHeader from "@/components/forms/table/sortableTableHeader";
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
-import type { UserSortField } from "@/constants/types";
-import { EnumSortOrder } from "@/generated/graphql";
+import type { HospitalsQuery } from "@/generated/graphql";
 
-type StaffListTableProps = {
-  users: any[];
-  totalCount: number;
+type HospitalListTableProps = {
+  hospitals: NonNullable<HospitalsQuery["hospitals"]>;
   page: number;
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
-  sortBy: { field: UserSortField; order: EnumSortOrder };
-  onSort: (field: UserSortField, order: EnumSortOrder) => void;
+  // sortBy: { field: UserSortField; order: EnumSortOrder };
+  // onSort: (field: UserSortField, order: EnumSortOrder) => void;
   loading: boolean;
 };
 
-export default function StaffListTable({
-  users,
-  totalCount,
+export default function HospitalListTable({
+  hospitals,
   page,
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
-  sortBy,
-  onSort,
+  // sortBy,
+  // onSort,
   loading,
-}: StaffListTableProps) {
-  const columnCount = 5; // Name, Email, Phone, Hospital, Role
+}: HospitalListTableProps) {
+  const columnCount = 4; // Name, Email, Phone, Address
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 600 }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <SortableTableHeader
+              {/* <SortableTableHeader
                 field="name"
                 label="Name"
                 currentSort={{
@@ -58,7 +54,6 @@ export default function StaffListTable({
                   );
                 }}
               />
-              {/* <TableCell>Email</TableCell> */}
               <SortableTableHeader
                 field="email"
                 label="Email"
@@ -72,30 +67,32 @@ export default function StaffListTable({
                     order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
                   );
                 }}
-              />
+              /> */}
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
-              <TableCell>Hospital</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>Address</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableSkeleton rows={rowsPerPage} columns={columnCount} />
-            ) : users.length === 0 ? (
+            ) : hospitals.count === 0 ? (
               <TableRow>
                 <TableCell colSpan={columnCount} align="center" sx={{ py: 4 }}>
-                  Хэрэглэгч олдсонгүй
+                  Эмнэлэг олдсонгүй
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.name ?? "-"}</TableCell>
-                  <TableCell>{user.email ?? "-"}</TableCell>
-                  <TableCell>{user.phone ?? "-"}</TableCell>
-                  <TableCell>{user.hospital?.name ?? "-"}</TableCell>
+              hospitals.data?.map((hospital) => (
+                <TableRow key={hospital.id}>
+                  <TableCell>{hospital.name ?? "-"}</TableCell>
+                  <TableCell>{hospital.email ?? "-"}</TableCell>
+                  <TableCell>{hospital.phoneNumber ?? "-"}</TableCell>
                   <TableCell>
-                    {user.roles?.map((r: any) => r?.key).join(", ") ?? "-"}
+                    {hospital.address?.address1 ?? "-"}
+                    {hospital.address?.address2 ?? "-"}
+                    {hospital.address?.province ?? "-"}
                   </TableCell>
                 </TableRow>
               ))
@@ -107,7 +104,7 @@ export default function StaffListTable({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={totalCount}
+        count={hospitals.count}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={(_, newPage) => onPageChange(newPage)}

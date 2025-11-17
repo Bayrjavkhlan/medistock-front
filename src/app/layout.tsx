@@ -33,8 +33,9 @@ export default function RootLayout({
   // const role = useSession().data?.user.roles[0].key as EnumUserRole | undefined;
 
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="mn" data-scroll-behavior="smooth">
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ApolloWrapper>

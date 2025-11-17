@@ -3,23 +3,16 @@ import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 
 import PageToolbar from "@/components/forms/toolbar";
-import { type UserSortField } from "@/constants/types";
-import type { UsersOrderByInput } from "@/generated/graphql";
-import { EnumSortOrder, useUsersQuery } from "@/generated/graphql";
+import { useHospitalsQuery } from "@/generated/graphql";
 
-import CreateStaffModal from "../components/modal/staff.modal";
-import StaffListTable from "../components/staff.list";
+import HospitalListTable from "../components/hospital.list";
 
-export default function StaffContainer() {
+// import CreateStaffModal from "../components/modal/staff.modal";
+// import StaffListTable from "../components/staff.list";
+
+export default function HospitalContainer() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<{
-    field: UserSortField;
-    order: EnumSortOrder;
-  }>({
-    field: "name",
-    order: EnumSortOrder.ASC,
-  });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -30,32 +23,24 @@ export default function StaffContainer() {
     return () => handler.cancel();
   }, [search]);
 
-  const buildOrderBy = (): UsersOrderByInput => {
-    const order: Partial<Record<UserSortField, EnumSortOrder>> = {};
-    order[sortBy.field] = sortBy.order;
-    return order as UsersOrderByInput;
-  };
-
-  const { data, loading, error, refetch } = useUsersQuery({
+  const { data, loading, error } = useHospitalsQuery({
     variables: {
       where: {
         search: debouncedSearch || undefined,
-        roleKey: undefined,
+        address: undefined,
       },
-      orderBy: buildOrderBy(),
       take: rowsPerPage,
       skip: page,
     },
     fetchPolicy: "no-cache",
   });
 
-  // if (loading) return <div>Уншиж байна...</div>;
+  if (loading) return <div>Уншиж байна...</div>;
   if (error) return <div>Алдаа: {error.message}</div>;
 
   console.log("Staff data:", data);
 
-  const users = data?.users?.data ?? [];
-  const totalCount = data?.users?.count ?? 0;
+  const hospitalsData = data?.hospitals ?? { data: [], count: 0 };
 
   return (
     <>
@@ -66,17 +51,16 @@ export default function StaffContainer() {
         placeholder="Ажилтан хайх..."
         buttonText="Шинэ ажилтан нэмэх"
       />
-      <CreateStaffModal
+      {/* <CreateHospitalModal
         open={open}
         onClose={() => setOpen(false)}
         onSuccess={() => {
           setOpen(false);
           refetch();
         }}
-      />
-      <StaffListTable
-        users={users}
-        totalCount={totalCount}
+      /> */}
+      <HospitalListTable
+        hospitals={hospitalsData}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={(newPage) => {
@@ -86,11 +70,11 @@ export default function StaffContainer() {
           setRowsPerPage(newRows);
           setPage(0);
         }}
-        sortBy={sortBy}
-        onSort={(field, order) => {
-          setSortBy({ field, order });
-          setPage(0);
-        }}
+        // sortBy={sortBy}
+        // onSort={(field, order) => {
+        //   setSortBy({ field, order });
+        //   setPage(0);
+        // }}
         loading={loading}
       />
     </>

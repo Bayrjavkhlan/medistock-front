@@ -79,7 +79,7 @@ export default function LoginForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 to-gray-700 p-4">
-      <Card className="w-full max-w-md space-y-6 bg-gray-800 p-8 shadow-2xl">
+      <Card className="w-full max-w-md space-y-8 bg-gray-800 p-8 shadow-2xl">
         <Typography variant="h4" className="text-center font-bold text-white">
           Нэвтрэх
         </Typography>
@@ -97,6 +97,9 @@ export default function LoginForm() {
               disabled={loading}
               className="bg-gray-700 text-white placeholder-gray-400"
               inputProps={{ "aria-label": "Имэйл" }}
+              sx={{
+                "& .MuiInput-input": { padding: "14px" },
+              }}
             />
           </div>
 
@@ -111,6 +114,9 @@ export default function LoginForm() {
               disabled={loading}
               className="bg-gray-700 text-white placeholder-gray-400"
               inputProps={{ "aria-label": "Нууц үг" }}
+              sx={{
+                "& .MuiInput-input": { padding: "14px" },
+              }}
             />
           </div>
 
