@@ -19,11 +19,8 @@ const config: CodegenConfig = {
         reactApolloVersion: 3,
         dedupeOperationSuffix: true,
         documentMode: "documentNode",
-
-        // THIS PREVENTS DUPLICATES FOREVER
-        // Even if you accidentally name two queries "UserDetail"
-        // It will generate: UserDetailDocument, UserDetailDocument2 → no crash
-        // avoidOptionals: false,
+        onlyOperationFiles: false,
+        generateAllOperations: true,
         maybeValue: "T | undefined",
         namingConvention: {
           typeNames: "change-case-all#pascalCase",
