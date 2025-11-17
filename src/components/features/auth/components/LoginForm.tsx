@@ -1,11 +1,13 @@
 "use client";
 
 import {
+  Alert,
   Button,
   Card,
   Checkbox,
   FormControlLabel,
   Input,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -18,7 +20,9 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const emailInputRef = useRef<HTMLInputElement>(null);
 
@@ -26,12 +30,21 @@ export default function LoginForm() {
     emailInputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    const saved = localStorage.getItem("rememberedEmail");
+    if (saved) {
+      setEmail(saved);
+      setRemember(true);
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
 
     setLoading(true);
-    setError("");
+    setSnackbarOpen(false);
+    setErrorMessage("");
 
     try {
       const result = await signIn("credentials", {
@@ -41,32 +54,28 @@ export default function LoginForm() {
       });
 
       if (result?.error) {
-        setError("Нэвтрэх нэр эсвэл нууц үг буруу байна.");
+        setErrorMessage("Нэвтрэх нэр эсвэл нууц үг буруу байна.");
+        setSnackbarOpen(true);
       } else {
         if (remember) {
           localStorage.setItem("rememberedEmail", email);
         } else {
           localStorage.removeItem("rememberedEmail");
         }
-
         router.push("/admin/dashboard");
         router.refresh();
       }
-    } catch (err) {
-      setError("Сервертэй холбогдоход алдаа гарлаа.");
-      console.log("Login error:", err);
+    } catch {
+      setErrorMessage("Сервертэй холбогдоход алдаа гарлаа.");
+      setSnackbarOpen(true);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem("rememberedEmail");
-    if (saved) {
-      setEmail(saved);
-      setRemember(true);
-    }
-  }, []);
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 to-gray-700 p-4">
@@ -131,12 +140,6 @@ export default function LoginForm() {
             </Typography>
           </div>
 
-          {error && (
-            <div className="rounded bg-red-900/50 p-3 text-sm text-red-300">
-              {error}
-            </div>
-          )}
-
           <Button
             type="submit"
             variant="contained"
@@ -145,14 +148,26 @@ export default function LoginForm() {
             disabled={loading || !email || !password}
             className="rounded-xl bg-blue-600 font-medium transition-all hover:bg-blue-700 disabled:bg-gray-600"
           >
-            {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
+            {loading ? "Нэвтэрж байна..." : "Нэвтрэх"}
           </Button>
         </form>
-
-        <div className="text-center text-xs text-gray-500">
-          © 2025 YourApp. Бүх эрх хуулиар хамгаалагдсан.
-        </div>
       </Card>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%", fontSize: "1rem" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

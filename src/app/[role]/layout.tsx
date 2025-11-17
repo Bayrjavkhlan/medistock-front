@@ -1,24 +1,23 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/lib/next-auth/authOptions";
+import { authOptions } from "@/lib/next-auth";
 
 export default async function RoleLayout({
-  children,
   params,
+  children,
 }: {
+  params: Promise<{ role: string }>;
   children: React.ReactNode;
-  params: { role: string };
 }) {
+  const { role } = await params;
+  const urlRole = role.toLowerCase();
+
   const session = await getServerSession(authOptions);
   const sessionRole = String(session?.user?.roleKey || "").toLowerCase();
-  const urlRole = params.role.toLowerCase();
 
   if (sessionRole && sessionRole !== urlRole) {
-    redirect(`/${sessionRole}${params.role === urlRole ? "" : ""}`);
-  }
-  if (!sessionRole) {
-    redirect("/login");
+    redirect(`/${sessionRole}/staff`);
   }
 
   return <>{children}</>;
