@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+npx --no -- commitlint --edit "$1" --config commitlint.config.cjs > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "Use 'yarn commit' for beautiful conventional commits!"
+  echo " (or 'git commit' and follow conventional commit rules)"
+  echo ""
+   echo "╔════════════════════════════════════════════════════════════════════╗"
+  echo "║  ❌ Commit message validation failed!                              ║"
+  echo "╟────────────────────────────────────────────────────────────────────╢"
+  echo "║  🚫 The commit message type must be one of the following:          ║"
+  echo "║  🛠️  build:    Changes that affect the build system or external     ║"
+  echo "║               dependencies (example scopes: gulp, broccoli, npm)   ║"
+  echo "║  🤖 chore:    Other changes that don't modify src or test files    ║"
+  echo "║  👷 ci:       Changes to our CI configuration files and scripts    ║"
+  echo "║  📚 docs:     Documentation only changes                           ║"
+  echo "║  ✨ feat:     A new feature                                        ║"
+  echo "║  🐛 fix:      A bug fix                                            ║"
+  echo "║  ⚡ perf:     A code change that improves performance              ║"
+  echo "║  🔨 refactor: A code change that neither fixes a bug nor adds a    ║"
+  echo "║               feature                                              ║"
+  echo "║  ⏪ revert:   Reverts a previous commit                            ║"
+  echo "║  ✅ test:     Adding missing tests or correcting existing tests    ║"
+  echo "╚════════════════════════════════════════════════════════════════════╝"
+  echo ""
+  echo "Learn more → https://www.conventionalcommits.org"
+  echo ""
+  echo ""
+  exit 1
+fi
