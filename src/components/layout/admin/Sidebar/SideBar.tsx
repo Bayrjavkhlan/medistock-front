@@ -38,6 +38,7 @@ export default function Sidebar({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: session } = useSession();
   const router = useRouter();
+  console.log("data:\t", session);
 
   const sidebarItems = getSidebarOptions(session);
 

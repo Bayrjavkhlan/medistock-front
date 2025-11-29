@@ -3,9 +3,9 @@ import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 
 import PageToolbar from "@/components/forms/toolbar";
-import { type UserSortField } from "@/constants/types";
-import type { UsersOrderByInput } from "@/generated/graphql";
-import { EnumSortOrder, useUsersQuery } from "@/generated/graphql";
+import { type StaffSortField } from "@/constants/types";
+import type { StaffsOrderByInput } from "@/generated/graphql";
+import { EnumSortOrder, useStaffsQuery } from "@/generated/graphql";
 
 import CreateStaffModal from "../components/modal/staff.modal";
 import StaffListTable from "../components/staff.list";
@@ -14,7 +14,7 @@ export default function StaffContainer() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<{
-    field: UserSortField;
+    field: StaffSortField;
     order: EnumSortOrder;
   }>({
     field: "name",
@@ -30,13 +30,13 @@ export default function StaffContainer() {
     return () => handler.cancel();
   }, [search]);
 
-  const buildOrderBy = (): UsersOrderByInput => {
-    const order: Partial<Record<UserSortField, EnumSortOrder>> = {};
+  const buildOrderBy = (): StaffsOrderByInput => {
+    const order: Partial<Record<StaffSortField, EnumSortOrder>> = {};
     order[sortBy.field] = sortBy.order;
-    return order as UsersOrderByInput;
+    return order as StaffsOrderByInput;
   };
 
-  const { data, loading, error, refetch } = useUsersQuery({
+  const { data, loading, error, refetch } = useStaffsQuery({
     variables: {
       where: {
         search: debouncedSearch || undefined,
@@ -54,8 +54,8 @@ export default function StaffContainer() {
 
   console.log("Staff data:", data);
 
-  const users = data?.users?.data ?? [];
-  const totalCount = data?.users?.count ?? 0;
+  const users = data?.staffs?.data ?? [];
+  const totalCount = data?.staffs?.count ?? 0;
 
   return (
     <>

@@ -15,7 +15,7 @@ export const defineAbilityFor = (session: Session | null): AppAbility => {
     return build();
   }
 
-  const role = session.user.roleKey;
+  const role = session.staff.roleKey;
 
   // === ADMIN ===
   if (role === "ADMIN") {

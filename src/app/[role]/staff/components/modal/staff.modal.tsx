@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import { STAFF_CREATE } from "@/features/user/graphql/mutations.gql";
-import { EnumUserRole } from "@/generated/graphql";
+import { STAFF_CREATE } from "@/features/staff/graphql/mutations.gql";
+import { EnumStaffRole } from "@/generated/graphql";
 
 interface CreateStaffModalProps {
   open: boolean;
@@ -23,9 +23,9 @@ interface CreateStaffModalProps {
 }
 
 const ROLES = [
-  { value: EnumUserRole.ADMIN, label: "Системийн админ" },
-  { value: EnumUserRole.HOSPITAL_ADMIN, label: "Эмнэлэгийн админ" },
-  { value: EnumUserRole.STAFF, label: "Ажилтан" },
+  { value: EnumStaffRole.ADMIN, label: "Системийн админ" },
+  { value: EnumStaffRole.HOSPITAL_ADMIN, label: "Эмнэлэгийн админ" },
+  { value: EnumStaffRole.STAFF, label: "Ажилтан" },
 ];
 
 const HOSPITALS = [
@@ -42,7 +42,7 @@ export default function CreateStaffModal({
     name: "",
     email: "",
     phone: "",
-    roleKeys: "" as EnumUserRole,
+    roleKeys: "" as EnumStaffRole,
     hospitalId: "",
   });
 
@@ -55,7 +55,7 @@ export default function CreateStaffModal({
         name: "",
         email: "",
         phone: "",
-        roleKeys: "" as EnumUserRole,
+        roleKeys: "" as EnumStaffRole,
         hospitalId: "",
       });
     },
@@ -70,7 +70,7 @@ export default function CreateStaffModal({
     if (!form.email) newErrors.email = "Имэйл шаардлагатай";
     if (!form.phone) newErrors.phone = "Утас шаардлагатай";
     if (!form.roleKeys) newErrors.roleKeys = "Үүрэг сонгоно уу";
-    if (form.roleKeys !== EnumUserRole.ADMIN && !form.hospitalId) {
+    if (form.roleKeys !== EnumStaffRole.ADMIN && !form.hospitalId) {
       newErrors.hospitalId = "Эмнэлэг сонгоно уу";
     }
     setErrors(newErrors);
@@ -88,7 +88,7 @@ export default function CreateStaffModal({
           phone: form.phone,
           roleKeys: form.roleKeys,
           hospitalId:
-            form.roleKeys === EnumUserRole.ADMIN ? null : form.hospitalId,
+            form.roleKeys === EnumStaffRole.ADMIN ? null : form.hospitalId,
         },
       },
     });
@@ -142,7 +142,7 @@ export default function CreateStaffModal({
           margin="normal"
           value={form.roleKeys}
           onChange={(e) =>
-            setForm({ ...form, roleKeys: e.target.value as EnumUserRole })
+            setForm({ ...form, roleKeys: e.target.value as EnumStaffRole })
           }
           error={!!errors.roleKeys}
           helperText={errors.roleKeys}
@@ -154,7 +154,7 @@ export default function CreateStaffModal({
           ))}
         </TextField>
 
-        {form.roleKeys !== EnumUserRole.ADMIN && (
+        {form.roleKeys !== EnumStaffRole.ADMIN && (
           <TextField
             select
             label="Эмнэлэг"

@@ -49,13 +49,13 @@ export type AddressCreateInput = {
   province: Scalars["String"]["input"];
 };
 
-export type CurrentUserObjectType = {
+export type CurrentStaffObjectType = {
   email: Scalars["String"]["output"];
   hospital: Maybe<Hospital>;
   id: Scalars["ID"]["output"];
   name: Maybe<Scalars["String"]["output"]>;
   phone: Maybe<Scalars["String"]["output"]>;
-  roleKey: Maybe<EnumUserRole>;
+  roleKey: Maybe<EnumStaffRole>;
   roles: Maybe<Array<Role>>;
 };
 
@@ -64,14 +64,14 @@ export enum EnumSortOrder {
   DESC = "desc",
 }
 
-export enum EnumUserRole {
+export enum EnumStaffRole {
   ADMIN = "ADMIN",
   HOSPITAL_ADMIN = "HOSPITAL_ADMIN",
   STAFF = "STAFF",
 }
 
 export type Equipment = {
-  assignedTo: Maybe<User>;
+  assignedTo: Maybe<Staff>;
   category: Maybe<Scalars["String"]["output"]>;
   createdAt: Maybe<Scalars["DateTime"]["output"]>;
   hospital: Maybe<Hospital>;
@@ -102,8 +102,8 @@ export type EquipmentCreateInput = {
   hospitalId: Scalars["String"]["input"];
   name: Scalars["String"]["input"];
   serialNo: Scalars["String"]["input"];
+  staffId: Scalars["String"]["input"];
   state: EquipmentState;
-  userId: Scalars["String"]["input"];
 };
 
 export type EquipmentLog = {
@@ -111,15 +111,15 @@ export type EquipmentLog = {
   description: Maybe<Scalars["String"]["output"]>;
   equipment: Maybe<Equipment>;
   id: Maybe<Scalars["String"]["output"]>;
-  performedBy: Maybe<User>;
+  performedBy: Maybe<Staff>;
+  staffId: Maybe<Scalars["String"]["output"]>;
   updatedAt: Maybe<Scalars["DateTime"]["output"]>;
-  userId: Maybe<Scalars["String"]["output"]>;
 };
 
 export type EquipmentLogCreateInput = {
   description: Scalars["String"]["input"];
   equipmentId: Scalars["String"]["input"];
-  userId: Scalars["String"]["input"];
+  staffId: Scalars["String"]["input"];
 };
 
 export type EquipmentLogUpdateInput = {
@@ -158,7 +158,7 @@ export type Hospital = {
   email: Maybe<Scalars["String"]["output"]>;
   id: Maybe<Scalars["String"]["output"]>;
   name: Maybe<Scalars["String"]["output"]>;
-  phoneNumber: Maybe<Scalars["String"]["output"]>;
+  phone: Maybe<Scalars["String"]["output"]>;
   updatedAt: Maybe<Scalars["DateTime"]["output"]>;
 };
 
@@ -166,7 +166,7 @@ export type HospitalCreateInput = {
   address: AddressCreateInput;
   email: Scalars["EmailAddress"]["input"];
   name: Scalars["String"]["input"];
-  phoneNumber: Scalars["String"]["input"];
+  phone: Scalars["String"]["input"];
 };
 
 export type HospitalOption = {
@@ -193,7 +193,7 @@ export type LoginPayload = {
   accessToken: Scalars["String"]["output"];
   accessTokenExpiresAt: Scalars["String"]["output"];
   refreshToken: Scalars["String"]["output"];
-  user: CurrentUserObjectType;
+  staff: CurrentStaffObjectType;
 };
 
 export type Mutation = {
@@ -205,8 +205,8 @@ export type Mutation = {
   hospitalUpdate: Maybe<Scalars["Boolean"]["output"]>;
   login: Maybe<LoginPayload>;
   refreshAccessToken: Maybe<LoginPayload>;
-  userCreate: Maybe<Scalars["Boolean"]["output"]>;
-  userUpdate: Maybe<Scalars["Boolean"]["output"]>;
+  staffCreate: Maybe<Scalars["Boolean"]["output"]>;
+  staffUpdate: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type MutationEquipmentCreateArgs = {
@@ -244,17 +244,17 @@ export type MutationRefreshAccessTokenArgs = {
   refreshToken: Scalars["String"]["input"];
 };
 
-export type MutationUserCreateArgs = {
-  input: UserCreateInput;
+export type MutationStaffCreateArgs = {
+  input: StaffCreateInput;
 };
 
-export type MutationUserUpdateArgs = {
+export type MutationStaffUpdateArgs = {
   id: Scalars["String"]["input"];
-  input: UserCreateInput;
+  input: StaffCreateInput;
 };
 
 export type Query = {
-  currentUser: Maybe<CurrentUserObjectType>;
+  currentStaff: Maybe<CurrentStaffObjectType>;
   equipmentDetail: Maybe<Equipment>;
   equipmentLogDetail: Maybe<EquipmentLog>;
   equipmentLogs: Maybe<EquipmentLogs>;
@@ -262,8 +262,8 @@ export type Query = {
   hospitalDetail: Maybe<Hospital>;
   hospitalOption: Array<HospitalOption>;
   hospitals: Maybe<Hospitals>;
-  userDetail: Maybe<User>;
-  users: Maybe<UserObjectType>;
+  staffDetail: Maybe<Staff>;
+  staffs: Maybe<StaffObjectType>;
 };
 
 export type QueryEquipmentDetailArgs = {
@@ -296,24 +296,24 @@ export type QueryHospitalsArgs = {
   where: InputMaybe<HospitalsWhereInput>;
 };
 
-export type QueryUserDetailArgs = {
+export type QueryStaffDetailArgs = {
   id: Scalars["String"]["input"];
 };
 
-export type QueryUsersArgs = {
-  orderBy: InputMaybe<UsersOrderByInput>;
+export type QueryStaffsArgs = {
+  orderBy: InputMaybe<StaffsOrderByInput>;
   skip: Scalars["Int"]["input"];
   take: Scalars["Int"]["input"];
-  where: InputMaybe<UsersWhereInput>;
+  where: InputMaybe<StaffsWhereInput>;
 };
 
 export type Role = {
   id: Maybe<Scalars["String"]["output"]>;
-  key: Maybe<EnumUserRole>;
+  key: Maybe<EnumStaffRole>;
   name: Maybe<Scalars["String"]["output"]>;
 };
 
-export type User = {
+export type Staff = {
   createdAt: Maybe<Scalars["DateTime"]["output"]>;
   email: Maybe<Scalars["String"]["output"]>;
   hospital: Maybe<Hospital>;
@@ -324,26 +324,26 @@ export type User = {
   updatedAt: Maybe<Scalars["DateTime"]["output"]>;
 };
 
-export type UserCreateInput = {
+export type StaffCreateInput = {
   email: Scalars["String"]["input"];
   hospitalId: Scalars["String"]["input"];
   name: Scalars["String"]["input"];
   phone: Scalars["String"]["input"];
-  roleKeys: Array<EnumUserRole>;
+  roleKeys: Array<EnumStaffRole>;
 };
 
-export type UserObjectType = {
+export type StaffObjectType = {
   count: Scalars["Int"]["output"];
-  data: Maybe<Array<User>>;
+  data: Maybe<Array<Staff>>;
 };
 
-export type UsersOrderByInput = {
+export type StaffsOrderByInput = {
   email: InputMaybe<EnumSortOrder>;
   name: InputMaybe<EnumSortOrder>;
 };
 
-export type UsersWhereInput = {
-  roleKey: InputMaybe<EnumUserRole>;
+export type StaffsWhereInput = {
+  roleKey: InputMaybe<EnumStaffRole>;
   search: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -357,12 +357,12 @@ export type LoginMutation = {
         accessToken: string;
         refreshToken: string;
         accessTokenExpiresAt: string;
-        user: {
+        staff: {
           id: string;
           name: string | undefined;
           email: string;
           phone: string | undefined;
-          roleKey: EnumUserRole | undefined;
+          roleKey: EnumStaffRole | undefined;
           hospital: { name: string | undefined } | undefined;
         };
       }
@@ -379,30 +379,30 @@ export type RefreshAccessTokenMutation = {
         accessToken: string;
         refreshToken: string;
         accessTokenExpiresAt: string;
-        user: {
+        staff: {
           id: string;
           name: string | undefined;
           email: string;
           phone: string | undefined;
-          roleKey: EnumUserRole | undefined;
+          roleKey: EnumStaffRole | undefined;
           hospital: { name: string | undefined } | undefined;
         };
       }
     | undefined;
 };
 
-export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>;
+export type CurrentStaffQueryVariables = Exact<{ [key: string]: never }>;
 
-export type CurrentUserQuery = {
-  currentUser:
+export type CurrentStaffQuery = {
+  currentStaff:
     | {
         id: string;
         name: string | undefined;
         email: string;
         phone: string | undefined;
-        roleKey: EnumUserRole | undefined;
+        roleKey: EnumStaffRole | undefined;
         roles:
-          | Array<{ key: EnumUserRole | undefined; id: string | undefined }>
+          | Array<{ key: EnumStaffRole | undefined; id: string | undefined }>
           | undefined;
         hospital:
           | {
@@ -519,7 +519,7 @@ export type HospitalsQuery = {
               id: string | undefined;
               name: string | undefined;
               email: string | undefined;
-              phoneNumber: string | undefined;
+              phone: string | undefined;
               address:
                 | {
                     address1: string | undefined;
@@ -544,7 +544,7 @@ export type HospitalDetailQuery = {
         id: string | undefined;
         name: string | undefined;
         email: string | undefined;
-        phoneNumber: string | undefined;
+        phone: string | undefined;
         address:
           | {
               id: string | undefined;
@@ -563,28 +563,28 @@ export type HospitalOptionQuery = {
   hospitalOption: Array<{ id: string | undefined; name: string | undefined }>;
 };
 
-export type UserCreateMutationVariables = Exact<{
-  input: UserCreateInput;
+export type StaffCreateMutationVariables = Exact<{
+  input: StaffCreateInput;
 }>;
 
-export type UserCreateMutation = { userCreate: boolean | undefined };
+export type StaffCreateMutation = { staffCreate: boolean | undefined };
 
-export type UserUpdateMutationVariables = Exact<{
-  userUpdateId: Scalars["String"]["input"];
-  input: UserCreateInput;
+export type StaffUpdateMutationVariables = Exact<{
+  staffUpdateId: Scalars["String"]["input"];
+  input: StaffCreateInput;
 }>;
 
-export type UserUpdateMutation = { userUpdate: boolean | undefined };
+export type StaffUpdateMutation = { staffUpdate: boolean | undefined };
 
-export type UsersQueryVariables = Exact<{
-  where: InputMaybe<UsersWhereInput>;
+export type StaffsQueryVariables = Exact<{
+  where: InputMaybe<StaffsWhereInput>;
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
-  orderBy: InputMaybe<UsersOrderByInput>;
+  orderBy: InputMaybe<StaffsOrderByInput>;
 }>;
 
-export type UsersQuery = {
-  users:
+export type StaffsQuery = {
+  staffs:
     | {
         count: number;
         data:
@@ -597,7 +597,7 @@ export type UsersQuery = {
                 | { id: string | undefined; name: string | undefined }
                 | undefined;
               roles:
-                | Array<{ key: EnumUserRole | undefined } | undefined>
+                | Array<{ key: EnumStaffRole | undefined } | undefined>
                 | undefined;
             }>
           | undefined;
@@ -605,12 +605,12 @@ export type UsersQuery = {
     | undefined;
 };
 
-export type UserDetailQueryVariables = Exact<{
-  userDetailId: Scalars["String"]["input"];
+export type StaffDetailQueryVariables = Exact<{
+  staffDetailId: Scalars["String"]["input"];
 }>;
 
-export type UserDetailQuery = {
-  userDetail:
+export type StaffDetailQuery = {
+  staffDetail:
     | {
         id: string | undefined;
         email: string | undefined;
@@ -620,7 +620,7 @@ export type UserDetailQuery = {
           | Array<
               | {
                   id: string | undefined;
-                  key: EnumUserRole | undefined;
+                  key: EnumStaffRole | undefined;
                   name: string | undefined;
                 }
               | undefined
@@ -677,7 +677,7 @@ export const LoginDocument = {
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "user" },
+                  name: { kind: "Name", value: "staff" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -806,7 +806,7 @@ export const RefreshAccessTokenDocument = {
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "user" },
+                  name: { kind: "Name", value: "staff" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -894,19 +894,19 @@ export type RefreshAccessTokenMutationOptions = Apollo.BaseMutationOptions<
   RefreshAccessTokenMutation,
   RefreshAccessTokenMutationVariables
 >;
-export const CurrentUserDocument = {
+export const CurrentStaffDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "CurrentUser" },
+      name: { kind: "Name", value: "CurrentStaff" },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "currentUser" },
+            name: { kind: "Name", value: "currentStaff" },
             selectionSet: {
               kind: "SelectionSet",
               selections: [
@@ -948,71 +948,73 @@ export const CurrentUserDocument = {
 } as unknown as DocumentNode;
 
 /**
- * __useCurrentUserQuery__
+ * __useCurrentStaffQuery__
  *
- * To run a query within a React component, call `useCurrentUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCurrentStaffQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentStaffQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useCurrentUserQuery({
+ * const { data, loading, error } = useCurrentStaffQuery({
  *   variables: {
  *   },
  * });
  */
-export function useCurrentUserQuery(
+export function useCurrentStaffQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    CurrentUserQuery,
-    CurrentUserQueryVariables
+    CurrentStaffQuery,
+    CurrentStaffQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<CurrentUserQuery, CurrentUserQueryVariables>(
-    CurrentUserDocument,
+  return Apollo.useQuery<CurrentStaffQuery, CurrentStaffQueryVariables>(
+    CurrentStaffDocument,
     options,
   );
 }
-export function useCurrentUserLazyQuery(
+export function useCurrentStaffLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    CurrentUserQuery,
-    CurrentUserQueryVariables
+    CurrentStaffQuery,
+    CurrentStaffQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<CurrentUserQuery, CurrentUserQueryVariables>(
-    CurrentUserDocument,
+  return Apollo.useLazyQuery<CurrentStaffQuery, CurrentStaffQueryVariables>(
+    CurrentStaffDocument,
     options,
   );
 }
-export function useCurrentUserSuspenseQuery(
+export function useCurrentStaffSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
     | Apollo.SuspenseQueryHookOptions<
-        CurrentUserQuery,
-        CurrentUserQueryVariables
+        CurrentStaffQuery,
+        CurrentStaffQueryVariables
       >,
 ) {
   const options =
     baseOptions === Apollo.skipToken
       ? baseOptions
       : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<CurrentUserQuery, CurrentUserQueryVariables>(
-    CurrentUserDocument,
+  return Apollo.useSuspenseQuery<CurrentStaffQuery, CurrentStaffQueryVariables>(
+    CurrentStaffDocument,
     options,
   );
 }
-export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>;
-export type CurrentUserLazyQueryHookResult = ReturnType<
-  typeof useCurrentUserLazyQuery
+export type CurrentStaffQueryHookResult = ReturnType<
+  typeof useCurrentStaffQuery
 >;
-export type CurrentUserSuspenseQueryHookResult = ReturnType<
-  typeof useCurrentUserSuspenseQuery
+export type CurrentStaffLazyQueryHookResult = ReturnType<
+  typeof useCurrentStaffLazyQuery
 >;
-export type CurrentUserQueryResult = Apollo.QueryResult<
-  CurrentUserQuery,
-  CurrentUserQueryVariables
+export type CurrentStaffSuspenseQueryHookResult = ReturnType<
+  typeof useCurrentStaffSuspenseQuery
+>;
+export type CurrentStaffQueryResult = Apollo.QueryResult<
+  CurrentStaffQuery,
+  CurrentStaffQueryVariables
 >;
 export const EquipmentCreateDocument = {
   kind: "Document",
@@ -1866,10 +1868,7 @@ export const HospitalsDocument = {
                       { kind: "Field", name: { kind: "Name", value: "id" } },
                       { kind: "Field", name: { kind: "Name", value: "name" } },
                       { kind: "Field", name: { kind: "Name", value: "email" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "phoneNumber" },
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "phone" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "address" },
@@ -2023,7 +2022,7 @@ export const HospitalDetailDocument = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "name" } },
                 { kind: "Field", name: { kind: "Name", value: "email" } },
-                { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+                { kind: "Field", name: { kind: "Name", value: "phone" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "address" },
@@ -2225,13 +2224,13 @@ export type HospitalOptionQueryResult = Apollo.QueryResult<
   HospitalOptionQuery,
   HospitalOptionQueryVariables
 >;
-export const UserCreateDocument = {
+export const StaffCreateDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "UserCreate" },
+      name: { kind: "Name", value: "staffCreate" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -2243,7 +2242,7 @@ export const UserCreateDocument = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "UserCreateInput" },
+              name: { kind: "Name", value: "StaffCreateInput" },
             },
           },
         },
@@ -2253,7 +2252,7 @@ export const UserCreateDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "userCreate" },
+            name: { kind: "Name", value: "staffCreate" },
             arguments: [
               {
                 kind: "Argument",
@@ -2270,62 +2269,62 @@ export const UserCreateDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export type UserCreateMutationFn = Apollo.MutationFunction<
-  UserCreateMutation,
-  UserCreateMutationVariables
+export type StaffCreateMutationFn = Apollo.MutationFunction<
+  StaffCreateMutation,
+  StaffCreateMutationVariables
 >;
 
 /**
- * __useUserCreateMutation__
+ * __useStaffCreateMutation__
  *
- * To run a mutation, you first call `useUserCreateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUserCreateMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useStaffCreateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStaffCreateMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [userCreateMutation, { data, loading, error }] = useUserCreateMutation({
+ * const [staffCreateMutation, { data, loading, error }] = useStaffCreateMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUserCreateMutation(
+export function useStaffCreateMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    UserCreateMutation,
-    UserCreateMutationVariables
+    StaffCreateMutation,
+    StaffCreateMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UserCreateMutation, UserCreateMutationVariables>(
-    UserCreateDocument,
+  return Apollo.useMutation<StaffCreateMutation, StaffCreateMutationVariables>(
+    StaffCreateDocument,
     options,
   );
 }
-export type UserCreateMutationHookResult = ReturnType<
-  typeof useUserCreateMutation
+export type StaffCreateMutationHookResult = ReturnType<
+  typeof useStaffCreateMutation
 >;
-export type UserCreateMutationResult =
-  Apollo.MutationResult<UserCreateMutation>;
-export type UserCreateMutationOptions = Apollo.BaseMutationOptions<
-  UserCreateMutation,
-  UserCreateMutationVariables
+export type StaffCreateMutationResult =
+  Apollo.MutationResult<StaffCreateMutation>;
+export type StaffCreateMutationOptions = Apollo.BaseMutationOptions<
+  StaffCreateMutation,
+  StaffCreateMutationVariables
 >;
-export const UserUpdateDocument = {
+export const StaffUpdateDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "UserUpdate" },
+      name: { kind: "Name", value: "StaffUpdate" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "userUpdateId" },
+            name: { kind: "Name", value: "staffUpdateId" },
           },
           type: {
             kind: "NonNullType",
@@ -2345,7 +2344,7 @@ export const UserUpdateDocument = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "UserCreateInput" },
+              name: { kind: "Name", value: "StaffCreateInput" },
             },
           },
         },
@@ -2355,14 +2354,14 @@ export const UserUpdateDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "userUpdate" },
+            name: { kind: "Name", value: "staffUpdate" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "userUpdateId" },
+                  name: { kind: "Name", value: "staffUpdateId" },
                 },
               },
               {
@@ -2380,57 +2379,57 @@ export const UserUpdateDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export type UserUpdateMutationFn = Apollo.MutationFunction<
-  UserUpdateMutation,
-  UserUpdateMutationVariables
+export type StaffUpdateMutationFn = Apollo.MutationFunction<
+  StaffUpdateMutation,
+  StaffUpdateMutationVariables
 >;
 
 /**
- * __useUserUpdateMutation__
+ * __useStaffUpdateMutation__
  *
- * To run a mutation, you first call `useUserUpdateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUserUpdateMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useStaffUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStaffUpdateMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [userUpdateMutation, { data, loading, error }] = useUserUpdateMutation({
+ * const [staffUpdateMutation, { data, loading, error }] = useStaffUpdateMutation({
  *   variables: {
- *      userUpdateId: // value for 'userUpdateId'
+ *      staffUpdateId: // value for 'staffUpdateId'
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUserUpdateMutation(
+export function useStaffUpdateMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    UserUpdateMutation,
-    UserUpdateMutationVariables
+    StaffUpdateMutation,
+    StaffUpdateMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UserUpdateMutation, UserUpdateMutationVariables>(
-    UserUpdateDocument,
+  return Apollo.useMutation<StaffUpdateMutation, StaffUpdateMutationVariables>(
+    StaffUpdateDocument,
     options,
   );
 }
-export type UserUpdateMutationHookResult = ReturnType<
-  typeof useUserUpdateMutation
+export type StaffUpdateMutationHookResult = ReturnType<
+  typeof useStaffUpdateMutation
 >;
-export type UserUpdateMutationResult =
-  Apollo.MutationResult<UserUpdateMutation>;
-export type UserUpdateMutationOptions = Apollo.BaseMutationOptions<
-  UserUpdateMutation,
-  UserUpdateMutationVariables
+export type StaffUpdateMutationResult =
+  Apollo.MutationResult<StaffUpdateMutation>;
+export type StaffUpdateMutationOptions = Apollo.BaseMutationOptions<
+  StaffUpdateMutation,
+  StaffUpdateMutationVariables
 >;
-export const UsersDocument = {
+export const StaffsDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "Users" },
+      name: { kind: "Name", value: "Staffs" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -2440,7 +2439,7 @@ export const UsersDocument = {
           },
           type: {
             kind: "NamedType",
-            name: { kind: "Name", value: "UsersWhereInput" },
+            name: { kind: "Name", value: "StaffsWhereInput" },
           },
         },
         {
@@ -2467,7 +2466,7 @@ export const UsersDocument = {
           },
           type: {
             kind: "NamedType",
-            name: { kind: "Name", value: "UsersOrderByInput" },
+            name: { kind: "Name", value: "StaffsOrderByInput" },
           },
         },
       ],
@@ -2476,7 +2475,7 @@ export const UsersDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "users" },
+            name: { kind: "Name", value: "staffs" },
             arguments: [
               {
                 kind: "Argument",
@@ -2568,16 +2567,16 @@ export const UsersDocument = {
 } as unknown as DocumentNode;
 
 /**
- * __useUsersQuery__
+ * __useStaffsQuery__
  *
- * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useStaffsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStaffsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUsersQuery({
+ * const { data, loading, error } = useStaffsQuery({
  *   variables: {
  *      where: // value for 'where'
  *      take: // value for 'take'
@@ -2586,61 +2585,61 @@ export const UsersDocument = {
  *   },
  * });
  */
-export function useUsersQuery(
-  baseOptions: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables> &
-    ({ variables: UsersQueryVariables; skip?: boolean } | { skip: boolean }),
+export function useStaffsQuery(
+  baseOptions: Apollo.QueryHookOptions<StaffsQuery, StaffsQueryVariables> &
+    ({ variables: StaffsQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<UsersQuery, UsersQueryVariables>(
-    UsersDocument,
+  return Apollo.useQuery<StaffsQuery, StaffsQueryVariables>(
+    StaffsDocument,
     options,
   );
 }
-export function useUsersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>,
+export function useStaffsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<StaffsQuery, StaffsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(
-    UsersDocument,
+  return Apollo.useLazyQuery<StaffsQuery, StaffsQueryVariables>(
+    StaffsDocument,
     options,
   );
 }
-export function useUsersSuspenseQuery(
+export function useStaffsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<UsersQuery, UsersQueryVariables>,
+    | Apollo.SuspenseQueryHookOptions<StaffsQuery, StaffsQueryVariables>,
 ) {
   const options =
     baseOptions === Apollo.skipToken
       ? baseOptions
       : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<UsersQuery, UsersQueryVariables>(
-    UsersDocument,
+  return Apollo.useSuspenseQuery<StaffsQuery, StaffsQueryVariables>(
+    StaffsDocument,
     options,
   );
 }
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
-export type UsersSuspenseQueryHookResult = ReturnType<
-  typeof useUsersSuspenseQuery
+export type StaffsQueryHookResult = ReturnType<typeof useStaffsQuery>;
+export type StaffsLazyQueryHookResult = ReturnType<typeof useStaffsLazyQuery>;
+export type StaffsSuspenseQueryHookResult = ReturnType<
+  typeof useStaffsSuspenseQuery
 >;
-export type UsersQueryResult = Apollo.QueryResult<
-  UsersQuery,
-  UsersQueryVariables
+export type StaffsQueryResult = Apollo.QueryResult<
+  StaffsQuery,
+  StaffsQueryVariables
 >;
-export const UserDetailDocument = {
+export const StaffDetailDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "UserDetail" },
+      name: { kind: "Name", value: "StaffDetail" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "userDetailId" },
+            name: { kind: "Name", value: "staffDetailId" },
           },
           type: {
             kind: "NonNullType",
@@ -2656,14 +2655,14 @@ export const UserDetailDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "userDetail" },
+            name: { kind: "Name", value: "staffDetail" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "userDetailId" },
+                  name: { kind: "Name", value: "staffDetailId" },
                 },
               },
             ],
@@ -2707,74 +2706,74 @@ export const UserDetailDocument = {
 } as unknown as DocumentNode;
 
 /**
- * __useUserDetailQuery__
+ * __useStaffDetailQuery__
  *
- * To run a query within a React component, call `useUserDetailQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useStaffDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStaffDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserDetailQuery({
+ * const { data, loading, error } = useStaffDetailQuery({
  *   variables: {
- *      userDetailId: // value for 'userDetailId'
+ *      staffDetailId: // value for 'staffDetailId'
  *   },
  * });
  */
-export function useUserDetailQuery(
+export function useStaffDetailQuery(
   baseOptions: Apollo.QueryHookOptions<
-    UserDetailQuery,
-    UserDetailQueryVariables
+    StaffDetailQuery,
+    StaffDetailQueryVariables
   > &
     (
-      | { variables: UserDetailQueryVariables; skip?: boolean }
+      | { variables: StaffDetailQueryVariables; skip?: boolean }
       | { skip: boolean }
     ),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<UserDetailQuery, UserDetailQueryVariables>(
-    UserDetailDocument,
+  return Apollo.useQuery<StaffDetailQuery, StaffDetailQueryVariables>(
+    StaffDetailDocument,
     options,
   );
 }
-export function useUserDetailLazyQuery(
+export function useStaffDetailLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    UserDetailQuery,
-    UserDetailQueryVariables
+    StaffDetailQuery,
+    StaffDetailQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<UserDetailQuery, UserDetailQueryVariables>(
-    UserDetailDocument,
+  return Apollo.useLazyQuery<StaffDetailQuery, StaffDetailQueryVariables>(
+    StaffDetailDocument,
     options,
   );
 }
-export function useUserDetailSuspenseQuery(
+export function useStaffDetailSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
     | Apollo.SuspenseQueryHookOptions<
-        UserDetailQuery,
-        UserDetailQueryVariables
+        StaffDetailQuery,
+        StaffDetailQueryVariables
       >,
 ) {
   const options =
     baseOptions === Apollo.skipToken
       ? baseOptions
       : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<UserDetailQuery, UserDetailQueryVariables>(
-    UserDetailDocument,
+  return Apollo.useSuspenseQuery<StaffDetailQuery, StaffDetailQueryVariables>(
+    StaffDetailDocument,
     options,
   );
 }
-export type UserDetailQueryHookResult = ReturnType<typeof useUserDetailQuery>;
-export type UserDetailLazyQueryHookResult = ReturnType<
-  typeof useUserDetailLazyQuery
+export type StaffDetailQueryHookResult = ReturnType<typeof useStaffDetailQuery>;
+export type StaffDetailLazyQueryHookResult = ReturnType<
+  typeof useStaffDetailLazyQuery
 >;
-export type UserDetailSuspenseQueryHookResult = ReturnType<
-  typeof useUserDetailSuspenseQuery
+export type StaffDetailSuspenseQueryHookResult = ReturnType<
+  typeof useStaffDetailSuspenseQuery
 >;
-export type UserDetailQueryResult = Apollo.QueryResult<
-  UserDetailQuery,
-  UserDetailQueryVariables
+export type StaffDetailQueryResult = Apollo.QueryResult<
+  StaffDetailQuery,
+  StaffDetailQueryVariables
 >;

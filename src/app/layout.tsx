@@ -30,8 +30,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const role = useSession().data?.user.roles[0].key as EnumUserRole | undefined;
-
   return (
     <html lang="mn" data-scroll-behavior="smooth">
       <body

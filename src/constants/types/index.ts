@@ -1,2 +1,2 @@
-export const USER_SORT_FIELDS = ["name", "email", "roleOrder"] as const;
-export type UserSortField = (typeof USER_SORT_FIELDS)[number];
+export const STAFF_SORT_FIELDS = ["name", "email", "roleOrder"] as const;
+export type StaffSortField = (typeof STAFF_SORT_FIELDS)[number];

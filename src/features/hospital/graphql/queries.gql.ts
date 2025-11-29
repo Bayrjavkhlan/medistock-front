@@ -8,7 +8,7 @@ export const HOSPITALS = gql`
         id
         name
         email
-        phoneNumber
+        phone
         address {
           address1
           address2
@@ -26,7 +26,7 @@ export const HOSPITAL_DETAIL = gql`
       id
       name
       email
-      phoneNumber
+      phone
       address {
         id
         address1

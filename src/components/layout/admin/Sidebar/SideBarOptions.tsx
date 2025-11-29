@@ -26,7 +26,7 @@ export type SidebarItem = {
 
 export const getSidebarOptions = (session: Session | null): SidebarItem[] => {
   const ability = defineAbilityFor(session);
-  const role = session?.user?.roleKey;
+  const role = session?.staff?.roleKey;
 
   if (!role) return [];
 

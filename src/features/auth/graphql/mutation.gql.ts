@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const LOGIN = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
-      user {
+      staff {
         id
         name
         email
@@ -22,7 +22,7 @@ export const LOGIN = gql`
 export const REFRESH_ACCESS_TOKEN = gql`
   mutation RefreshAccessToken($refreshToken: String!) {
     refreshAccessToken(refreshToken: $refreshToken) {
-      user {
+      staff {
         id
         name
         email

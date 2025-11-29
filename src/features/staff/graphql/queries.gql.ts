@@ -1,14 +1,14 @@
 // src/app/admin/user/queries.gql.ts
 import { gql } from "@apollo/client";
 
-export const USERS = gql`
-  query Users(
-    $where: UsersWhereInput
+export const STAFFS = gql`
+  query Staffs(
+    $where: StaffsWhereInput
     $take: Int!
     $skip: Int!
-    $orderBy: UsersOrderByInput
+    $orderBy: StaffsOrderByInput
   ) {
-    users(where: $where, take: $take, skip: $skip, orderBy: $orderBy) {
+    staffs(where: $where, take: $take, skip: $skip, orderBy: $orderBy) {
       data {
         id
         name
@@ -27,9 +27,9 @@ export const USERS = gql`
   }
 `;
 
-export const USER_DETAIL = gql`
-  query UserDetail($userDetailId: String!) {
-    userDetail(id: $userDetailId) {
+export const STAFF_DETAIL = gql`
+  query StaffDetail($staffDetailId: String!) {
+    staffDetail(id: $staffDetailId) {
       id
       email
       name

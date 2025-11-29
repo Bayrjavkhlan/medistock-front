@@ -1,15 +1,17 @@
 import type { DefaultUser } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 
-import type { EnumUserRole, Role } from "@/generated";
+import type { EnumStaffRole } from "@/generated/graphql";
+
+import type { Role } from "@/generated";
 
 declare module "next-auth" {
   interface Session {
-    user: {
+    staff: {
       id: string;
       name?: string;
       email?: string;
-      roleKey: EnumUserRole;
+      roleKey: EnumStaffRole;
       roles: Role[];
       // permissions: Permission[];
       resetPasswordToken?: string;
@@ -20,11 +22,11 @@ declare module "next-auth" {
     refreshToken?: string;
   }
 
-  interface User extends DefaultUser {
+  interface Staff extends DefaultUser {
     id: string;
     name: string;
     email: string;
-    roleKey: EnumUserRole;
+    roleKey: EnumStaffRole;
     roles: Role[];
     // permissions: Permission[];
     resetPasswordToken?: string;
@@ -41,7 +43,7 @@ declare module "next-auth/jwt" {
     id?: string;
     name?: string;
     email?: string;
-    roleKey: EnumUserRole;
+    roleKey: EnumStaffRole;
     roles: Role[];
     // permissions: Permission[];
     resetPasswordToken?: string;

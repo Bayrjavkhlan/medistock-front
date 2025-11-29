@@ -11,7 +11,7 @@ import {
 
 import SortableTableHeader from "@/components/forms/table/sortableTableHeader";
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
-import type { UserSortField } from "@/constants/types";
+import type { StaffSortField } from "@/constants/types";
 import { EnumSortOrder } from "@/generated/graphql";
 
 type StaffListTableProps = {
@@ -21,8 +21,8 @@ type StaffListTableProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
-  sortBy: { field: UserSortField; order: EnumSortOrder };
-  onSort: (field: UserSortField, order: EnumSortOrder) => void;
+  sortBy: { field: StaffSortField; order: EnumSortOrder };
+  onSort: (field: StaffSortField, order: EnumSortOrder) => void;
   loading: boolean;
 };
 
@@ -53,7 +53,7 @@ export default function StaffListTable({
                 }}
                 onSort={(field, order) => {
                   onSort(
-                    field as UserSortField,
+                    field as StaffSortField,
                     order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
                   );
                 }}
@@ -68,7 +68,7 @@ export default function StaffListTable({
                 }}
                 onSort={(field, order) => {
                   onSort(
-                    field as UserSortField,
+                    field as StaffSortField,
                     order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
                   );
                 }}
