@@ -13,7 +13,7 @@ interface RenderLayoutProps {
 export const RenderLayout = ({ children }: RenderLayoutProps) => {
   const pathname = usePathname() ?? "";
 
-  const protectedPrefixes = ["/admin", "/staff", "/hospital"];
+  const protectedPrefixes = ["/admin", "/staff", "/hospital", "/profile"];
 
   if (protectedPrefixes.some((prefix) => pathname.startsWith(prefix))) {
     return <AppLayout>{children}</AppLayout>;

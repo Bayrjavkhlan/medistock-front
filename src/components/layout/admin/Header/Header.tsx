@@ -1,14 +1,15 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
-  Avatar,
-  Box,
   IconButton,
   Toolbar,
   Typography,
   useTheme,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 import React from "react";
+
+import Profile from "@/components/core/Profile";
 
 type HeaderProps = {
   collapsed: boolean;
@@ -24,6 +25,8 @@ export default function Header({
 }: HeaderProps) {
   const theme = useTheme();
   const sidebarWidth = collapsed ? 100 : 300;
+
+  const { data: session } = useSession();
 
   return (
     <AppBar
@@ -64,11 +67,7 @@ export default function Header({
         <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
           Title
         </Typography>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography variant="body1">John Doe</Typography>
-          <Avatar alt="John Doe" src="/dummy-profile.jpg" />
-        </Box>
+        <Profile username={session?.staff.name} role={session?.staff.roleKey} />
       </Toolbar>
     </AppBar>
   );

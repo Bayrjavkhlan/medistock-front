@@ -5,15 +5,14 @@ export type Subject =
   | "Auth_Login"
   | "Auth_Forgot"
   | "Auth_NewPassword"
+  | "Profile"
   // Admin
-  | "Admin_Profile"
   | "Admin_Dashboard"
   | "Admin_Staff"
   | "Admin_Hospital"
   | "Admin_Equipment"
   | "Admin_EquipmentLog"
   // Hospital Admin
-  | "Hospital_Profile"
   | "Hospital_Dashboard"
   | "Hospital_Staff"
   | "Hospital_Equipment"
@@ -94,18 +93,19 @@ export const Routes: RouteType = {
     ),
   },
 
-  // === ADMIN ===
-  Admin_Profile: {
-    key: "/admin/profile",
+  Profile: {
+    key: "/profile",
     Index: createRoute(
       "Профайл",
-      "/admin/profile",
-      "Admin_Profile",
+      "/profile",
+      "Profile", // ← new shared subject
       "read",
       "/",
       true,
     ),
   },
+
+  // === ADMIN ===
   Admin_Dashboard: {
     key: "/admin/dashboard",
     Index: createRoute(
@@ -184,17 +184,6 @@ export const Routes: RouteType = {
   },
 
   // === HOSPITAL ADMIN ===
-  Hospital_Profile: {
-    key: "/hospital/profile",
-    Index: createRoute(
-      "Профайл",
-      "/hospital/profile",
-      "Hospital_Profile",
-      "read",
-      "/",
-      true,
-    ),
-  },
   Hospital_Dashboard: {
     key: "/hospital/dashboard",
     Index: createRoute(

@@ -1,8 +1,8 @@
-// components/sidebar/Sidebar.tsx
 "use client";
 
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
   Box,
   Drawer,
@@ -38,7 +38,6 @@ export default function Sidebar({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: session } = useSession();
   const router = useRouter();
-  console.log("data:\t", session);
 
   const sidebarItems = getSidebarOptions(session);
 
@@ -49,20 +48,16 @@ export default function Sidebar({
         bgcolor: "background.paper",
         height: "100vh",
         borderRight: `1px solid ${theme.palette.divider}`,
-        py: 0,
-        transition: "width 0.3s",
         display: "flex",
         flexDirection: "column",
         position: "fixed",
         top: 0,
         left: 0,
         zIndex: 1200,
+        transition: "width 0.3s ease",
       }}
     >
-      {/* Logo + Collapse */}
-      <IconButton
-        onClick={() => setCollapsed(!collapsed)}
-        disableRipple
+      <Box
         sx={{
           bgcolor: "transparent",
           borderRadius: 0,
@@ -86,23 +81,15 @@ export default function Sidebar({
               transition: "opacity 0.3s",
             }}
           >
-            Logo
+            Medistock
           </Typography>
         )}
-        {collapsed ? (
-          <ChevronRightIcon sx={{ fontSize: 32 }} />
-        ) : (
-          <ChevronLeftIcon sx={{ fontSize: 32 }} />
-        )}
-      </IconButton>
+        <IconButton disableRipple onClick={() => setCollapsed(!collapsed)}>
+          {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        </IconButton>
+      </Box>
 
-      {/* Menu Items */}
-      <List
-        sx={{
-          paddingTop: 0,
-          paddingBottom: 0,
-        }}
-      >
+      <List sx={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}>
         {sidebarItems.map((item) => (
           <Tooltip
             key={item.path}
@@ -110,7 +97,6 @@ export default function Sidebar({
             placement="right"
           >
             <ListItem
-              // button
               onClick={() => {
                 if (item.path.startsWith("/api/auth")) {
                   window.location.href = item.path;
@@ -147,6 +133,55 @@ export default function Sidebar({
           </Tooltip>
         ))}
       </List>
+
+      <Box
+        sx={{
+          borderTop: `1px solid ${theme.palette.divider}`,
+          bgcolor: "background.default",
+        }}
+      >
+        <Tooltip title={collapsed ? "Гарах" : ""} placement="right">
+          <ListItem
+            onClick={() => {
+              window.location.href = "/api/auth/signout";
+            }}
+            sx={{
+              px: collapsed ? 0 : 2,
+              py: 2,
+              justifyContent: collapsed ? "center" : "flex-start",
+              transition: "all 0.3s ease",
+              borderRadius: 0,
+              "&:hover": {
+                bgcolor: theme.palette.action.hover,
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                justifyContent: collapsed ? "center" : "flex-start",
+                mr: collapsed ? 0 : 2,
+                "& svg": {
+                  fontSize: "32px",
+                },
+                color: "error.main",
+              }}
+            >
+              <LogoutIcon />
+            </ListItemIcon>
+
+            {/* Text — only visible when expanded */}
+            {!collapsed && (
+              <ListItemText
+                primary="Гарах"
+                sx={{
+                  color: "error.main",
+                }}
+              />
+            )}
+          </ListItem>
+        </Tooltip>
+      </Box>
     </Box>
   );
 

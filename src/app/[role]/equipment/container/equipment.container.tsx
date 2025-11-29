@@ -22,7 +22,7 @@ export default function EquipmentContainer() {
     handler();
     return () => handler.cancel();
   }, [search]);
-
+  console.log("open:\t", open);
   const { data, loading, error } = useEquipmentsQuery({
     variables: {
       where: {

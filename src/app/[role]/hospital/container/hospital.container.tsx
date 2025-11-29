@@ -38,7 +38,7 @@ export default function HospitalContainer() {
   if (loading) return <div>Уншиж байна...</div>;
   if (error) return <div>Алдаа: {error.message}</div>;
 
-  console.log("Staff data:", data);
+  console.log("Staff data:", open);
 
   const hospitalsData = data?.hospitals ?? { data: [], count: 0 };
 
