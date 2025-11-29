@@ -1,56 +1,49 @@
-import type { DefaultUser } from "next-auth";
-import type { DefaultJWT } from "next-auth/jwt";
-
-import type { EnumStaffRole } from "@/generated/graphql";
-
-import type { Role } from "@/generated";
+import "next-auth";
+import "next-auth/jwt";
+import type { EnumStaffRole, Role } from "@/generated/graphql";
 
 declare module "next-auth" {
   interface Session {
     staff: {
       id: string;
-      name?: string;
-      email?: string;
+      name: string;
+      email: string;
+      phone: string | null;
       roleKey: EnumStaffRole;
       roles: Role[];
-      // permissions: Permission[];
-      resetPasswordToken?: string;
-      phone?: string;
+      resetPasswordToken: string | null;
     };
-    accessToken?: string;
-    accessTokenExpiresAt?: number;
-    refreshToken?: string;
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresAt: number;
   }
 
-  interface Staff extends DefaultUser {
+  interface User {
     id: string;
     name: string;
     email: string;
+    phone: string | null;
     roleKey: EnumStaffRole;
     roles: Role[];
-    // permissions: Permission[];
-    resetPasswordToken?: string;
-    phone?: string;
-
-    accessToken?: string;
-    refreshToken?: string;
-    accessTokenExpiresAt?: number;
+    resetPasswordToken: string | null;
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresAt: number;
   }
 }
 
 declare module "next-auth/jwt" {
-  interface JWT extends DefaultJWT {
-    id?: string;
-    name?: string;
-    email?: string;
+  interface JWT {
+    id: string;
+    name: string;
+    email: string;
+    phone: string | null;
     roleKey: EnumStaffRole;
     roles: Role[];
-    // permissions: Permission[];
-    resetPasswordToken?: string;
-    phone?: string;
-
-    accessToken?: string;
-    refreshToken?: string;
-    accessTokenExpiresAt?: number;
+    resetPasswordToken: string | null;
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresAt: number;
+    error?: string;
   }
 }
