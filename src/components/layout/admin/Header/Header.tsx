@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import Profile from "@/components/core/Profile";
+import { usePageTitle } from "@/utils/getPageTitle";
 
 type HeaderProps = {
   collapsed: boolean;
@@ -27,6 +28,7 @@ export default function Header({
   const sidebarWidth = collapsed ? 100 : 300;
 
   const { data: session } = useSession();
+  const pageTitle = usePageTitle(); // ← This gets the current title!
 
   return (
     <AppBar
@@ -65,7 +67,7 @@ export default function Header({
         </IconButton>
 
         <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
-          Title
+          {pageTitle}
         </Typography>
         <Profile username={session?.staff.name} role={session?.staff.roleKey} />
       </Toolbar>
