@@ -5,13 +5,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --primary-color: theme("colors.primary.500") !important;
+  /* --primary-color: theme("colors.primary.500") !important;
   --primary-100-color: theme("colors.primary.100") !important;
   --primary-400-color: theme("colors.primary.400") !important;
   --tertiary-color: theme("colors.tertiary.DEFAULT") !important;
   --dark-color: theme("colors.dark.DEFAULT") !important;
   --white-color: theme("colors.white.DEFAULT") !important;
-  --light-color: theme("colors.light.DEFAULT") !important;
+  --light-color: theme("colors.light.DEFAULT") !important; */
   --main-shadow: theme("boxShadow.main") !important;
   --font-display: theme("fontFamily.display") !important;
 }
