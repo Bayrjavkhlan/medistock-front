@@ -16,7 +16,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { getSidebarOptions } from "./SideBarOptions";
@@ -35,12 +35,17 @@ export default function Sidebar({
   setMobileOpen,
 }: Props) {
   const theme = useTheme();
+  const pathname = usePathname();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: session } = useSession();
   const router = useRouter();
 
   const sidebarItems = getSidebarOptions(session);
 
+  const isActive = (path: string) => {
+    if (path === "/") return pathname === "/";
+    return pathname.startsWith(path);
+  };
   const content = (
     <Box
       sx={{
@@ -90,48 +95,63 @@ export default function Sidebar({
       </Box>
 
       <List sx={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}>
-        {sidebarItems.map((item) => (
-          <Tooltip
-            key={item.path}
-            title={collapsed ? item.text : ""}
-            placement="right"
-          >
-            <ListItem
-              onClick={() => {
-                if (item.path.startsWith("/api/auth")) {
-                  window.location.href = item.path;
-                } else {
-                  router.push(item.path);
-                  if (isMobile) setMobileOpen(false);
-                }
-              }}
-              sx={{
-                px: collapsed ? 0 : 2,
-                py: 2,
-                justifyContent: collapsed ? "center" : "flex-start",
-                transition: "all 0.3s ease",
-                borderRadius: 0,
-                "&:hover": {
-                  bgcolor: theme.palette.action.hover,
-                },
-              }}
+        {sidebarItems.map((item) => {
+          const active = isActive(item.path);
+          return (
+            <Tooltip
+              key={item.path}
+              title={collapsed ? item.text : ""}
+              placement="right"
             >
-              <ListItemIcon
+              <ListItem
+                onClick={() => {
+                  if (item.path.startsWith("/api/auth")) {
+                    window.location.href = item.path;
+                  } else {
+                    router.push(item.path);
+                    if (isMobile) setMobileOpen(false);
+                  }
+                }}
                 sx={{
-                  minWidth: 0,
+                  px: collapsed ? 0 : 2,
+                  py: 2,
                   justifyContent: collapsed ? "center" : "flex-start",
-                  mr: collapsed ? 0 : 2,
-                  "& svg": {
-                    fontSize: collapsed ? "32px" : "32px",
+                  transition: "all 0.3s ease",
+                  borderRadius: 0,
+                  "&:hover": {
+                    bgcolor: "primary.100",
+                    ".dark &": {
+                      bgcolor: "primary.800",
+                    },
                   },
+
+                  ...(active && {
+                    bgcolor: "primary.50",
+                    ".dark &": {
+                      bgcolor: "primary.900",
+                      "&:hover": { bgcolor: "primary.800" },
+                    },
+                  }),
                 }}
               >
-                {item.icon}
-              </ListItemIcon>
-              {!collapsed && <ListItemText primary={item.text} />}
-            </ListItem>
-          </Tooltip>
-        ))}
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    justifyContent: collapsed ? "center" : "flex-start",
+                    mr: collapsed ? 0 : 2,
+                    "& svg": {
+                      fontSize: "32px",
+                    },
+                  }}
+                  className="text-primary dark:text-white"
+                >
+                  {item.icon}
+                </ListItemIcon>
+                {!collapsed && <ListItemText primary={item.text} />}
+              </ListItem>
+            </Tooltip>
+          );
+        })}
       </List>
 
       <Box
@@ -152,7 +172,11 @@ export default function Sidebar({
               transition: "all 0.3s ease",
               borderRadius: 0,
               "&:hover": {
-                bgcolor: theme.palette.action.hover,
+                bgcolor: "error.100",
+
+                ".dark &": {
+                  bgcolor: "error.900",
+                },
               },
             }}
           >
@@ -170,7 +194,6 @@ export default function Sidebar({
               <LogoutIcon />
             </ListItemIcon>
 
-            {/* Text — only visible when expanded */}
             {!collapsed && (
               <ListItemText
                 primary="Гарах"
