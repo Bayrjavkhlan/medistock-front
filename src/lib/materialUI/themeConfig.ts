@@ -1,4 +1,4 @@
-// themeConfig.ts
+// src/lib/materialUI/themeConfig.ts   ← exact same path as before
 import { createTheme } from "@mui/material/styles";
 
 export const getTheme = (mode: "light" | "dark") =>
@@ -6,69 +6,59 @@ export const getTheme = (mode: "light" | "dark") =>
     palette: {
       mode,
       primary: {
-        light: "#63A4FF",
-        main: "#1E88E5",
-        dark: "#0B428A",
+        50: "#E8EEFD",
+        100: "#D0DEFB",
+        200: "#A2BCF6",
+        300: "#739BF2",
+        400: "#447AEE",
+        500: "#1659E9",
+        600: "#1147BB",
+        700: "#0D358C",
+        800: "#09235D",
+        900: "#04122F",
+        main: "#1659E9",
         contrastText: "#FFFFFF",
       },
-      success: {
-        light: "#6FBD7F",
-        main: "#43A047",
-        dark: "#257829",
+      secondary: {
+        50: "#E8FDF6",
+        100: "#D0FBED",
+        200: "#A1F7DA",
+        300: "#72F3C8",
+        400: "#43EFB6",
+        500: "#14EBA3",
+        600: "#10BC83",
+        700: "#0C8D62",
+        800: "#085E41",
+        900: "#042F21",
+        main: "#14EBA3",
         contrastText: "#FFFFFF",
       },
       error: {
-        light: "#F5C1A9",
-        main: "#E53935",
-        dark: "#AB1F1D",
+        50: "#FDE8E8",
+        100: "#FBD0D0",
+        200: "#F7A1A1",
+        300: "#F37272",
+        400: "#EF4343",
+        500: "#EB1414",
+        600: "#BC1010",
+        700: "#8D0C0C",
+        800: "#5E0808",
+        900: "#2F0404",
+        main: "#EB1414",
         contrastText: "#FFFFFF",
       },
-      warning: {
-        light: "#FFF59D",
-        main: "#FBC02D",
-        dark: "#F57F17",
-        contrastText: "#101317",
+      background: {
+        default: mode === "light" ? "#f8fafc" : "#0f172b",
+        paper: mode === "light" ? "#f1f5f9" : "#1a1f2e",
       },
       text: {
-        primary: mode === "light" ? "#101317" : "#FFFFFF",
-        secondary: mode === "light" ? "#5C6670" : "#ACAFB5",
-        disabled: "#ACAFB5",
+        primary: mode === "light" ? "#101317" : "#f1f5f9",
       },
-      background: {
-        default: mode === "light" ? "#FFFFFF" : "#121212",
-        paper: mode === "light" ? "#F8F9FA" : "#1E1E1E",
-      },
-      divider: mode === "light" ? "#E0E0E0" : "#333",
+    },
+    shape: {
+      borderRadius: 12,
     },
     typography: {
-      fontFamily: "Roboto Condensed, sans-serif",
-      fontWeightBold: 700,
-      h1: { fontSize: "2rem", fontWeight: 700 },
-      h2: { fontSize: "1.75rem", fontWeight: 600 },
-      button: { textTransform: "none", fontWeight: 600 },
-      body1: { fontSize: "1rem", lineHeight: 1.5 },
-      body2: { fontSize: "0.875rem", lineHeight: 1.4 },
-    },
-    shape: { borderRadius: 12 },
-    components: {
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            borderRadius: 12,
-            boxShadow: "none",
-            ":hover": { boxShadow: "0px 2px 6px rgba(0,0,0,0.1)" },
-          },
-          sizeSmall: { borderRadius: 8 },
-        },
-      },
-      MuiCard: {
-        styleOverrides: {
-          root: {
-            borderRadius: 14,
-            boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
-          },
-        },
-      },
-      MuiInputBase: { styleOverrides: { root: { borderRadius: 10 } } },
+      fontFamily: '"Inter", "Roboto Condensed", sans-serif',
     },
   });

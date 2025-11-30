@@ -1,5 +1,7 @@
-import { Box, TableCell, TableSortLabel } from "@mui/material";
+import { Box, TableSortLabel } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
+
+import StyledTableHeadCell from "./styledTableHeader";
 
 type SortableTableHeaderProps = {
   field: string;
@@ -18,7 +20,7 @@ export default function SortableTableHeader({
   const direction = isActive ? currentSort.order : "asc";
 
   return (
-    <TableCell>
+    <StyledTableHeadCell>
       <TableSortLabel
         active={isActive}
         direction={direction}
@@ -26,6 +28,19 @@ export default function SortableTableHeader({
           const newOrder =
             isActive && currentSort.order === "asc" ? "desc" : "asc";
           onSort(field, newOrder);
+        }}
+        sx={{
+          color: "white !important",
+          "&.Mui-active": { color: "white !important" },
+          "& .MuiTableSortLabel-icon": {
+            color: "white !important",
+            opacity: 0.7,
+          },
+
+          ".dark &": {
+            color: "white !important",
+            "& .MuiTableSortLabel-icon": { color: "white !important" },
+          },
         }}
       >
         {label}
@@ -37,6 +52,6 @@ export default function SortableTableHeader({
           </Box>
         ) : null}
       </TableSortLabel>
-    </TableCell>
+    </StyledTableHeadCell>
   );
 }

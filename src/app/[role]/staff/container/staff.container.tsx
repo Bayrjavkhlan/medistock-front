@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@mui/material";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 
@@ -6,11 +7,14 @@ import PageToolbar from "@/components/forms/toolbar";
 import { type StaffSortField } from "@/constants/types";
 import type { StaffsOrderByInput } from "@/generated/graphql";
 import { EnumSortOrder, useStaffsQuery } from "@/generated/graphql";
+import { useThemeMode } from "@/hooks/useThemeMode";
 
 import CreateStaffModal from "../components/modal/staff.modal";
 import StaffListTable from "../components/staff.list";
 
 export default function StaffContainer() {
+  const { toggleMode } = useThemeMode();
+
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<{
@@ -59,6 +63,8 @@ export default function StaffContainer() {
 
   return (
     <>
+      <Button onClick={toggleMode}>ToggleMode</Button>
+
       <PageToolbar
         search={search}
         onSearchChange={setSearch}

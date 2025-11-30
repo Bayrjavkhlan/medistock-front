@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 import SortableTableHeader from "@/components/forms/table/sortableTableHeader";
+import StyledTableHeadCell from "@/components/forms/table/styledTableHeader";
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
 import type { StaffSortField } from "@/constants/types";
 import { EnumSortOrder } from "@/generated/graphql";
@@ -58,7 +59,6 @@ export default function StaffListTable({
                   );
                 }}
               />
-              {/* <TableCell>Email</TableCell> */}
               <SortableTableHeader
                 field="email"
                 label="Email"
@@ -73,9 +73,9 @@ export default function StaffListTable({
                   );
                 }}
               />
-              <TableCell>Phone</TableCell>
-              <TableCell>Hospital</TableCell>
-              <TableCell>Role</TableCell>
+              <StyledTableHeadCell>Phone</StyledTableHeadCell>
+              <StyledTableHeadCell>Hospital</StyledTableHeadCell>
+              <StyledTableHeadCell>Role</StyledTableHeadCell>
             </TableRow>
           </TableHead>
           <TableBody>
