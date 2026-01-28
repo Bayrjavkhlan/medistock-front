@@ -1,7 +1,7 @@
-import { DocumentNode } from "graphql";
-import * as Apollo from "@apollo/client";
-export type Maybe<T> = T | undefined;
-export type InputMaybe<T> = T | undefined;
+/* eslint-disable */
+import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
@@ -20,7 +20,6 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
     };
-const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -28,73 +27,79 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: { input: any; output: any };
+  /** A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address. */
   EmailAddress: { input: any; output: any };
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { input: any; output: any };
 };
 
 export type Address = {
-  address1: Maybe<Scalars["String"]["output"]>;
-  address2: Maybe<Scalars["String"]["output"]>;
-  createdAt: Maybe<Scalars["DateTime"]["output"]>;
-  id: Maybe<Scalars["String"]["output"]>;
-  name: Maybe<Hospital>;
-  province: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Maybe<Scalars["DateTime"]["output"]>;
+  __typename?: "Address";
+  address1?: Maybe<Scalars["String"]["output"]>;
+  address2?: Maybe<Scalars["String"]["output"]>;
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Hospital>;
+  province?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type AddressCreateInput = {
   address1: Scalars["String"]["input"];
-  address2: InputMaybe<Scalars["String"]["input"]>;
+  address2?: InputMaybe<Scalars["String"]["input"]>;
   province: Scalars["String"]["input"];
 };
 
 export type CurrentStaffObjectType = {
+  __typename?: "CurrentStaffObjectType";
   email: Scalars["String"]["output"];
-  hospital: Maybe<Hospital>;
+  hospital?: Maybe<Hospital>;
   id: Scalars["ID"]["output"];
-  name: Maybe<Scalars["String"]["output"]>;
-  phone: Maybe<Scalars["String"]["output"]>;
-  roleKey: Maybe<EnumStaffRole>;
-  roles: Maybe<Array<Role>>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  phone?: Maybe<Scalars["String"]["output"]>;
+  roleKey?: Maybe<EnumStaffRole>;
+  roles?: Maybe<Array<Role>>;
 };
 
 export enum EnumSortOrder {
-  ASC = "asc",
-  DESC = "desc",
+  Asc = "asc",
+  Desc = "desc",
 }
 
 export enum EnumStaffRole {
-  ADMIN = "ADMIN",
-  HOSPITAL_ADMIN = "HOSPITAL_ADMIN",
-  STAFF = "STAFF",
+  Admin = "ADMIN",
+  HospitalAdmin = "HOSPITAL_ADMIN",
+  Staff = "STAFF",
 }
 
 export type Equipment = {
-  assignedTo: Maybe<Staff>;
-  category: Maybe<Scalars["String"]["output"]>;
-  createdAt: Maybe<Scalars["DateTime"]["output"]>;
-  hospital: Maybe<Hospital>;
-  id: Maybe<Scalars["String"]["output"]>;
-  name: Maybe<Scalars["String"]["output"]>;
-  serialNo: Maybe<Scalars["String"]["output"]>;
-  state: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Maybe<Scalars["DateTime"]["output"]>;
+  __typename?: "Equipment";
+  assignedTo?: Maybe<Staff>;
+  category?: Maybe<Scalars["String"]["output"]>;
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  hospital?: Maybe<Hospital>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  serialNo?: Maybe<Scalars["String"]["output"]>;
+  state?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export enum EquipmentCategory {
-  DEFIBRILLATOR = "DEFIBRILLATOR",
-  DIALYSIS_MACHINE = "DIALYSIS_MACHINE",
-  IMAGING_CT = "IMAGING_CT",
-  IMAGING_MRI = "IMAGING_MRI",
-  IMAGING_ULTRASOUND = "IMAGING_ULTRASOUND",
-  IMAGING_X_RAY = "IMAGING_X_RAY",
-  INFUSION_PUMP = "INFUSION_PUMP",
-  LAB_EQUIPMENT = "LAB_EQUIPMENT",
-  OTHER = "OTHER",
-  PATIENT_MONITOR = "PATIENT_MONITOR",
-  SURGICAL_INSTRUMENT = "SURGICAL_INSTRUMENT",
-  VENTILATOR = "VENTILATOR",
+  Defibrillator = "DEFIBRILLATOR",
+  DialysisMachine = "DIALYSIS_MACHINE",
+  ImagingCt = "IMAGING_CT",
+  ImagingMri = "IMAGING_MRI",
+  ImagingUltrasound = "IMAGING_ULTRASOUND",
+  ImagingXRay = "IMAGING_X_RAY",
+  InfusionPump = "INFUSION_PUMP",
+  LabEquipment = "LAB_EQUIPMENT",
+  Other = "OTHER",
+  PatientMonitor = "PATIENT_MONITOR",
+  SurgicalInstrument = "SURGICAL_INSTRUMENT",
+  Ventilator = "VENTILATOR",
 }
 
 export type EquipmentCreateInput = {
@@ -107,13 +112,14 @@ export type EquipmentCreateInput = {
 };
 
 export type EquipmentLog = {
-  createdAt: Maybe<Scalars["DateTime"]["output"]>;
-  description: Maybe<Scalars["String"]["output"]>;
-  equipment: Maybe<Equipment>;
-  id: Maybe<Scalars["String"]["output"]>;
-  performedBy: Maybe<Staff>;
-  staffId: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Maybe<Scalars["DateTime"]["output"]>;
+  __typename?: "EquipmentLog";
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
+  equipment?: Maybe<Equipment>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  performedBy?: Maybe<Staff>;
+  staffId?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type EquipmentLogCreateInput = {
@@ -127,39 +133,42 @@ export type EquipmentLogUpdateInput = {
 };
 
 export type EquipmentLogs = {
+  __typename?: "EquipmentLogs";
   count: Scalars["Int"]["output"];
-  data: Maybe<Array<EquipmentLog>>;
+  data?: Maybe<Array<EquipmentLog>>;
 };
 
 export type EquipmentLogsWhereInput = {
-  search: InputMaybe<Scalars["String"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export enum EquipmentState {
-  ASSIGNED = "ASSIGNED",
-  AVAILABLE = "AVAILABLE",
-  IN_MAINTENANCE = "IN_MAINTENANCE",
-  OUT_OF_ORDER = "OUT_OF_ORDER",
-  RETIRED = "RETIRED",
+  Assigned = "ASSIGNED",
+  Available = "AVAILABLE",
+  InMaintenance = "IN_MAINTENANCE",
+  OutOfOrder = "OUT_OF_ORDER",
+  Retired = "RETIRED",
 }
 
 export type Equipments = {
+  __typename?: "Equipments";
   count: Scalars["Int"]["output"];
-  data: Maybe<Array<Equipment>>;
+  data?: Maybe<Array<Equipment>>;
 };
 
 export type EquipmentsWhereInput = {
-  search: InputMaybe<Scalars["String"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Hospital = {
-  address: Maybe<Address>;
-  createdAt: Maybe<Scalars["DateTime"]["output"]>;
-  email: Maybe<Scalars["String"]["output"]>;
-  id: Maybe<Scalars["String"]["output"]>;
-  name: Maybe<Scalars["String"]["output"]>;
-  phone: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Maybe<Scalars["DateTime"]["output"]>;
+  __typename?: "Hospital";
+  address?: Maybe<Address>;
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  phone?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type HospitalCreateInput = {
@@ -170,18 +179,20 @@ export type HospitalCreateInput = {
 };
 
 export type HospitalOption = {
-  id: Maybe<Scalars["String"]["output"]>;
-  name: Maybe<Scalars["String"]["output"]>;
+  __typename?: "HospitalOption";
+  id?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type Hospitals = {
+  __typename?: "Hospitals";
   count: Scalars["Int"]["output"];
-  data: Maybe<Array<Hospital>>;
+  data?: Maybe<Array<Hospital>>;
 };
 
 export type HospitalsWhereInput = {
-  address: InputMaybe<Scalars["String"]["input"]>;
-  search: InputMaybe<Scalars["String"]["input"]>;
+  address?: InputMaybe<Scalars["String"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type LoginInput = {
@@ -190,6 +201,7 @@ export type LoginInput = {
 };
 
 export type LoginPayload = {
+  __typename?: "LoginPayload";
   accessToken: Scalars["String"]["output"];
   accessTokenExpiresAt: Scalars["String"]["output"];
   refreshToken: Scalars["String"]["output"];
@@ -197,16 +209,17 @@ export type LoginPayload = {
 };
 
 export type Mutation = {
-  equipmentCreate: Maybe<Scalars["Boolean"]["output"]>;
-  equipmentLogCreate: Maybe<Scalars["Boolean"]["output"]>;
-  equipmentLogUpdate: Maybe<Scalars["Boolean"]["output"]>;
-  equipmentUpdate: Maybe<Scalars["Boolean"]["output"]>;
-  hospitalCreate: Maybe<Scalars["Boolean"]["output"]>;
-  hospitalUpdate: Maybe<Scalars["Boolean"]["output"]>;
-  login: Maybe<LoginPayload>;
-  refreshAccessToken: Maybe<LoginPayload>;
-  staffCreate: Maybe<Scalars["Boolean"]["output"]>;
-  staffUpdate: Maybe<Scalars["Boolean"]["output"]>;
+  __typename?: "Mutation";
+  equipmentCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  equipmentLogCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  equipmentLogUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  equipmentUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  hospitalCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  hospitalUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  login?: Maybe<LoginPayload>;
+  refreshAccessToken?: Maybe<LoginPayload>;
+  staffCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  staffUpdate?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type MutationEquipmentCreateArgs = {
@@ -254,16 +267,17 @@ export type MutationStaffUpdateArgs = {
 };
 
 export type Query = {
-  currentStaff: Maybe<CurrentStaffObjectType>;
-  equipmentDetail: Maybe<Equipment>;
-  equipmentLogDetail: Maybe<EquipmentLog>;
-  equipmentLogs: Maybe<EquipmentLogs>;
-  equipments: Maybe<Equipments>;
-  hospitalDetail: Maybe<Hospital>;
+  __typename?: "Query";
+  currentStaff?: Maybe<CurrentStaffObjectType>;
+  equipmentDetail?: Maybe<Equipment>;
+  equipmentLogDetail?: Maybe<EquipmentLog>;
+  equipmentLogs?: Maybe<EquipmentLogs>;
+  equipments?: Maybe<Equipments>;
+  hospitalDetail?: Maybe<Hospital>;
   hospitalOption: Array<HospitalOption>;
-  hospitals: Maybe<Hospitals>;
-  staffDetail: Maybe<Staff>;
-  staffs: Maybe<StaffObjectType>;
+  hospitals?: Maybe<Hospitals>;
+  staffDetail?: Maybe<Staff>;
+  staffs?: Maybe<StaffObjectType>;
 };
 
 export type QueryEquipmentDetailArgs = {
@@ -277,13 +291,13 @@ export type QueryEquipmentLogDetailArgs = {
 export type QueryEquipmentLogsArgs = {
   skip: Scalars["Int"]["input"];
   take: Scalars["Int"]["input"];
-  where: InputMaybe<EquipmentLogsWhereInput>;
+  where?: InputMaybe<EquipmentLogsWhereInput>;
 };
 
 export type QueryEquipmentsArgs = {
   skip: Scalars["Int"]["input"];
   take: Scalars["Int"]["input"];
-  where: InputMaybe<EquipmentsWhereInput>;
+  where?: InputMaybe<EquipmentsWhereInput>;
 };
 
 export type QueryHospitalDetailArgs = {
@@ -293,7 +307,7 @@ export type QueryHospitalDetailArgs = {
 export type QueryHospitalsArgs = {
   skip: Scalars["Int"]["input"];
   take: Scalars["Int"]["input"];
-  where: InputMaybe<HospitalsWhereInput>;
+  where?: InputMaybe<HospitalsWhereInput>;
 };
 
 export type QueryStaffDetailArgs = {
@@ -301,27 +315,29 @@ export type QueryStaffDetailArgs = {
 };
 
 export type QueryStaffsArgs = {
-  orderBy: InputMaybe<StaffsOrderByInput>;
+  orderBy?: InputMaybe<StaffsOrderByInput>;
   skip: Scalars["Int"]["input"];
   take: Scalars["Int"]["input"];
-  where: InputMaybe<StaffsWhereInput>;
+  where?: InputMaybe<StaffsWhereInput>;
 };
 
 export type Role = {
-  id: Maybe<Scalars["String"]["output"]>;
-  key: Maybe<EnumStaffRole>;
-  name: Maybe<Scalars["String"]["output"]>;
+  __typename?: "Role";
+  id?: Maybe<Scalars["String"]["output"]>;
+  key?: Maybe<EnumStaffRole>;
+  name?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type Staff = {
-  createdAt: Maybe<Scalars["DateTime"]["output"]>;
-  email: Maybe<Scalars["String"]["output"]>;
-  hospital: Maybe<Hospital>;
-  id: Maybe<Scalars["String"]["output"]>;
-  name: Maybe<Scalars["String"]["output"]>;
-  phone: Maybe<Scalars["String"]["output"]>;
-  roles: Maybe<Array<Maybe<Role>>>;
-  updatedAt: Maybe<Scalars["DateTime"]["output"]>;
+  __typename?: "Staff";
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  hospital?: Maybe<Hospital>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  phone?: Maybe<Scalars["String"]["output"]>;
+  roles?: Maybe<Array<Maybe<Role>>>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type StaffCreateInput = {
@@ -333,18 +349,19 @@ export type StaffCreateInput = {
 };
 
 export type StaffObjectType = {
+  __typename?: "StaffObjectType";
   count: Scalars["Int"]["output"];
-  data: Maybe<Array<Staff>>;
+  data?: Maybe<Array<Staff>>;
 };
 
 export type StaffsOrderByInput = {
-  email: InputMaybe<EnumSortOrder>;
-  name: InputMaybe<EnumSortOrder>;
+  email?: InputMaybe<EnumSortOrder>;
+  name?: InputMaybe<EnumSortOrder>;
 };
 
 export type StaffsWhereInput = {
-  roleKey: InputMaybe<EnumStaffRole>;
-  search: InputMaybe<Scalars["String"]["input"]>;
+  roleKey?: InputMaybe<EnumStaffRole>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type LoginMutationVariables = Exact<{
@@ -352,21 +369,22 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 export type LoginMutation = {
-  login:
-    | {
-        accessToken: string;
-        refreshToken: string;
-        accessTokenExpiresAt: string;
-        staff: {
-          id: string;
-          name: string | undefined;
-          email: string;
-          phone: string | undefined;
-          roleKey: EnumStaffRole | undefined;
-          hospital: { name: string | undefined } | undefined;
-        };
-      }
-    | undefined;
+  __typename?: "Mutation";
+  login?: {
+    __typename?: "LoginPayload";
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresAt: string;
+    staff: {
+      __typename?: "CurrentStaffObjectType";
+      id: string;
+      name?: string | null;
+      email: string;
+      phone?: string | null;
+      roleKey?: EnumStaffRole | null;
+      hospital?: { __typename?: "Hospital"; name?: string | null } | null;
+    };
+  } | null;
 };
 
 export type RefreshAccessTokenMutationVariables = Exact<{
@@ -374,96 +392,101 @@ export type RefreshAccessTokenMutationVariables = Exact<{
 }>;
 
 export type RefreshAccessTokenMutation = {
-  refreshAccessToken:
-    | {
-        accessToken: string;
-        refreshToken: string;
-        accessTokenExpiresAt: string;
-        staff: {
-          id: string;
-          name: string | undefined;
-          email: string;
-          phone: string | undefined;
-          roleKey: EnumStaffRole | undefined;
-          hospital: { name: string | undefined } | undefined;
-        };
-      }
-    | undefined;
+  __typename?: "Mutation";
+  refreshAccessToken?: {
+    __typename?: "LoginPayload";
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresAt: string;
+    staff: {
+      __typename?: "CurrentStaffObjectType";
+      id: string;
+      name?: string | null;
+      email: string;
+      phone?: string | null;
+      roleKey?: EnumStaffRole | null;
+      hospital?: { __typename?: "Hospital"; name?: string | null } | null;
+    };
+  } | null;
 };
 
 export type CurrentStaffQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentStaffQuery = {
-  currentStaff:
-    | {
-        id: string;
-        name: string | undefined;
-        email: string;
-        phone: string | undefined;
-        roleKey: EnumStaffRole | undefined;
-        roles:
-          | Array<{ key: EnumStaffRole | undefined; id: string | undefined }>
-          | undefined;
-        hospital:
-          | {
-              id: string | undefined;
-              name: string | undefined;
-              email: string | undefined;
-            }
-          | undefined;
-      }
-    | undefined;
+  __typename?: "Query";
+  currentStaff?: {
+    __typename?: "CurrentStaffObjectType";
+    id: string;
+    name?: string | null;
+    email: string;
+    phone?: string | null;
+    roleKey?: EnumStaffRole | null;
+    roles?: Array<{
+      __typename?: "Role";
+      key?: EnumStaffRole | null;
+      id?: string | null;
+    }> | null;
+    hospital?: {
+      __typename?: "Hospital";
+      id?: string | null;
+      name?: string | null;
+      email?: string | null;
+    } | null;
+  } | null;
 };
 
 export type EquipmentCreateMutationVariables = Exact<{
   input: EquipmentCreateInput;
 }>;
 
-export type EquipmentCreateMutation = { equipmentCreate: boolean | undefined };
+export type EquipmentCreateMutation = {
+  __typename?: "Mutation";
+  equipmentCreate?: boolean | null;
+};
 
 export type EquipmentUpdateMutationVariables = Exact<{
   equipmentUpdateId: Scalars["String"]["input"];
   input: EquipmentCreateInput;
 }>;
 
-export type EquipmentUpdateMutation = { equipmentUpdate: boolean | undefined };
+export type EquipmentUpdateMutation = {
+  __typename?: "Mutation";
+  equipmentUpdate?: boolean | null;
+};
 
 export type EquipmentsQueryVariables = Exact<{
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
-  where: InputMaybe<EquipmentsWhereInput>;
+  where?: InputMaybe<EquipmentsWhereInput>;
 }>;
 
 export type EquipmentsQuery = {
-  equipments:
-    | {
-        count: number;
-        data:
-          | Array<{
-              id: string | undefined;
-              name: string | undefined;
-              serialNo: string | undefined;
-              state: string | undefined;
-              category: string | undefined;
-              assignedTo:
-                | {
-                    id: string | undefined;
-                    name: string | undefined;
-                    email: string | undefined;
-                    phone: string | undefined;
-                  }
-                | undefined;
-              hospital:
-                | {
-                    id: string | undefined;
-                    name: string | undefined;
-                    email: string | undefined;
-                  }
-                | undefined;
-            }>
-          | undefined;
-      }
-    | undefined;
+  __typename?: "Query";
+  equipments?: {
+    __typename?: "Equipments";
+    count: number;
+    data?: Array<{
+      __typename?: "Equipment";
+      id?: string | null;
+      name?: string | null;
+      serialNo?: string | null;
+      state?: string | null;
+      category?: string | null;
+      assignedTo?: {
+        __typename?: "Staff";
+        id?: string | null;
+        name?: string | null;
+        email?: string | null;
+        phone?: string | null;
+      } | null;
+      hospital?: {
+        __typename?: "Hospital";
+        id?: string | null;
+        name?: string | null;
+        email?: string | null;
+      } | null;
+    }> | null;
+  } | null;
 };
 
 export type EquipmentDetailQueryVariables = Exact<{
@@ -471,67 +494,72 @@ export type EquipmentDetailQueryVariables = Exact<{
 }>;
 
 export type EquipmentDetailQuery = {
-  equipmentDetail:
-    | {
-        id: string | undefined;
-        name: string | undefined;
-        serialNo: string | undefined;
-        state: string | undefined;
-        assignedTo:
-          | {
-              id: string | undefined;
-              name: string | undefined;
-              email: string | undefined;
-            }
-          | undefined;
-        hospital:
-          | { id: string | undefined; name: string | undefined }
-          | undefined;
-      }
-    | undefined;
+  __typename?: "Query";
+  equipmentDetail?: {
+    __typename?: "Equipment";
+    id?: string | null;
+    name?: string | null;
+    serialNo?: string | null;
+    state?: string | null;
+    assignedTo?: {
+      __typename?: "Staff";
+      id?: string | null;
+      name?: string | null;
+      email?: string | null;
+    } | null;
+    hospital?: {
+      __typename?: "Hospital";
+      id?: string | null;
+      name?: string | null;
+    } | null;
+  } | null;
 };
 
 export type HospitalCreateMutationVariables = Exact<{
   input: HospitalCreateInput;
 }>;
 
-export type HospitalCreateMutation = { hospitalCreate: boolean | undefined };
+export type HospitalCreateMutation = {
+  __typename?: "Mutation";
+  hospitalCreate?: boolean | null;
+};
 
 export type HospitalUpdateMutationVariables = Exact<{
   hospitalUpdateId: Scalars["String"]["input"];
   input: HospitalCreateInput;
 }>;
 
-export type HospitalUpdateMutation = { hospitalUpdate: boolean | undefined };
+export type HospitalUpdateMutation = {
+  __typename?: "Mutation";
+  hospitalUpdate?: boolean | null;
+};
 
 export type HospitalsQueryVariables = Exact<{
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
-  where: InputMaybe<HospitalsWhereInput>;
+  where?: InputMaybe<HospitalsWhereInput>;
 }>;
 
 export type HospitalsQuery = {
-  hospitals:
-    | {
-        count: number;
-        data:
-          | Array<{
-              id: string | undefined;
-              name: string | undefined;
-              email: string | undefined;
-              phone: string | undefined;
-              address:
-                | {
-                    address1: string | undefined;
-                    address2: string | undefined;
-                    id: string | undefined;
-                    province: string | undefined;
-                  }
-                | undefined;
-            }>
-          | undefined;
-      }
-    | undefined;
+  __typename?: "Query";
+  hospitals?: {
+    __typename?: "Hospitals";
+    count: number;
+    data?: Array<{
+      __typename?: "Hospital";
+      id?: string | null;
+      name?: string | null;
+      email?: string | null;
+      phone?: string | null;
+      address?: {
+        __typename?: "Address";
+        address1?: string | null;
+        address2?: string | null;
+        id?: string | null;
+        province?: string | null;
+      } | null;
+    }> | null;
+  } | null;
 };
 
 export type HospitalDetailQueryVariables = Exact<{
@@ -539,70 +567,82 @@ export type HospitalDetailQueryVariables = Exact<{
 }>;
 
 export type HospitalDetailQuery = {
-  hospitalDetail:
-    | {
-        id: string | undefined;
-        name: string | undefined;
-        email: string | undefined;
-        phone: string | undefined;
-        address:
-          | {
-              id: string | undefined;
-              address1: string | undefined;
-              address2: string | undefined;
-              province: string | undefined;
-            }
-          | undefined;
-      }
-    | undefined;
+  __typename?: "Query";
+  hospitalDetail?: {
+    __typename?: "Hospital";
+    id?: string | null;
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    address?: {
+      __typename?: "Address";
+      id?: string | null;
+      address1?: string | null;
+      address2?: string | null;
+      province?: string | null;
+    } | null;
+  } | null;
 };
 
 export type HospitalOptionQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HospitalOptionQuery = {
-  hospitalOption: Array<{ id: string | undefined; name: string | undefined }>;
+  __typename?: "Query";
+  hospitalOption: Array<{
+    __typename?: "HospitalOption";
+    id?: string | null;
+    name?: string | null;
+  }>;
 };
 
 export type StaffCreateMutationVariables = Exact<{
   input: StaffCreateInput;
 }>;
 
-export type StaffCreateMutation = { staffCreate: boolean | undefined };
+export type StaffCreateMutation = {
+  __typename?: "Mutation";
+  staffCreate?: boolean | null;
+};
 
 export type StaffUpdateMutationVariables = Exact<{
   staffUpdateId: Scalars["String"]["input"];
   input: StaffCreateInput;
 }>;
 
-export type StaffUpdateMutation = { staffUpdate: boolean | undefined };
+export type StaffUpdateMutation = {
+  __typename?: "Mutation";
+  staffUpdate?: boolean | null;
+};
 
 export type StaffsQueryVariables = Exact<{
-  where: InputMaybe<StaffsWhereInput>;
+  where?: InputMaybe<StaffsWhereInput>;
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
-  orderBy: InputMaybe<StaffsOrderByInput>;
+  orderBy?: InputMaybe<StaffsOrderByInput>;
 }>;
 
 export type StaffsQuery = {
-  staffs:
-    | {
-        count: number;
-        data:
-          | Array<{
-              id: string | undefined;
-              name: string | undefined;
-              email: string | undefined;
-              phone: string | undefined;
-              hospital:
-                | { id: string | undefined; name: string | undefined }
-                | undefined;
-              roles:
-                | Array<{ key: EnumStaffRole | undefined } | undefined>
-                | undefined;
-            }>
-          | undefined;
-      }
-    | undefined;
+  __typename?: "Query";
+  staffs?: {
+    __typename?: "StaffObjectType";
+    count: number;
+    data?: Array<{
+      __typename?: "Staff";
+      id?: string | null;
+      name?: string | null;
+      email?: string | null;
+      phone?: string | null;
+      hospital?: {
+        __typename?: "Hospital";
+        id?: string | null;
+        name?: string | null;
+      } | null;
+      roles?: Array<{
+        __typename?: "Role";
+        key?: EnumStaffRole | null;
+      } | null> | null;
+    }> | null;
+  } | null;
 };
 
 export type StaffDetailQueryVariables = Exact<{
@@ -610,27 +650,25 @@ export type StaffDetailQueryVariables = Exact<{
 }>;
 
 export type StaffDetailQuery = {
-  staffDetail:
-    | {
-        id: string | undefined;
-        email: string | undefined;
-        name: string | undefined;
-        phone: string | undefined;
-        roles:
-          | Array<
-              | {
-                  id: string | undefined;
-                  key: EnumStaffRole | undefined;
-                  name: string | undefined;
-                }
-              | undefined
-            >
-          | undefined;
-        hospital:
-          | { name: string | undefined; id: string | undefined }
-          | undefined;
-      }
-    | undefined;
+  __typename?: "Query";
+  staffDetail?: {
+    __typename?: "Staff";
+    id?: string | null;
+    email?: string | null;
+    name?: string | null;
+    phone?: string | null;
+    roles?: Array<{
+      __typename?: "Role";
+      id?: string | null;
+      key?: EnumStaffRole | null;
+      name?: string | null;
+    } | null> | null;
+    hospital?: {
+      __typename?: "Hospital";
+      name?: string | null;
+      id?: string | null;
+    } | null;
+  } | null;
 };
 
 export const LoginDocument = {
@@ -721,47 +759,7 @@ export const LoginDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type LoginMutationFn = Apollo.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    options,
-  );
-}
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->;
+} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const RefreshAccessTokenDocument = {
   kind: "Document",
   definitions: [
@@ -850,47 +848,7 @@ export const RefreshAccessTokenDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type RefreshAccessTokenMutationFn = Apollo.MutationFunction<
-  RefreshAccessTokenMutation,
-  RefreshAccessTokenMutationVariables
->;
-
-/**
- * __useRefreshAccessTokenMutation__
- *
- * To run a mutation, you first call `useRefreshAccessTokenMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRefreshAccessTokenMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [refreshAccessTokenMutation, { data, loading, error }] = useRefreshAccessTokenMutation({
- *   variables: {
- *      refreshToken: // value for 'refreshToken'
- *   },
- * });
- */
-export function useRefreshAccessTokenMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RefreshAccessTokenMutation,
-    RefreshAccessTokenMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    RefreshAccessTokenMutation,
-    RefreshAccessTokenMutationVariables
-  >(RefreshAccessTokenDocument, options);
-}
-export type RefreshAccessTokenMutationHookResult = ReturnType<
-  typeof useRefreshAccessTokenMutation
->;
-export type RefreshAccessTokenMutationResult =
-  Apollo.MutationResult<RefreshAccessTokenMutation>;
-export type RefreshAccessTokenMutationOptions = Apollo.BaseMutationOptions<
+} as unknown as DocumentNode<
   RefreshAccessTokenMutation,
   RefreshAccessTokenMutationVariables
 >;
@@ -945,77 +903,7 @@ export const CurrentStaffDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useCurrentStaffQuery__
- *
- * To run a query within a React component, call `useCurrentStaffQuery` and pass it any options that fit your needs.
- * When your component renders, `useCurrentStaffQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCurrentStaffQuery({
- *   variables: {
- *   },
- * });
- */
-export function useCurrentStaffQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    CurrentStaffQuery,
-    CurrentStaffQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<CurrentStaffQuery, CurrentStaffQueryVariables>(
-    CurrentStaffDocument,
-    options,
-  );
-}
-export function useCurrentStaffLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    CurrentStaffQuery,
-    CurrentStaffQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<CurrentStaffQuery, CurrentStaffQueryVariables>(
-    CurrentStaffDocument,
-    options,
-  );
-}
-export function useCurrentStaffSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        CurrentStaffQuery,
-        CurrentStaffQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<CurrentStaffQuery, CurrentStaffQueryVariables>(
-    CurrentStaffDocument,
-    options,
-  );
-}
-export type CurrentStaffQueryHookResult = ReturnType<
-  typeof useCurrentStaffQuery
->;
-export type CurrentStaffLazyQueryHookResult = ReturnType<
-  typeof useCurrentStaffLazyQuery
->;
-export type CurrentStaffSuspenseQueryHookResult = ReturnType<
-  typeof useCurrentStaffSuspenseQuery
->;
-export type CurrentStaffQueryResult = Apollo.QueryResult<
-  CurrentStaffQuery,
-  CurrentStaffQueryVariables
->;
+} as unknown as DocumentNode<CurrentStaffQuery, CurrentStaffQueryVariables>;
 export const EquipmentCreateDocument = {
   kind: "Document",
   definitions: [
@@ -1060,47 +948,7 @@ export const EquipmentCreateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type EquipmentCreateMutationFn = Apollo.MutationFunction<
-  EquipmentCreateMutation,
-  EquipmentCreateMutationVariables
->;
-
-/**
- * __useEquipmentCreateMutation__
- *
- * To run a mutation, you first call `useEquipmentCreateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useEquipmentCreateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [equipmentCreateMutation, { data, loading, error }] = useEquipmentCreateMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useEquipmentCreateMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    EquipmentCreateMutation,
-    EquipmentCreateMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    EquipmentCreateMutation,
-    EquipmentCreateMutationVariables
-  >(EquipmentCreateDocument, options);
-}
-export type EquipmentCreateMutationHookResult = ReturnType<
-  typeof useEquipmentCreateMutation
->;
-export type EquipmentCreateMutationResult =
-  Apollo.MutationResult<EquipmentCreateMutation>;
-export type EquipmentCreateMutationOptions = Apollo.BaseMutationOptions<
+} as unknown as DocumentNode<
   EquipmentCreateMutation,
   EquipmentCreateMutationVariables
 >;
@@ -1170,48 +1018,7 @@ export const EquipmentUpdateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type EquipmentUpdateMutationFn = Apollo.MutationFunction<
-  EquipmentUpdateMutation,
-  EquipmentUpdateMutationVariables
->;
-
-/**
- * __useEquipmentUpdateMutation__
- *
- * To run a mutation, you first call `useEquipmentUpdateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useEquipmentUpdateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [equipmentUpdateMutation, { data, loading, error }] = useEquipmentUpdateMutation({
- *   variables: {
- *      equipmentUpdateId: // value for 'equipmentUpdateId'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useEquipmentUpdateMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    EquipmentUpdateMutation,
-    EquipmentUpdateMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    EquipmentUpdateMutation,
-    EquipmentUpdateMutationVariables
-  >(EquipmentUpdateDocument, options);
-}
-export type EquipmentUpdateMutationHookResult = ReturnType<
-  typeof useEquipmentUpdateMutation
->;
-export type EquipmentUpdateMutationResult =
-  Apollo.MutationResult<EquipmentUpdateMutation>;
-export type EquipmentUpdateMutationOptions = Apollo.BaseMutationOptions<
+} as unknown as DocumentNode<
   EquipmentUpdateMutation,
   EquipmentUpdateMutationVariables
 >;
@@ -1360,82 +1167,7 @@ export const EquipmentsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useEquipmentsQuery__
- *
- * To run a query within a React component, call `useEquipmentsQuery` and pass it any options that fit your needs.
- * When your component renders, `useEquipmentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useEquipmentsQuery({
- *   variables: {
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useEquipmentsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    EquipmentsQuery,
-    EquipmentsQueryVariables
-  > &
-    (
-      | { variables: EquipmentsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<EquipmentsQuery, EquipmentsQueryVariables>(
-    EquipmentsDocument,
-    options,
-  );
-}
-export function useEquipmentsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    EquipmentsQuery,
-    EquipmentsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<EquipmentsQuery, EquipmentsQueryVariables>(
-    EquipmentsDocument,
-    options,
-  );
-}
-export function useEquipmentsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        EquipmentsQuery,
-        EquipmentsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<EquipmentsQuery, EquipmentsQueryVariables>(
-    EquipmentsDocument,
-    options,
-  );
-}
-export type EquipmentsQueryHookResult = ReturnType<typeof useEquipmentsQuery>;
-export type EquipmentsLazyQueryHookResult = ReturnType<
-  typeof useEquipmentsLazyQuery
->;
-export type EquipmentsSuspenseQueryHookResult = ReturnType<
-  typeof useEquipmentsSuspenseQuery
->;
-export type EquipmentsQueryResult = Apollo.QueryResult<
-  EquipmentsQuery,
-  EquipmentsQueryVariables
->;
+} as unknown as DocumentNode<EquipmentsQuery, EquipmentsQueryVariables>;
 export const EquipmentDetailDocument = {
   kind: "Document",
   definitions: [
@@ -1512,79 +1244,7 @@ export const EquipmentDetailDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useEquipmentDetailQuery__
- *
- * To run a query within a React component, call `useEquipmentDetailQuery` and pass it any options that fit your needs.
- * When your component renders, `useEquipmentDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useEquipmentDetailQuery({
- *   variables: {
- *      equipmentDetailId: // value for 'equipmentDetailId'
- *   },
- * });
- */
-export function useEquipmentDetailQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    EquipmentDetailQuery,
-    EquipmentDetailQueryVariables
-  > &
-    (
-      | { variables: EquipmentDetailQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<EquipmentDetailQuery, EquipmentDetailQueryVariables>(
-    EquipmentDetailDocument,
-    options,
-  );
-}
-export function useEquipmentDetailLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    EquipmentDetailQuery,
-    EquipmentDetailQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    EquipmentDetailQuery,
-    EquipmentDetailQueryVariables
-  >(EquipmentDetailDocument, options);
-}
-export function useEquipmentDetailSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        EquipmentDetailQuery,
-        EquipmentDetailQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    EquipmentDetailQuery,
-    EquipmentDetailQueryVariables
-  >(EquipmentDetailDocument, options);
-}
-export type EquipmentDetailQueryHookResult = ReturnType<
-  typeof useEquipmentDetailQuery
->;
-export type EquipmentDetailLazyQueryHookResult = ReturnType<
-  typeof useEquipmentDetailLazyQuery
->;
-export type EquipmentDetailSuspenseQueryHookResult = ReturnType<
-  typeof useEquipmentDetailSuspenseQuery
->;
-export type EquipmentDetailQueryResult = Apollo.QueryResult<
+} as unknown as DocumentNode<
   EquipmentDetailQuery,
   EquipmentDetailQueryVariables
 >;
@@ -1632,47 +1292,7 @@ export const HospitalCreateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type HospitalCreateMutationFn = Apollo.MutationFunction<
-  HospitalCreateMutation,
-  HospitalCreateMutationVariables
->;
-
-/**
- * __useHospitalCreateMutation__
- *
- * To run a mutation, you first call `useHospitalCreateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useHospitalCreateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [hospitalCreateMutation, { data, loading, error }] = useHospitalCreateMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useHospitalCreateMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    HospitalCreateMutation,
-    HospitalCreateMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    HospitalCreateMutation,
-    HospitalCreateMutationVariables
-  >(HospitalCreateDocument, options);
-}
-export type HospitalCreateMutationHookResult = ReturnType<
-  typeof useHospitalCreateMutation
->;
-export type HospitalCreateMutationResult =
-  Apollo.MutationResult<HospitalCreateMutation>;
-export type HospitalCreateMutationOptions = Apollo.BaseMutationOptions<
+} as unknown as DocumentNode<
   HospitalCreateMutation,
   HospitalCreateMutationVariables
 >;
@@ -1742,48 +1362,7 @@ export const HospitalUpdateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type HospitalUpdateMutationFn = Apollo.MutationFunction<
-  HospitalUpdateMutation,
-  HospitalUpdateMutationVariables
->;
-
-/**
- * __useHospitalUpdateMutation__
- *
- * To run a mutation, you first call `useHospitalUpdateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useHospitalUpdateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [hospitalUpdateMutation, { data, loading, error }] = useHospitalUpdateMutation({
- *   variables: {
- *      hospitalUpdateId: // value for 'hospitalUpdateId'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useHospitalUpdateMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    HospitalUpdateMutation,
-    HospitalUpdateMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    HospitalUpdateMutation,
-    HospitalUpdateMutationVariables
-  >(HospitalUpdateDocument, options);
-}
-export type HospitalUpdateMutationHookResult = ReturnType<
-  typeof useHospitalUpdateMutation
->;
-export type HospitalUpdateMutationResult =
-  Apollo.MutationResult<HospitalUpdateMutation>;
-export type HospitalUpdateMutationOptions = Apollo.BaseMutationOptions<
+} as unknown as DocumentNode<
   HospitalUpdateMutation,
   HospitalUpdateMutationVariables
 >;
@@ -1904,79 +1483,7 @@ export const HospitalsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useHospitalsQuery__
- *
- * To run a query within a React component, call `useHospitalsQuery` and pass it any options that fit your needs.
- * When your component renders, `useHospitalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHospitalsQuery({
- *   variables: {
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useHospitalsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    HospitalsQuery,
-    HospitalsQueryVariables
-  > &
-    (
-      | { variables: HospitalsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<HospitalsQuery, HospitalsQueryVariables>(
-    HospitalsDocument,
-    options,
-  );
-}
-export function useHospitalsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    HospitalsQuery,
-    HospitalsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<HospitalsQuery, HospitalsQueryVariables>(
-    HospitalsDocument,
-    options,
-  );
-}
-export function useHospitalsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<HospitalsQuery, HospitalsQueryVariables>,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<HospitalsQuery, HospitalsQueryVariables>(
-    HospitalsDocument,
-    options,
-  );
-}
-export type HospitalsQueryHookResult = ReturnType<typeof useHospitalsQuery>;
-export type HospitalsLazyQueryHookResult = ReturnType<
-  typeof useHospitalsLazyQuery
->;
-export type HospitalsSuspenseQueryHookResult = ReturnType<
-  typeof useHospitalsSuspenseQuery
->;
-export type HospitalsQueryResult = Apollo.QueryResult<
-  HospitalsQuery,
-  HospitalsQueryVariables
->;
+} as unknown as DocumentNode<HospitalsQuery, HospitalsQueryVariables>;
 export const HospitalDetailDocument = {
   kind: "Document",
   definitions: [
@@ -2052,82 +1559,7 @@ export const HospitalDetailDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useHospitalDetailQuery__
- *
- * To run a query within a React component, call `useHospitalDetailQuery` and pass it any options that fit your needs.
- * When your component renders, `useHospitalDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHospitalDetailQuery({
- *   variables: {
- *      hospitalDetailId: // value for 'hospitalDetailId'
- *   },
- * });
- */
-export function useHospitalDetailQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    HospitalDetailQuery,
-    HospitalDetailQueryVariables
-  > &
-    (
-      | { variables: HospitalDetailQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<HospitalDetailQuery, HospitalDetailQueryVariables>(
-    HospitalDetailDocument,
-    options,
-  );
-}
-export function useHospitalDetailLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    HospitalDetailQuery,
-    HospitalDetailQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<HospitalDetailQuery, HospitalDetailQueryVariables>(
-    HospitalDetailDocument,
-    options,
-  );
-}
-export function useHospitalDetailSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        HospitalDetailQuery,
-        HospitalDetailQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    HospitalDetailQuery,
-    HospitalDetailQueryVariables
-  >(HospitalDetailDocument, options);
-}
-export type HospitalDetailQueryHookResult = ReturnType<
-  typeof useHospitalDetailQuery
->;
-export type HospitalDetailLazyQueryHookResult = ReturnType<
-  typeof useHospitalDetailLazyQuery
->;
-export type HospitalDetailSuspenseQueryHookResult = ReturnType<
-  typeof useHospitalDetailSuspenseQuery
->;
-export type HospitalDetailQueryResult = Apollo.QueryResult<
-  HospitalDetailQuery,
-  HospitalDetailQueryVariables
->;
+} as unknown as DocumentNode<HospitalDetailQuery, HospitalDetailQueryVariables>;
 export const HospitalOptionDocument = {
   kind: "Document",
   definitions: [
@@ -2153,77 +1585,7 @@ export const HospitalOptionDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useHospitalOptionQuery__
- *
- * To run a query within a React component, call `useHospitalOptionQuery` and pass it any options that fit your needs.
- * When your component renders, `useHospitalOptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHospitalOptionQuery({
- *   variables: {
- *   },
- * });
- */
-export function useHospitalOptionQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    HospitalOptionQuery,
-    HospitalOptionQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<HospitalOptionQuery, HospitalOptionQueryVariables>(
-    HospitalOptionDocument,
-    options,
-  );
-}
-export function useHospitalOptionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    HospitalOptionQuery,
-    HospitalOptionQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<HospitalOptionQuery, HospitalOptionQueryVariables>(
-    HospitalOptionDocument,
-    options,
-  );
-}
-export function useHospitalOptionSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        HospitalOptionQuery,
-        HospitalOptionQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    HospitalOptionQuery,
-    HospitalOptionQueryVariables
-  >(HospitalOptionDocument, options);
-}
-export type HospitalOptionQueryHookResult = ReturnType<
-  typeof useHospitalOptionQuery
->;
-export type HospitalOptionLazyQueryHookResult = ReturnType<
-  typeof useHospitalOptionLazyQuery
->;
-export type HospitalOptionSuspenseQueryHookResult = ReturnType<
-  typeof useHospitalOptionSuspenseQuery
->;
-export type HospitalOptionQueryResult = Apollo.QueryResult<
-  HospitalOptionQuery,
-  HospitalOptionQueryVariables
->;
+} as unknown as DocumentNode<HospitalOptionQuery, HospitalOptionQueryVariables>;
 export const StaffCreateDocument = {
   kind: "Document",
   definitions: [
@@ -2268,50 +1630,7 @@ export const StaffCreateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type StaffCreateMutationFn = Apollo.MutationFunction<
-  StaffCreateMutation,
-  StaffCreateMutationVariables
->;
-
-/**
- * __useStaffCreateMutation__
- *
- * To run a mutation, you first call `useStaffCreateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useStaffCreateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [staffCreateMutation, { data, loading, error }] = useStaffCreateMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useStaffCreateMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    StaffCreateMutation,
-    StaffCreateMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<StaffCreateMutation, StaffCreateMutationVariables>(
-    StaffCreateDocument,
-    options,
-  );
-}
-export type StaffCreateMutationHookResult = ReturnType<
-  typeof useStaffCreateMutation
->;
-export type StaffCreateMutationResult =
-  Apollo.MutationResult<StaffCreateMutation>;
-export type StaffCreateMutationOptions = Apollo.BaseMutationOptions<
-  StaffCreateMutation,
-  StaffCreateMutationVariables
->;
+} as unknown as DocumentNode<StaffCreateMutation, StaffCreateMutationVariables>;
 export const StaffUpdateDocument = {
   kind: "Document",
   definitions: [
@@ -2378,51 +1697,7 @@ export const StaffUpdateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-export type StaffUpdateMutationFn = Apollo.MutationFunction<
-  StaffUpdateMutation,
-  StaffUpdateMutationVariables
->;
-
-/**
- * __useStaffUpdateMutation__
- *
- * To run a mutation, you first call `useStaffUpdateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useStaffUpdateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [staffUpdateMutation, { data, loading, error }] = useStaffUpdateMutation({
- *   variables: {
- *      staffUpdateId: // value for 'staffUpdateId'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useStaffUpdateMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    StaffUpdateMutation,
-    StaffUpdateMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<StaffUpdateMutation, StaffUpdateMutationVariables>(
-    StaffUpdateDocument,
-    options,
-  );
-}
-export type StaffUpdateMutationHookResult = ReturnType<
-  typeof useStaffUpdateMutation
->;
-export type StaffUpdateMutationResult =
-  Apollo.MutationResult<StaffUpdateMutation>;
-export type StaffUpdateMutationOptions = Apollo.BaseMutationOptions<
-  StaffUpdateMutation,
-  StaffUpdateMutationVariables
->;
+} as unknown as DocumentNode<StaffUpdateMutation, StaffUpdateMutationVariables>;
 export const StaffsDocument = {
   kind: "Document",
   definitions: [
@@ -2564,69 +1839,7 @@ export const StaffsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useStaffsQuery__
- *
- * To run a query within a React component, call `useStaffsQuery` and pass it any options that fit your needs.
- * When your component renders, `useStaffsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useStaffsQuery({
- *   variables: {
- *      where: // value for 'where'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      orderBy: // value for 'orderBy'
- *   },
- * });
- */
-export function useStaffsQuery(
-  baseOptions: Apollo.QueryHookOptions<StaffsQuery, StaffsQueryVariables> &
-    ({ variables: StaffsQueryVariables; skip?: boolean } | { skip: boolean }),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<StaffsQuery, StaffsQueryVariables>(
-    StaffsDocument,
-    options,
-  );
-}
-export function useStaffsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<StaffsQuery, StaffsQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<StaffsQuery, StaffsQueryVariables>(
-    StaffsDocument,
-    options,
-  );
-}
-export function useStaffsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<StaffsQuery, StaffsQueryVariables>,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<StaffsQuery, StaffsQueryVariables>(
-    StaffsDocument,
-    options,
-  );
-}
-export type StaffsQueryHookResult = ReturnType<typeof useStaffsQuery>;
-export type StaffsLazyQueryHookResult = ReturnType<typeof useStaffsLazyQuery>;
-export type StaffsSuspenseQueryHookResult = ReturnType<
-  typeof useStaffsSuspenseQuery
->;
-export type StaffsQueryResult = Apollo.QueryResult<
-  StaffsQuery,
-  StaffsQueryVariables
->;
+} as unknown as DocumentNode<StaffsQuery, StaffsQueryVariables>;
 export const StaffDetailDocument = {
   kind: "Document",
   definitions: [
@@ -2703,77 +1916,4 @@ export const StaffDetailDocument = {
       },
     },
   ],
-} as unknown as DocumentNode;
-
-/**
- * __useStaffDetailQuery__
- *
- * To run a query within a React component, call `useStaffDetailQuery` and pass it any options that fit your needs.
- * When your component renders, `useStaffDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useStaffDetailQuery({
- *   variables: {
- *      staffDetailId: // value for 'staffDetailId'
- *   },
- * });
- */
-export function useStaffDetailQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    StaffDetailQuery,
-    StaffDetailQueryVariables
-  > &
-    (
-      | { variables: StaffDetailQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<StaffDetailQuery, StaffDetailQueryVariables>(
-    StaffDetailDocument,
-    options,
-  );
-}
-export function useStaffDetailLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    StaffDetailQuery,
-    StaffDetailQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<StaffDetailQuery, StaffDetailQueryVariables>(
-    StaffDetailDocument,
-    options,
-  );
-}
-export function useStaffDetailSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        StaffDetailQuery,
-        StaffDetailQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<StaffDetailQuery, StaffDetailQueryVariables>(
-    StaffDetailDocument,
-    options,
-  );
-}
-export type StaffDetailQueryHookResult = ReturnType<typeof useStaffDetailQuery>;
-export type StaffDetailLazyQueryHookResult = ReturnType<
-  typeof useStaffDetailLazyQuery
->;
-export type StaffDetailSuspenseQueryHookResult = ReturnType<
-  typeof useStaffDetailSuspenseQuery
->;
-export type StaffDetailQueryResult = Apollo.QueryResult<
-  StaffDetailQuery,
-  StaffDetailQueryVariables
->;
+} as unknown as DocumentNode<StaffDetailQuery, StaffDetailQueryVariables>;

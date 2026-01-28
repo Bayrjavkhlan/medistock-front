@@ -1,14 +1,12 @@
 "use client";
+import { useQuery } from "@apollo/client/react";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 
 import PageToolbar from "@/components/forms/toolbar";
-import { useHospitalsQuery } from "@/generated/graphql";
+import { HospitalsDocument } from "@/generated/graphql";
 
 import HospitalListTable from "../components/hospital.list";
-
-// import CreateStaffModal from "../components/modal/staff.modal";
-// import StaffListTable from "../components/staff.list";
 
 export default function HospitalContainer() {
   const [open, setOpen] = useState(false);
@@ -23,7 +21,7 @@ export default function HospitalContainer() {
     return () => handler.cancel();
   }, [search]);
 
-  const { data, loading, error } = useHospitalsQuery({
+  const { data, loading, error } = useQuery(HospitalsDocument, {
     variables: {
       where: {
         search: debouncedSearch || undefined,

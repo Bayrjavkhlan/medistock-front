@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 import { authLink, errorLink, httpLink } from "./links";
 
-let apolloClient: ApolloClient<any> | null = null;
+let apolloClient: ApolloClient | null = null;
 
 const createClient = () => {
   return new ApolloClient({

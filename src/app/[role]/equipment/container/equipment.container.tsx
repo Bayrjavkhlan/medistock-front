@@ -1,9 +1,10 @@
 "use client";
+import { useQuery } from "@apollo/client/react";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 
 import PageToolbar from "@/components/forms/toolbar";
-import { useEquipmentsQuery } from "@/generated/graphql";
+import { EquipmentsDocument } from "@/generated/graphql";
 
 import EquipmentListTable from "../components/euipment.list";
 
@@ -23,7 +24,7 @@ export default function EquipmentContainer() {
     return () => handler.cancel();
   }, [search]);
   console.log("open:\t", open);
-  const { data, loading, error } = useEquipmentsQuery({
+  const { data, loading, error } = useQuery(EquipmentsDocument, {
     variables: {
       where: {
         search: debouncedSearch || undefined,

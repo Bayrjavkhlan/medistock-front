@@ -1,5 +1,5 @@
 "use client";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import {
   Alert,
   Button,
@@ -23,9 +23,9 @@ interface CreateStaffModalProps {
 }
 
 const ROLES = [
-  { value: EnumStaffRole.ADMIN, label: "Системийн админ" },
-  { value: EnumStaffRole.HOSPITAL_ADMIN, label: "Эмнэлэгийн админ" },
-  { value: EnumStaffRole.STAFF, label: "Ажилтан" },
+  { value: EnumStaffRole.Admin, label: "Системийн админ" },
+  { value: EnumStaffRole.HospitalAdmin, label: "Эмнэлэгийн админ" },
+  { value: EnumStaffRole.Staff, label: "Ажилтан" },
 ];
 
 const HOSPITALS = [
@@ -70,7 +70,7 @@ export default function CreateStaffModal({
     if (!form.email) newErrors.email = "Имэйл шаардлагатай";
     if (!form.phone) newErrors.phone = "Утас шаардлагатай";
     if (!form.roleKeys) newErrors.roleKeys = "Үүрэг сонгоно уу";
-    if (form.roleKeys !== EnumStaffRole.ADMIN && !form.hospitalId) {
+    if (form.roleKeys !== EnumStaffRole.Admin && !form.hospitalId) {
       newErrors.hospitalId = "Эмнэлэг сонгоно уу";
     }
     setErrors(newErrors);
@@ -88,7 +88,7 @@ export default function CreateStaffModal({
           phone: form.phone,
           roleKeys: form.roleKeys,
           hospitalId:
-            form.roleKeys === EnumStaffRole.ADMIN ? null : form.hospitalId,
+            form.roleKeys === EnumStaffRole.Admin ? null : form.hospitalId,
         },
       },
     });
@@ -154,7 +154,7 @@ export default function CreateStaffModal({
           ))}
         </TextField>
 
-        {form.roleKeys !== EnumStaffRole.ADMIN && (
+        {form.roleKeys !== EnumStaffRole.Admin && (
           <TextField
             select
             label="Эмнэлэг"

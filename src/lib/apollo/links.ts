@@ -1,23 +1,31 @@
 import { HttpLink } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
+import { SetContextLink } from "@apollo/client/link/context";
+import { ErrorLink } from "@apollo/client/link/error";
+import type { GraphQLError } from "graphql";
 
 import { env } from "@/constants/config";
+
+type ApolloLikeError = {
+  graphQLErrors?: readonly GraphQLError[];
+  networkError?: unknown;
+};
 
 export const httpLink = new HttpLink({
   uri: `${env.BACKEND_URL}/api/graphql`,
   credentials: "include",
 });
 
-export const authLink = setContext(async (_, { headers }) => {
+export const authLink = new SetContextLink(async (prevContext) => {
   let token = "";
 
   if (typeof window === "undefined") {
+    // Server-side (SSR)
     const { getServerSession } = await import("next-auth/next");
     const { authOptions } = await import("@/lib/next-auth/authOptions");
     const session = await getServerSession(authOptions);
     token = session?.accessToken || "";
   } else {
+    // Client-side
     const { getSession } = await import("next-auth/react");
     const session = await getSession();
     token = session?.accessToken || "";
@@ -25,14 +33,21 @@ export const authLink = setContext(async (_, { headers }) => {
 
   return {
     headers: {
-      ...headers,
+      ...prevContext.headers,
       authorization: token ? `Bearer ${token}` : "",
     },
   };
 });
 
-export const errorLink = onError(({ graphQLErrors, networkError }) => {
+export const errorLink = new ErrorLink((handler) => {
   if (typeof window === "undefined") return;
+
+  const err = handler.error as ApolloLikeError | null | undefined;
+
+  if (!err) return;
+
+  const graphQLErrors = err.graphQLErrors ?? [];
+  const networkError = err.networkError;
 
   const authErrorCodes = [
     "INVALID_ACCESS_TOKEN",
@@ -44,22 +59,17 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
 
   type AuthErrorCode = (typeof authErrorCodes)[number];
 
-  const hasAuthError = graphQLErrors?.some((err) => {
-    const code = err.extensions?.code;
-    console.log("GraphQL Error Code:", code);
-    return (
-      typeof code === "string" && authErrorCodes.includes(code as AuthErrorCode)
-    );
+  const hasAuthError = graphQLErrors.some((gqlErr) => {
+    const code = gqlErr.extensions?.code as string | undefined;
+    return !!code && authErrorCodes.includes(code as AuthErrorCode);
   });
 
   if (hasAuthError) {
-    console.log("[Auth Error] Redirecting to /login");
     window.location.href = "/login";
     return;
   }
 
   if (networkError) {
     console.error("[Network Error]", networkError);
-    window.location.href = "/login";
   }
 });

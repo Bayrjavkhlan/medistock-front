@@ -1,4 +1,5 @@
 "use client";
+import { useQuery } from "@apollo/client/react";
 import { Button } from "@mui/material";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
@@ -6,7 +7,7 @@ import { useEffect, useState } from "react";
 import PageToolbar from "@/components/forms/toolbar";
 import { type StaffSortField } from "@/constants/types";
 import type { StaffsOrderByInput } from "@/generated/graphql";
-import { EnumSortOrder, useStaffsQuery } from "@/generated/graphql";
+import { EnumSortOrder, StaffsDocument } from "@/generated/graphql";
 import { useThemeMode } from "@/hooks/useThemeMode";
 
 import CreateStaffModal from "../components/modal/staff.modal";
@@ -22,7 +23,7 @@ export default function StaffContainer() {
     order: EnumSortOrder;
   }>({
     field: "name",
-    order: EnumSortOrder.ASC,
+    order: EnumSortOrder.Asc,
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -40,7 +41,7 @@ export default function StaffContainer() {
     return order as StaffsOrderByInput;
   };
 
-  const { data, loading, error, refetch } = useStaffsQuery({
+  const { data, loading, error, refetch } = useQuery(StaffsDocument, {
     variables: {
       where: {
         search: debouncedSearch || undefined,
