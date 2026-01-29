@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 
 import PageToolbar from "@/components/forms/toolbar";
 import { type StaffSortField } from "@/constants/types";
-import type { StaffsOrderByInput } from "@/generated/graphql";
-import { EnumSortOrder, StaffsDocument } from "@/generated/graphql";
+import type { Membership } from "@/generated/graphql";
+import { EnumSortOrder, MembershipsDocument } from "@/generated/graphql";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useThemeMode } from "@/hooks/useThemeMode";
 
 import CreateStaffModal from "../components/modal/staff.modal";
@@ -35,21 +36,12 @@ export default function StaffContainer() {
     return () => handler.cancel();
   }, [search]);
 
-  const buildOrderBy = (): StaffsOrderByInput => {
-    const order: Partial<Record<StaffSortField, EnumSortOrder>> = {};
-    order[sortBy.field] = sortBy.order;
-    return order as StaffsOrderByInput;
-  };
+  const { activeOrganization } = useActiveOrganization();
 
-  const { data, loading, error, refetch } = useQuery(StaffsDocument, {
+  const { data, loading, error, refetch } = useQuery(MembershipsDocument, {
     variables: {
-      where: {
-        search: debouncedSearch || undefined,
-        roleKey: undefined,
-      },
-      orderBy: buildOrderBy(),
       take: rowsPerPage,
-      skip: page,
+      skip: page * rowsPerPage,
     },
     fetchPolicy: "no-cache",
   });
@@ -59,8 +51,38 @@ export default function StaffContainer() {
 
   console.log("Staff data:", data);
 
-  const users = data?.staffs?.data ?? [];
-  const totalCount = data?.staffs?.count ?? 0;
+  const memberships = data?.memberships?.data ?? [];
+  const totalCount = data?.memberships?.count ?? 0;
+
+  const normalize = (value: string | null | undefined) =>
+    (value ?? "").toLowerCase();
+
+  const filteredMemberships = memberships.filter((membership) => {
+    if (!debouncedSearch) return true;
+    const target =
+      normalize(membership.user?.name) +
+      normalize(membership.user?.email) +
+      normalize(membership.user?.phone) +
+      normalize(membership.role);
+    return target.includes(normalize(debouncedSearch));
+  });
+
+  const sortedMemberships = [...filteredMemberships].sort((a, b) => {
+    const direction = sortBy.order === EnumSortOrder.Asc ? 1 : -1;
+    const field = sortBy.field;
+    if (field === "email") {
+      return (
+        normalize(a.user?.email).localeCompare(normalize(b.user?.email)) *
+        direction
+      );
+    }
+    if (field === "role") {
+      return normalize(a.role).localeCompare(normalize(b.role)) * direction;
+    }
+    return (
+      normalize(a.user?.name).localeCompare(normalize(b.user?.name)) * direction
+    );
+  });
 
   return (
     <>
@@ -80,9 +102,10 @@ export default function StaffContainer() {
           setOpen(false);
           refetch();
         }}
+        activeOrgId={activeOrganization?.organization?.id ?? null}
       />
       <StaffListTable
-        users={users}
+        memberships={sortedMemberships as Membership[]}
         totalCount={totalCount}
         page={page}
         rowsPerPage={rowsPerPage}

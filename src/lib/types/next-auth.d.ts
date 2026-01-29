@@ -1,17 +1,16 @@
 import "next-auth";
 import "next-auth/jwt";
-import type { EnumStaffRole, Role } from "@/generated/graphql";
+import type { UserMembership } from "@/generated/graphql";
 
 declare module "next-auth" {
   interface Session {
-    staff: {
+    user: {
       id: string;
       name: string;
       email: string;
       phone: string | null;
-      roleKey: EnumStaffRole;
-      roles: Role[];
-      resetPasswordToken: string | null;
+      isPlatformAdmin: boolean;
+      memberships: UserMembership[];
     };
     accessToken: string;
     refreshToken: string;
@@ -23,9 +22,8 @@ declare module "next-auth" {
     name: string;
     email: string;
     phone: string | null;
-    roleKey: EnumStaffRole;
-    roles: Role[];
-    resetPasswordToken: string | null;
+    isPlatformAdmin: boolean;
+    memberships: UserMembership[];
     accessToken: string;
     refreshToken: string;
     accessTokenExpiresAt: number;
@@ -38,9 +36,8 @@ declare module "next-auth/jwt" {
     name: string;
     email: string;
     phone: string | null;
-    roleKey: EnumStaffRole;
-    roles: Role[];
-    resetPasswordToken: string | null;
+    isPlatformAdmin: boolean;
+    memberships: UserMembership[];
     accessToken: string;
     refreshToken: string;
     accessTokenExpiresAt: number;

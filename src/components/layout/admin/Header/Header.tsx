@@ -1,7 +1,11 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
+  Box,
+  FormControl,
   IconButton,
+  MenuItem,
+  Select,
   Toolbar,
   Typography,
   useTheme,
@@ -10,6 +14,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import Profile from "@/components/core/Profile";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { usePageTitle } from "@/utils/getPageTitle";
 
 type HeaderProps = {
@@ -28,6 +33,8 @@ export default function Header({
   const sidebarWidth = collapsed ? 100 : 300;
 
   const { data: session } = useSession();
+  const { memberships, activeOrganization, setActiveOrganization } =
+    useActiveOrganization();
   const pageTitle = usePageTitle(); // ← This gets the current title!
 
   return (
@@ -69,7 +76,35 @@ export default function Header({
         <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
           {pageTitle}
         </Typography>
-        <Profile username={session?.staff.name} role={session?.staff.roleKey} />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {memberships.length > 0 && (
+            <FormControl size="small" sx={{ minWidth: 200 }}>
+              <Select
+                value={activeOrganization?.organization.id ?? ""}
+                displayEmpty
+                onChange={(event) => {
+                  const value = event.target.value as string;
+                  if (value) {
+                    void setActiveOrganization(value);
+                  }
+                }}
+              >
+                {memberships.map((membership) => (
+                  <MenuItem
+                    key={membership.organization.id}
+                    value={membership.organization.id}
+                  >
+                    {membership.organization.name} • {membership.role}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          <Profile
+            username={session?.user?.name ?? undefined}
+            role={activeOrganization?.role}
+          />
+        </Box>
       </Toolbar>
     </AppBar>
   );

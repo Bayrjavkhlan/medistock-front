@@ -1,11 +1,11 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-import type { EnumStaffRole } from "@/generated/graphql";
+import type { OrganizationRole } from "@/generated/graphql";
 
 type ProfileProps = {
   username: string | undefined;
-  role: EnumStaffRole | undefined;
+  role: OrganizationRole | null | undefined;
   image?: string | undefined;
 };
 

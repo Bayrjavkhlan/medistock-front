@@ -45,12 +45,12 @@ export default function HospitalListTable({
                 label="Name"
                 currentSort={{
                   field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.ASC ? "asc" : "desc",
+                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
                 }}
                 onSort={(field, order) => {
                   onSort(
                     field as UserSortField,
-                    order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
+                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
                   );
                 }}
               />
@@ -59,12 +59,12 @@ export default function HospitalListTable({
                 label="Email"
                 currentSort={{
                   field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.ASC ? "asc" : "desc",
+                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
                 }}
                 onSort={(field, order) => {
                   onSort(
                     field as UserSortField,
-                    order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
+                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
                   );
                 }}
               /> */}
@@ -88,7 +88,7 @@ export default function HospitalListTable({
                 <TableRow key={hospital.id}>
                   <TableCell>{hospital.name ?? "-"}</TableCell>
                   <TableCell>{hospital.email ?? "-"}</TableCell>
-                  <TableCell>{hospital.phoneNumber ?? "-"}</TableCell>
+                  <TableCell>{hospital.phone ?? "-"}</TableCell>
                   <TableCell>
                     {hospital.address?.address1 ?? "-"}
                     {hospital.address?.address2 ?? "-"}

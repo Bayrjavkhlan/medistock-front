@@ -17,24 +17,29 @@ export const httpLink = new HttpLink({
 
 export const authLink = new SetContextLink(async (prevContext) => {
   let token = "";
+  let orgId = "";
 
   if (typeof window === "undefined") {
     // Server-side (SSR)
     const { getServerSession } = await import("next-auth/next");
+    const { cookies } = await import("next/headers");
     const { authOptions } = await import("@/lib/next-auth/authOptions");
     const session = await getServerSession(authOptions);
     token = session?.accessToken || "";
+    orgId = (await cookies()).get("x-org-id")?.value ?? "";
   } else {
     // Client-side
     const { getSession } = await import("next-auth/react");
     const session = await getSession();
     token = session?.accessToken || "";
+    orgId = localStorage.getItem("medistock.activeOrgId") ?? "";
   }
 
   return {
     headers: {
       ...prevContext.headers,
       authorization: token ? `Bearer ${token}` : "",
+      ...(orgId ? { "x-org-id": orgId } : {}),
     },
   };
 });

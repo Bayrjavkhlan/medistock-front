@@ -13,50 +13,47 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import { STAFF_CREATE } from "@/features/staff/graphql/mutations.gql";
-import { EnumStaffRole } from "@/generated/graphql";
+import { USER_CREATE } from "@/features/staff/graphql/mutations.gql";
+import { OrganizationRole } from "@/generated/graphql";
 
 interface CreateStaffModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  activeOrgId: string | null;
 }
 
 const ROLES = [
-  { value: EnumStaffRole.Admin, label: "Системийн админ" },
-  { value: EnumStaffRole.HospitalAdmin, label: "Эмнэлэгийн админ" },
-  { value: EnumStaffRole.Staff, label: "Ажилтан" },
-];
-
-const HOSPITALS = [
-  { id: "hosp-1", name: "Central Hospital" },
-  { id: "hosp-2", name: "Northside Medical Center" },
+  { value: OrganizationRole.Owner, label: "Owner" },
+  { value: OrganizationRole.Manager, label: "Manager" },
+  { value: OrganizationRole.Staff, label: "Staff" },
 ];
 
 export default function CreateStaffModal({
   open,
   onClose,
   onSuccess,
+  activeOrgId,
 }: CreateStaffModalProps) {
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
-    roleKeys: "" as EnumStaffRole,
-    hospitalId: "",
+    password: "",
+    role: "" as OrganizationRole,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const [createStaff, { loading, error }] = useMutation(STAFF_CREATE, {
+  const [createUser, { loading, error }] = useMutation(USER_CREATE, {
     onCompleted: () => {
       onSuccess();
       setForm({
         name: "",
         email: "",
         phone: "",
-        roleKeys: "" as EnumStaffRole,
-        hospitalId: "",
+        password: "",
+        role: "" as OrganizationRole,
       });
     },
     onError: (err) => {
@@ -69,10 +66,9 @@ export default function CreateStaffModal({
     if (!form.name) newErrors.name = "Нэр шаардлагатай";
     if (!form.email) newErrors.email = "Имэйл шаардлагатай";
     if (!form.phone) newErrors.phone = "Утас шаардлагатай";
-    if (!form.roleKeys) newErrors.roleKeys = "Үүрэг сонгоно уу";
-    if (form.roleKeys !== EnumStaffRole.Admin && !form.hospitalId) {
-      newErrors.hospitalId = "Эмнэлэг сонгоно уу";
-    }
+    if (!form.password) newErrors.password = "Нууц үг шаардлагатай";
+    if (!form.role) newErrors.role = "Үүрэг сонгоно уу";
+    if (!activeOrgId) newErrors.organizationId = "Байгууллага сонгоно уу";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -80,15 +76,15 @@ export default function CreateStaffModal({
   const handleSubmit = () => {
     if (!validate()) return;
 
-    createStaff({
+    createUser({
       variables: {
         input: {
           name: form.name,
           email: form.email,
           phone: form.phone,
-          roleKeys: form.roleKeys,
-          hospitalId:
-            form.roleKeys === EnumStaffRole.Admin ? null : form.hospitalId,
+          password: form.password,
+          role: form.role,
+          organizationId: activeOrgId,
         },
       },
     });
@@ -136,16 +132,27 @@ export default function CreateStaffModal({
         />
 
         <TextField
+          label="Нууц үг"
+          fullWidth
+          margin="normal"
+          type="password"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          error={!!errors.password}
+          helperText={errors.password}
+        />
+
+        <TextField
           select
           label="Үүрэг"
           fullWidth
           margin="normal"
-          value={form.roleKeys}
+          value={form.role}
           onChange={(e) =>
-            setForm({ ...form, roleKeys: e.target.value as EnumStaffRole })
+            setForm({ ...form, role: e.target.value as OrganizationRole })
           }
-          error={!!errors.roleKeys}
-          helperText={errors.roleKeys}
+          error={!!errors.role}
+          helperText={errors.role}
         >
           {ROLES.map((role) => (
             <MenuItem key={role.value} value={role.value}>
@@ -153,26 +160,10 @@ export default function CreateStaffModal({
             </MenuItem>
           ))}
         </TextField>
-
-        {form.roleKeys !== EnumStaffRole.Admin && (
-          <TextField
-            select
-            label="Эмнэлэг"
-            fullWidth
-            margin="normal"
-            value={form.hospitalId}
-            onChange={(e) => setForm({ ...form, hospitalId: e.target.value })}
-            error={!!errors.hospitalId}
-            helperText={
-              errors.hospitalId || "Системийн админд эмнэлэг хэрэггүй"
-            }
-          >
-            {HOSPITALS.map((h) => (
-              <MenuItem key={h.id} value={h.id}>
-                {h.name}
-              </MenuItem>
-            ))}
-          </TextField>
+        {!activeOrgId && (
+          <Alert severity="warning" sx={{ mt: 2 }}>
+            Үргэлжлүүлэхийн өмнө байгууллага сонгоно уу.
+          </Alert>
         )}
       </DialogContent>
 
@@ -181,7 +172,7 @@ export default function CreateStaffModal({
         <Button
           onClick={handleSubmit}
           variant="contained"
-          disabled={loading}
+          disabled={loading || !activeOrgId}
           startIcon={loading ? <CircularProgress size={20} /> : null}
         >
           Хадгалах

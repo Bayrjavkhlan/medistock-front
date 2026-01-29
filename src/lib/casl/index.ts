@@ -2,11 +2,15 @@ import { AbilityBuilder, PureAbility } from "@casl/ability";
 import type { Session } from "next-auth";
 
 import type { Action, Subject } from "@/constants/routes";
+import type { OrganizationRole } from "@/generated/graphql";
 
 export type AppAbility = PureAbility<[Action, Subject]>;
 export const AppAbility = PureAbility as unknown;
 
-export const defineAbilityFor = (session: Session | null): AppAbility => {
+export const defineAbilityFor = (
+  session: Session | null,
+  activeRole: OrganizationRole | null = null,
+): AppAbility => {
   const { can, build } = new AbilityBuilder<AppAbility>(PureAbility);
 
   // === GUEST ===
@@ -15,10 +19,7 @@ export const defineAbilityFor = (session: Session | null): AppAbility => {
     return build();
   }
 
-  const role = session.staff.roleKey;
-
-  // === ADMIN ===
-  if (role === "ADMIN") {
+  if (session.user?.isPlatformAdmin) {
     can(
       ["create", "read", "update", "delete"],
       [
@@ -27,15 +28,19 @@ export const defineAbilityFor = (session: Session | null): AppAbility => {
         "Admin_Hospital",
         "Admin_Equipment",
         "Admin_EquipmentLog",
-        "Admin_Profile",
       ],
     );
+    can("read", "Profile");
+    return build();
   }
 
-  // === HOSPITAL_ADMIN ===
-  if (role === "HOSPITAL_ADMIN") {
+  const role =
+    activeRole ?? session.user?.memberships?.[0]?.role ?? ("STAFF" as const);
+
+  // === OWNER ===
+  if (role === "OWNER") {
     can(
-      ["read", "create", "update", "delete"],
+      ["create", "read", "update", "delete"],
       [
         "Hospital_Dashboard",
         "Hospital_Staff",
@@ -43,13 +48,28 @@ export const defineAbilityFor = (session: Session | null): AppAbility => {
         "Hospital_EquipmentLog",
       ],
     );
-    can(["read", "update"], "Hospital_Profile");
+    can("read", "Profile");
+  }
+
+  // === MANAGER ===
+  if (role === "MANAGER") {
+    can(
+      ["read", "create", "update"],
+      [
+        "Hospital_Dashboard",
+        "Hospital_Staff",
+        "Hospital_Equipment",
+        "Hospital_EquipmentLog",
+      ],
+    );
+    can("read", "Profile");
   }
 
   // === STAFF ===
   if (role === "STAFF") {
     can("read", ["Staff_Dashboard", "Staff_Equipment"]);
     can(["create", "read", "update"], "Staff_EquipmentLog");
+    can("read", "Profile");
   }
 
   return build();

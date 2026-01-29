@@ -2,7 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import type { EnumStaffRole, Role } from "@/generated/graphql";
+import type { UserMembership } from "@/generated/graphql";
 import { LoginDocument, RefreshAccessTokenDocument } from "@/generated/graphql";
 
 import { getApolloClient } from "../apollo/ApolloClient";
@@ -16,17 +16,16 @@ const refreshAccessToken = async (token: JWT): Promise<JWT> => {
     });
 
     const payload = data?.refreshAccessToken;
-    if (!payload?.staff?.id) throw new Error("Invalid refresh token");
+    if (!payload?.user?.id) throw new Error("Invalid refresh token");
 
     return {
       ...token,
-      id: payload.staff.id,
-      name: payload.staff.name ?? null,
-      email: payload.staff.email,
-      phone: payload.staff.phone ?? null,
-      roleKey: payload.staff.roleKey,
-      roles: payload.staff.roles,
-      resetPasswordToken: payload.staff.resetPasswordToken ?? null,
+      id: payload.user.id,
+      name: payload.user.name ?? "",
+      email: payload.user.email,
+      phone: payload.user.phone ?? "",
+      isPlatformAdmin: payload.user.isPlatformAdmin,
+      memberships: payload.user.memberships as UserMembership[],
       accessToken: payload.accessToken,
       refreshToken: payload.refreshToken,
       accessTokenExpiresAt: Number(payload.accessTokenExpiresAt),
@@ -62,16 +61,15 @@ export const authOptions: NextAuthOptions = {
           });
 
           const payload = data?.login;
-          if (!payload?.staff?.id) return null;
+          if (!payload?.user?.id) return null;
 
           return {
-            id: payload.staff.id,
-            name: payload.staff.name ?? null,
-            email: payload.staff.email,
-            phone: payload.staff.phone ?? null,
-            roleKey: payload.staff.roleKey,
-            roles: payload.staff.roles,
-            resetPasswordToken: payload.staff.resetPasswordToken ?? null,
+            id: payload.user.id,
+            name: payload.user.name ?? null,
+            email: payload.user.email,
+            phone: payload.user.phone ?? null,
+            isPlatformAdmin: payload.user.isPlatformAdmin,
+            memberships: payload.user.memberships as UserMembership[],
             accessToken: payload.accessToken,
             refreshToken: payload.refreshToken,
             accessTokenExpiresAt: Number(payload.accessTokenExpiresAt),
@@ -91,14 +89,13 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      session.staff = {
+      session.user = {
         id: token.id as string,
         name: token.name as string,
         email: token.email as string,
         phone: token.phone as string,
-        roleKey: token.roleKey as EnumStaffRole,
-        roles: token.roles as Role[],
-        resetPasswordToken: token.resetPasswordToken as string,
+        isPlatformAdmin: token.isPlatformAdmin as boolean,
+        memberships: token.memberships as UserMembership[],
       };
       session.accessToken = token.accessToken as string;
       session.refreshToken = token.refreshToken as string;

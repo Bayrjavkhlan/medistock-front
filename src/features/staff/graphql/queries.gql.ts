@@ -1,25 +1,22 @@
 // src/app/admin/user/queries.gql.ts
 import { gql } from "@apollo/client";
 
-export const STAFFS = gql`
-  query Staffs(
-    $where: StaffsWhereInput
-    $take: Int!
-    $skip: Int!
-    $orderBy: StaffsOrderByInput
-  ) {
-    staffs(where: $where, take: $take, skip: $skip, orderBy: $orderBy) {
+export const MEMBERSHIPS = gql`
+  query Memberships($take: Int!, $skip: Int!) {
+    memberships(take: $take, skip: $skip) {
       data {
         id
-        name
-        email
-        phone
-        hospital {
+        role
+        user {
           id
           name
+          email
+          phone
         }
-        roles {
-          key
+        organization {
+          id
+          name
+          type
         }
       }
       count
@@ -27,22 +24,14 @@ export const STAFFS = gql`
   }
 `;
 
-export const STAFF_DETAIL = gql`
-  query StaffDetail($staffDetailId: String!) {
-    staffDetail(id: $staffDetailId) {
+export const USER_DETAIL = gql`
+  query UserDetail($userDetailId: String!) {
+    userDetail(id: $userDetailId) {
       id
-      email
       name
+      email
       phone
-      roles {
-        id
-        key
-        name
-      }
-      hospital {
-        name
-        id
-      }
+      isPlatformAdmin
     }
   }
 `;

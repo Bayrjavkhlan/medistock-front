@@ -19,6 +19,8 @@ import { useTheme } from "@mui/material/styles";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+
 import { getSidebarOptions } from "./SideBarOptions";
 
 type Props = {
@@ -38,9 +40,13 @@ export default function Sidebar({
   const pathname = usePathname();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: session } = useSession();
+  const { activeOrganization } = useActiveOrganization();
   const router = useRouter();
 
-  const sidebarItems = getSidebarOptions(session);
+  const sidebarItems = getSidebarOptions(
+    session,
+    activeOrganization?.role ?? null,
+  );
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";

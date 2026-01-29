@@ -1,7 +1,17 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/lib/next-auth";
+
+const getRouteRole = (
+  role: string | null | undefined,
+  isPlatformAdmin: boolean | undefined,
+) => {
+  if (isPlatformAdmin) return "admin";
+  if (!role) return null;
+  return role === "STAFF" ? "staff" : "hospital";
+};
 
 export default async function RoleLayout({
   params,
@@ -14,10 +24,20 @@ export default async function RoleLayout({
   const urlRole = role.toLowerCase();
 
   const session = await getServerSession(authOptions);
-  const sessionRole = String(session?.user?.roleKey || "").toLowerCase();
+  const activeOrgId = cookies().get("x-org-id")?.value ?? null;
+  const memberships = session?.user?.memberships ?? [];
+  const activeMembership =
+    memberships.find(
+      (membership) => membership.organization.id === activeOrgId,
+    ) ?? memberships[0];
+
+  const sessionRole = getRouteRole(
+    activeMembership?.role ?? null,
+    session?.user?.isPlatformAdmin,
+  );
 
   if (sessionRole && sessionRole !== urlRole) {
-    redirect(`/${sessionRole}/staff`);
+    redirect(`/${sessionRole}/dashboard`);
   }
 
   return <>{children}</>;

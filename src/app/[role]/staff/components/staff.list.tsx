@@ -13,10 +13,11 @@ import SortableTableHeader from "@/components/forms/table/sortableTableHeader";
 import StyledTableHeadCell from "@/components/forms/table/styledTableHeader";
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
 import type { StaffSortField } from "@/constants/types";
+import type { Membership } from "@/generated/graphql";
 import { EnumSortOrder } from "@/generated/graphql";
 
 type StaffListTableProps = {
-  users: any[];
+  memberships: Membership[];
   totalCount: number;
   page: number;
   rowsPerPage: number;
@@ -28,7 +29,7 @@ type StaffListTableProps = {
 };
 
 export default function StaffListTable({
-  users,
+  memberships,
   totalCount,
   page,
   rowsPerPage,
@@ -38,7 +39,7 @@ export default function StaffListTable({
   onSort,
   loading,
 }: StaffListTableProps) {
-  const columnCount = 5; // Name, Email, Phone, Hospital, Role
+  const columnCount = 5; // Name, Email, Phone, Organization, Role
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 600 }}>
@@ -50,12 +51,12 @@ export default function StaffListTable({
                 label="Name"
                 currentSort={{
                   field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.ASC ? "asc" : "desc",
+                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
                 }}
                 onSort={(field, order) => {
                   onSort(
                     field as StaffSortField,
-                    order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
+                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
                   );
                 }}
               />
@@ -64,39 +65,37 @@ export default function StaffListTable({
                 label="Email"
                 currentSort={{
                   field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.ASC ? "asc" : "desc",
+                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
                 }}
                 onSort={(field, order) => {
                   onSort(
                     field as StaffSortField,
-                    order === "asc" ? EnumSortOrder.ASC : EnumSortOrder.DESC,
+                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
                   );
                 }}
               />
               <StyledTableHeadCell>Phone</StyledTableHeadCell>
-              <StyledTableHeadCell>Hospital</StyledTableHeadCell>
+              <StyledTableHeadCell>Organization</StyledTableHeadCell>
               <StyledTableHeadCell>Role</StyledTableHeadCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableSkeleton rows={rowsPerPage} columns={columnCount} />
-            ) : users.length === 0 ? (
+            ) : memberships.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={columnCount} align="center" sx={{ py: 4 }}>
                   Хэрэглэгч олдсонгүй
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.name ?? "-"}</TableCell>
-                  <TableCell>{user.email ?? "-"}</TableCell>
-                  <TableCell>{user.phone ?? "-"}</TableCell>
-                  <TableCell>{user.hospital?.name ?? "-"}</TableCell>
-                  <TableCell>
-                    {user.roles?.map((r: any) => r?.key).join(", ") ?? "-"}
-                  </TableCell>
+              memberships.map((membership) => (
+                <TableRow key={membership.id ?? membership.user?.id}>
+                  <TableCell>{membership.user?.name ?? "-"}</TableCell>
+                  <TableCell>{membership.user?.email ?? "-"}</TableCell>
+                  <TableCell>{membership.user?.phone ?? "-"}</TableCell>
+                  <TableCell>{membership.organization?.name ?? "-"}</TableCell>
+                  <TableCell>{membership.role ?? "-"}</TableCell>
                 </TableRow>
               ))
             )}

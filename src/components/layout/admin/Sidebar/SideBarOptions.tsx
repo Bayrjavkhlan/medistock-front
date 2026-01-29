@@ -6,6 +6,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import type { Session } from "next-auth";
 
 import { Routes } from "@/constants/routes";
+import type { OrganizationRole } from "@/generated/graphql";
 import { defineAbilityFor } from "@/lib/casl";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -22,7 +23,10 @@ export type SidebarItem = {
   icon: React.ReactNode;
 };
 
-export const getSidebarOptions = (session: Session | null): SidebarItem[] => {
+export const getSidebarOptions = (
+  session: Session | null,
+  activeRole: OrganizationRole | null = null,
+): SidebarItem[] => {
   // if (!session?.staff) {
   //   return [
   //     {
@@ -33,7 +37,7 @@ export const getSidebarOptions = (session: Session | null): SidebarItem[] => {
   //   ];
   // }
 
-  const ability = defineAbilityFor(session);
+  const ability = defineAbilityFor(session, activeRole);
   const items: SidebarItem[] = [];
 
   Object.values(Routes).forEach((route) => {

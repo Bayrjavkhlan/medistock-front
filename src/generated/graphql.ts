@@ -41,7 +41,6 @@ export type Address = {
   address2?: Maybe<Scalars["String"]["output"]>;
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
   id?: Maybe<Scalars["String"]["output"]>;
-  name?: Maybe<Hospital>;
   province?: Maybe<Scalars["String"]["output"]>;
   updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
@@ -52,15 +51,89 @@ export type AddressCreateInput = {
   province: Scalars["String"]["input"];
 };
 
-export type CurrentStaffObjectType = {
-  __typename?: "CurrentStaffObjectType";
-  email: Scalars["String"]["output"];
-  hospital?: Maybe<Hospital>;
-  id: Scalars["ID"]["output"];
+export type AuthUser = {
+  __typename?: "AuthUser";
+  email?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["String"]["output"];
+  isPlatformAdmin: Scalars["Boolean"]["output"];
+  memberships: Array<UserMembership>;
   name?: Maybe<Scalars["String"]["output"]>;
   phone?: Maybe<Scalars["String"]["output"]>;
-  roleKey?: Maybe<EnumStaffRole>;
-  roles?: Maybe<Array<Role>>;
+};
+
+export type Booking = {
+  __typename?: "Booking";
+  bookingTime?: Maybe<Scalars["DateTime"]["output"]>;
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  department?: Maybe<Scalars["String"]["output"]>;
+  doctorName?: Maybe<Scalars["String"]["output"]>;
+  hospital?: Maybe<Hospital>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  patientName?: Maybe<Scalars["String"]["output"]>;
+  patientPhone?: Maybe<Scalars["String"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+};
+
+export type BookingCreateInput = {
+  bookingTime: Scalars["DateTime"]["input"];
+  department: Scalars["String"]["input"];
+  doctorName?: InputMaybe<Scalars["String"]["input"]>;
+  hospitalId: Scalars["String"]["input"];
+  patientName: Scalars["String"]["input"];
+  patientPhone: Scalars["String"]["input"];
+  status: BookingStatus;
+};
+
+export enum BookingStatus {
+  Cancelled = "CANCELLED",
+  Completed = "COMPLETED",
+  Confirmed = "CONFIRMED",
+  Pending = "PENDING",
+}
+
+export type Bookings = {
+  __typename?: "Bookings";
+  count: Scalars["Int"]["output"];
+  data?: Maybe<Array<Booking>>;
+};
+
+export type BookingsWhereInput = {
+  hospitalId?: InputMaybe<Scalars["String"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<BookingStatus>;
+};
+
+export type Drug = {
+  __typename?: "Drug";
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
+  dosageForm?: Maybe<Scalars["String"]["output"]>;
+  genericName?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  manufacturer?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  strength?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+};
+
+export type DrugCreateInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  dosageForm?: InputMaybe<Scalars["String"]["input"]>;
+  genericName?: InputMaybe<Scalars["String"]["input"]>;
+  manufacturer?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  strength?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type Drugs = {
+  __typename?: "Drugs";
+  count: Scalars["Int"]["output"];
+  data?: Maybe<Array<Drug>>;
+};
+
+export type DrugsWhereInput = {
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export enum EnumSortOrder {
@@ -68,15 +141,9 @@ export enum EnumSortOrder {
   Desc = "desc",
 }
 
-export enum EnumStaffRole {
-  Admin = "ADMIN",
-  HospitalAdmin = "HOSPITAL_ADMIN",
-  Staff = "STAFF",
-}
-
 export type Equipment = {
   __typename?: "Equipment";
-  assignedTo?: Maybe<Staff>;
+  assignedTo?: Maybe<User>;
   category?: Maybe<Scalars["String"]["output"]>;
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
   hospital?: Maybe<Hospital>;
@@ -103,11 +170,11 @@ export enum EquipmentCategory {
 }
 
 export type EquipmentCreateInput = {
+  assignedToId?: InputMaybe<Scalars["String"]["input"]>;
   category: EquipmentCategory;
   hospitalId: Scalars["String"]["input"];
   name: Scalars["String"]["input"];
   serialNo: Scalars["String"]["input"];
-  staffId: Scalars["String"]["input"];
   state: EquipmentState;
 };
 
@@ -117,15 +184,12 @@ export type EquipmentLog = {
   description?: Maybe<Scalars["String"]["output"]>;
   equipment?: Maybe<Equipment>;
   id?: Maybe<Scalars["String"]["output"]>;
-  performedBy?: Maybe<Staff>;
-  staffId?: Maybe<Scalars["String"]["output"]>;
-  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  performedBy?: Maybe<User>;
 };
 
 export type EquipmentLogCreateInput = {
   description: Scalars["String"]["input"];
   equipmentId: Scalars["String"]["input"];
-  staffId: Scalars["String"]["input"];
 };
 
 export type EquipmentLogUpdateInput = {
@@ -205,29 +269,110 @@ export type LoginPayload = {
   accessToken: Scalars["String"]["output"];
   accessTokenExpiresAt: Scalars["String"]["output"];
   refreshToken: Scalars["String"]["output"];
-  staff: CurrentStaffObjectType;
+  user: AuthUser;
+};
+
+export type MePayload = {
+  __typename?: "MePayload";
+  activeOrganization?: Maybe<UserMembership>;
+  user: AuthUser;
+};
+
+export type Membership = {
+  __typename?: "Membership";
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  organization: OrganizationSummary;
+  role: OrganizationRole;
+  user: User;
+};
+
+export type MembershipCreateInput = {
+  role: OrganizationRole;
+  userId: Scalars["String"]["input"];
+};
+
+export type MembershipUpdateInput = {
+  role: OrganizationRole;
+};
+
+export type Memberships = {
+  __typename?: "Memberships";
+  count: Scalars["Int"]["output"];
+  data?: Maybe<Array<Membership>>;
 };
 
 export type Mutation = {
   __typename?: "Mutation";
+  bookingCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  bookingDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  bookingUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  drugCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  drugDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  drugUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   equipmentCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  equipmentDelete?: Maybe<Scalars["Boolean"]["output"]>;
   equipmentLogCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  equipmentLogDelete?: Maybe<Scalars["Boolean"]["output"]>;
   equipmentLogUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   equipmentUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   hospitalCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  hospitalDelete?: Maybe<Scalars["Boolean"]["output"]>;
   hospitalUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   login?: Maybe<LoginPayload>;
+  membershipCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  membershipDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  membershipUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  pharmacyCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  pharmacyDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  pharmacyUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   refreshAccessToken?: Maybe<LoginPayload>;
-  staffCreate?: Maybe<Scalars["Boolean"]["output"]>;
-  staffUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  selectOrganization?: Maybe<UserMembership>;
+  userCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  userDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  userUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+export type MutationBookingCreateArgs = {
+  input: BookingCreateInput;
+};
+
+export type MutationBookingDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type MutationBookingUpdateArgs = {
+  id: Scalars["String"]["input"];
+  input: BookingCreateInput;
+};
+
+export type MutationDrugCreateArgs = {
+  input: DrugCreateInput;
+};
+
+export type MutationDrugDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type MutationDrugUpdateArgs = {
+  id: Scalars["String"]["input"];
+  input: DrugCreateInput;
 };
 
 export type MutationEquipmentCreateArgs = {
   input: EquipmentCreateInput;
 };
 
+export type MutationEquipmentDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
 export type MutationEquipmentLogCreateArgs = {
   input: EquipmentLogCreateInput;
+};
+
+export type MutationEquipmentLogDeleteArgs = {
+  id: Scalars["String"]["input"];
 };
 
 export type MutationEquipmentLogUpdateArgs = {
@@ -244,6 +389,10 @@ export type MutationHospitalCreateArgs = {
   input: HospitalCreateInput;
 };
 
+export type MutationHospitalDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
 export type MutationHospitalUpdateArgs = {
   id: Scalars["String"]["input"];
   input: HospitalCreateInput;
@@ -253,22 +402,112 @@ export type MutationLoginArgs = {
   input: LoginInput;
 };
 
+export type MutationMembershipCreateArgs = {
+  input: MembershipCreateInput;
+};
+
+export type MutationMembershipDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type MutationMembershipUpdateArgs = {
+  id: Scalars["String"]["input"];
+  input: MembershipUpdateInput;
+};
+
+export type MutationPharmacyCreateArgs = {
+  input: PharmacyCreateInput;
+};
+
+export type MutationPharmacyDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type MutationPharmacyUpdateArgs = {
+  id: Scalars["String"]["input"];
+  input: PharmacyCreateInput;
+};
+
 export type MutationRefreshAccessTokenArgs = {
   refreshToken: Scalars["String"]["input"];
 };
 
-export type MutationStaffCreateArgs = {
-  input: StaffCreateInput;
+export type MutationSelectOrganizationArgs = {
+  orgId: Scalars["String"]["input"];
 };
 
-export type MutationStaffUpdateArgs = {
+export type MutationUserCreateArgs = {
+  input: UserCreateInput;
+};
+
+export type MutationUserDeleteArgs = {
   id: Scalars["String"]["input"];
-  input: StaffCreateInput;
+};
+
+export type MutationUserUpdateArgs = {
+  id: Scalars["String"]["input"];
+  input: UserUpdateInput;
+};
+
+export enum OrganizationRole {
+  Manager = "MANAGER",
+  Owner = "OWNER",
+  Staff = "STAFF",
+}
+
+export type OrganizationSummary = {
+  __typename?: "OrganizationSummary";
+  id: Scalars["String"]["output"];
+  name: Scalars["String"]["output"];
+  type: OrganizationType;
+};
+
+export enum OrganizationType {
+  Hospital = "HOSPITAL",
+  Pharmacy = "PHARMACY",
+}
+
+export type PharmaciesWhereInput = {
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type Pharmacy = {
+  __typename?: "Pharmacy";
+  address?: Maybe<Address>;
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  phone?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+};
+
+export type PharmacyCreateInput = {
+  address: AddressCreateInput;
+  email: Scalars["EmailAddress"]["input"];
+  name: Scalars["String"]["input"];
+  phone: Scalars["String"]["input"];
+};
+
+export type PharmacyOption = {
+  __typename?: "PharmacyOption";
+  id?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type Pharmacys = {
+  __typename?: "Pharmacys";
+  count: Scalars["Int"]["output"];
+  data?: Maybe<Array<Pharmacy>>;
 };
 
 export type Query = {
   __typename?: "Query";
-  currentStaff?: Maybe<CurrentStaffObjectType>;
+  bookingDetail?: Maybe<Booking>;
+  bookings?: Maybe<Bookings>;
+  currentUser?: Maybe<AuthUser>;
+  drugDetail?: Maybe<Drug>;
+  drugs?: Maybe<Drugs>;
   equipmentDetail?: Maybe<Equipment>;
   equipmentLogDetail?: Maybe<EquipmentLog>;
   equipmentLogs?: Maybe<EquipmentLogs>;
@@ -276,8 +515,33 @@ export type Query = {
   hospitalDetail?: Maybe<Hospital>;
   hospitalOption: Array<HospitalOption>;
   hospitals?: Maybe<Hospitals>;
-  staffDetail?: Maybe<Staff>;
-  staffs?: Maybe<StaffObjectType>;
+  me?: Maybe<MePayload>;
+  memberships?: Maybe<Memberships>;
+  pharmacies?: Maybe<Pharmacys>;
+  pharmacyDetail?: Maybe<Pharmacy>;
+  pharmacyOption: Array<PharmacyOption>;
+  userDetail?: Maybe<User>;
+  users?: Maybe<Users>;
+};
+
+export type QueryBookingDetailArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type QueryBookingsArgs = {
+  skip: Scalars["Int"]["input"];
+  take: Scalars["Int"]["input"];
+  where?: InputMaybe<BookingsWhereInput>;
+};
+
+export type QueryDrugDetailArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type QueryDrugsArgs = {
+  skip: Scalars["Int"]["input"];
+  take: Scalars["Int"]["input"];
+  where?: InputMaybe<DrugsWhereInput>;
 };
 
 export type QueryEquipmentDetailArgs = {
@@ -310,57 +574,76 @@ export type QueryHospitalsArgs = {
   where?: InputMaybe<HospitalsWhereInput>;
 };
 
-export type QueryStaffDetailArgs = {
+export type QueryMembershipsArgs = {
+  skip: Scalars["Int"]["input"];
+  take: Scalars["Int"]["input"];
+};
+
+export type QueryPharmaciesArgs = {
+  skip: Scalars["Int"]["input"];
+  take: Scalars["Int"]["input"];
+  where?: InputMaybe<PharmaciesWhereInput>;
+};
+
+export type QueryPharmacyDetailArgs = {
   id: Scalars["String"]["input"];
 };
 
-export type QueryStaffsArgs = {
-  orderBy?: InputMaybe<StaffsOrderByInput>;
+export type QueryUserDetailArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type QueryUsersArgs = {
   skip: Scalars["Int"]["input"];
   take: Scalars["Int"]["input"];
-  where?: InputMaybe<StaffsWhereInput>;
+  where?: InputMaybe<UsersWhereInput>;
 };
 
-export type Role = {
-  __typename?: "Role";
-  id?: Maybe<Scalars["String"]["output"]>;
-  key?: Maybe<EnumStaffRole>;
-  name?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type Staff = {
-  __typename?: "Staff";
+export type User = {
+  __typename?: "User";
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
   email?: Maybe<Scalars["String"]["output"]>;
-  hospital?: Maybe<Hospital>;
   id?: Maybe<Scalars["String"]["output"]>;
+  isPlatformAdmin?: Maybe<Scalars["Boolean"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   phone?: Maybe<Scalars["String"]["output"]>;
-  roles?: Maybe<Array<Maybe<Role>>>;
   updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
-export type StaffCreateInput = {
+export type UserCreateInput = {
   email: Scalars["String"]["input"];
-  hospitalId: Scalars["String"]["input"];
-  name: Scalars["String"]["input"];
-  phone: Scalars["String"]["input"];
-  roleKeys: Array<EnumStaffRole>;
+  isPlatformAdmin?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  organizationId?: InputMaybe<Scalars["String"]["input"]>;
+  password: Scalars["String"]["input"];
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  role?: InputMaybe<OrganizationRole>;
 };
 
-export type StaffObjectType = {
-  __typename?: "StaffObjectType";
+export type UserMembership = {
+  __typename?: "UserMembership";
+  organization: OrganizationSummary;
+  role: OrganizationRole;
+};
+
+export type UserUpdateInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  isPlatformAdmin?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  organizationId?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  role?: InputMaybe<OrganizationRole>;
+};
+
+export type Users = {
+  __typename?: "Users";
   count: Scalars["Int"]["output"];
-  data?: Maybe<Array<Staff>>;
+  data?: Maybe<Array<User>>;
 };
 
-export type StaffsOrderByInput = {
-  email?: InputMaybe<EnumSortOrder>;
-  name?: InputMaybe<EnumSortOrder>;
-};
-
-export type StaffsWhereInput = {
-  roleKey?: InputMaybe<EnumStaffRole>;
+export type UsersWhereInput = {
+  organizationId?: InputMaybe<Scalars["String"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -375,14 +658,23 @@ export type LoginMutation = {
     accessToken: string;
     refreshToken: string;
     accessTokenExpiresAt: string;
-    staff: {
-      __typename?: "CurrentStaffObjectType";
+    user: {
+      __typename?: "AuthUser";
       id: string;
       name?: string | null;
-      email: string;
+      email?: string | null;
       phone?: string | null;
-      roleKey?: EnumStaffRole | null;
-      hospital?: { __typename?: "Hospital"; name?: string | null } | null;
+      isPlatformAdmin: boolean;
+      memberships: Array<{
+        __typename?: "UserMembership";
+        role: OrganizationRole;
+        organization: {
+          __typename?: "OrganizationSummary";
+          id: string;
+          name: string;
+          type: OrganizationType;
+        };
+      }>;
     };
   } | null;
 };
@@ -398,40 +690,103 @@ export type RefreshAccessTokenMutation = {
     accessToken: string;
     refreshToken: string;
     accessTokenExpiresAt: string;
-    staff: {
-      __typename?: "CurrentStaffObjectType";
+    user: {
+      __typename?: "AuthUser";
       id: string;
       name?: string | null;
-      email: string;
+      email?: string | null;
       phone?: string | null;
-      roleKey?: EnumStaffRole | null;
-      hospital?: { __typename?: "Hospital"; name?: string | null } | null;
+      isPlatformAdmin: boolean;
+      memberships: Array<{
+        __typename?: "UserMembership";
+        role: OrganizationRole;
+        organization: {
+          __typename?: "OrganizationSummary";
+          id: string;
+          name: string;
+          type: OrganizationType;
+        };
+      }>;
     };
   } | null;
 };
 
-export type CurrentStaffQueryVariables = Exact<{ [key: string]: never }>;
+export type SelectOrganizationMutationVariables = Exact<{
+  orgId: Scalars["String"]["input"];
+}>;
 
-export type CurrentStaffQuery = {
+export type SelectOrganizationMutation = {
+  __typename?: "Mutation";
+  selectOrganization?: {
+    __typename?: "UserMembership";
+    role: OrganizationRole;
+    organization: {
+      __typename?: "OrganizationSummary";
+      id: string;
+      name: string;
+      type: OrganizationType;
+    };
+  } | null;
+};
+
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type MeQuery = {
   __typename?: "Query";
-  currentStaff?: {
-    __typename?: "CurrentStaffObjectType";
-    id: string;
-    name?: string | null;
-    email: string;
-    phone?: string | null;
-    roleKey?: EnumStaffRole | null;
-    roles?: Array<{
-      __typename?: "Role";
-      key?: EnumStaffRole | null;
-      id?: string | null;
-    }> | null;
-    hospital?: {
-      __typename?: "Hospital";
-      id?: string | null;
+  me?: {
+    __typename?: "MePayload";
+    activeOrganization?: {
+      __typename?: "UserMembership";
+      role: OrganizationRole;
+      organization: {
+        __typename?: "OrganizationSummary";
+        id: string;
+        name: string;
+        type: OrganizationType;
+      };
+    } | null;
+    user: {
+      __typename?: "AuthUser";
+      id: string;
       name?: string | null;
       email?: string | null;
-    } | null;
+      phone?: string | null;
+      isPlatformAdmin: boolean;
+      memberships: Array<{
+        __typename?: "UserMembership";
+        role: OrganizationRole;
+        organization: {
+          __typename?: "OrganizationSummary";
+          id: string;
+          name: string;
+          type: OrganizationType;
+        };
+      }>;
+    };
+  } | null;
+};
+
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CurrentUserQuery = {
+  __typename?: "Query";
+  currentUser?: {
+    __typename?: "AuthUser";
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    isPlatformAdmin: boolean;
+    memberships: Array<{
+      __typename?: "UserMembership";
+      role: OrganizationRole;
+      organization: {
+        __typename?: "OrganizationSummary";
+        id: string;
+        name: string;
+        type: OrganizationType;
+      };
+    }>;
   } | null;
 };
 
@@ -473,7 +828,7 @@ export type EquipmentsQuery = {
       state?: string | null;
       category?: string | null;
       assignedTo?: {
-        __typename?: "Staff";
+        __typename?: "User";
         id?: string | null;
         name?: string | null;
         email?: string | null;
@@ -502,7 +857,7 @@ export type EquipmentDetailQuery = {
     serialNo?: string | null;
     state?: string | null;
     assignedTo?: {
-      __typename?: "Staff";
+      __typename?: "User";
       id?: string | null;
       name?: string | null;
       email?: string | null;
@@ -595,79 +950,79 @@ export type HospitalOptionQuery = {
   }>;
 };
 
-export type StaffCreateMutationVariables = Exact<{
-  input: StaffCreateInput;
+export type UserCreateMutationVariables = Exact<{
+  input: UserCreateInput;
 }>;
 
-export type StaffCreateMutation = {
+export type UserCreateMutation = {
   __typename?: "Mutation";
-  staffCreate?: boolean | null;
+  userCreate?: boolean | null;
 };
 
-export type StaffUpdateMutationVariables = Exact<{
-  staffUpdateId: Scalars["String"]["input"];
-  input: StaffCreateInput;
+export type UserUpdateMutationVariables = Exact<{
+  userUpdateId: Scalars["String"]["input"];
+  input: UserUpdateInput;
 }>;
 
-export type StaffUpdateMutation = {
+export type UserUpdateMutation = {
   __typename?: "Mutation";
-  staffUpdate?: boolean | null;
+  userUpdate?: boolean | null;
 };
 
-export type StaffsQueryVariables = Exact<{
-  where?: InputMaybe<StaffsWhereInput>;
+export type MembershipUpdateMutationVariables = Exact<{
+  membershipUpdateId: Scalars["String"]["input"];
+  input: MembershipUpdateInput;
+}>;
+
+export type MembershipUpdateMutation = {
+  __typename?: "Mutation";
+  membershipUpdate?: boolean | null;
+};
+
+export type MembershipsQueryVariables = Exact<{
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
-  orderBy?: InputMaybe<StaffsOrderByInput>;
 }>;
 
-export type StaffsQuery = {
+export type MembershipsQuery = {
   __typename?: "Query";
-  staffs?: {
-    __typename?: "StaffObjectType";
+  memberships?: {
+    __typename?: "Memberships";
     count: number;
     data?: Array<{
-      __typename?: "Staff";
+      __typename?: "Membership";
       id?: string | null;
-      name?: string | null;
-      email?: string | null;
-      phone?: string | null;
-      hospital?: {
-        __typename?: "Hospital";
+      role: OrganizationRole;
+      user: {
+        __typename?: "User";
         id?: string | null;
         name?: string | null;
-      } | null;
-      roles?: Array<{
-        __typename?: "Role";
-        key?: EnumStaffRole | null;
-      } | null> | null;
+        email?: string | null;
+        phone?: string | null;
+      };
+      organization: {
+        __typename?: "OrganizationSummary";
+        id: string;
+        name: string;
+        type: OrganizationType;
+      };
     }> | null;
   } | null;
 };
 
-export type StaffDetailQueryVariables = Exact<{
-  staffDetailId: Scalars["String"]["input"];
+export type UserDetailQueryVariables = Exact<{
+  userDetailId: Scalars["String"]["input"];
 }>;
 
-export type StaffDetailQuery = {
+export type UserDetailQuery = {
   __typename?: "Query";
-  staffDetail?: {
-    __typename?: "Staff";
+  userDetail?: {
+    __typename?: "User";
     id?: string | null;
-    email?: string | null;
     name?: string | null;
+    email?: string | null;
     phone?: string | null;
-    roles?: Array<{
-      __typename?: "Role";
-      id?: string | null;
-      key?: EnumStaffRole | null;
-      name?: string | null;
-    } | null> | null;
-    hospital?: {
-      __typename?: "Hospital";
-      name?: string | null;
-      id?: string | null;
-    } | null;
+    isPlatformAdmin?: boolean | null;
   } | null;
 };
 
@@ -715,7 +1070,7 @@ export const LoginDocument = {
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "staff" },
+                  name: { kind: "Name", value: "user" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -725,17 +1080,38 @@ export const LoginDocument = {
                       { kind: "Field", name: { kind: "Name", value: "phone" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "roleKey" },
+                        name: { kind: "Name", value: "isPlatformAdmin" },
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "hospital" },
+                        name: { kind: "Name", value: "memberships" },
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "Field",
-                              name: { kind: "Name", value: "name" },
+                              name: { kind: "Name", value: "role" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "organization" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -804,7 +1180,7 @@ export const RefreshAccessTokenDocument = {
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "staff" },
+                  name: { kind: "Name", value: "user" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -814,17 +1190,38 @@ export const RefreshAccessTokenDocument = {
                       { kind: "Field", name: { kind: "Name", value: "phone" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "roleKey" },
+                        name: { kind: "Name", value: "isPlatformAdmin" },
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "hospital" },
+                        name: { kind: "Name", value: "memberships" },
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "Field",
-                              name: { kind: "Name", value: "name" },
+                              name: { kind: "Name", value: "role" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "organization" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -852,47 +1249,58 @@ export const RefreshAccessTokenDocument = {
   RefreshAccessTokenMutation,
   RefreshAccessTokenMutationVariables
 >;
-export const CurrentStaffDocument = {
+export const SelectOrganizationDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "CurrentStaff" },
+      operation: "mutation",
+      name: { kind: "Name", value: "SelectOrganization" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "orgId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "currentStaff" },
+            name: { kind: "Name", value: "selectOrganization" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orgId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "orgId" },
+                },
+              },
+            ],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "email" } },
-                { kind: "Field", name: { kind: "Name", value: "phone" } },
+                { kind: "Field", name: { kind: "Name", value: "role" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "roles" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "key" } },
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                    ],
-                  },
-                },
-                { kind: "Field", name: { kind: "Name", value: "roleKey" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "hospital" },
+                  name: { kind: "Name", value: "organization" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
                       { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "email" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
                     ],
                   },
                 },
@@ -903,7 +1311,179 @@ export const CurrentStaffDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<CurrentStaffQuery, CurrentStaffQueryVariables>;
+} as unknown as DocumentNode<
+  SelectOrganizationMutation,
+  SelectOrganizationMutationVariables
+>;
+export const MeDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Me" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "me" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "activeOrganization" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "role" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organization" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "type" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "user" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "email" } },
+                      { kind: "Field", name: { kind: "Name", value: "phone" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "isPlatformAdmin" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "memberships" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "role" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "organization" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
+export const CurrentUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "CurrentUser" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "currentUser" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "phone" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "isPlatformAdmin" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "memberships" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "role" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organization" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "type" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CurrentUserQuery, CurrentUserQueryVariables>;
 export const EquipmentCreateDocument = {
   kind: "Document",
   definitions: [
@@ -1586,13 +2166,13 @@ export const HospitalOptionDocument = {
     },
   ],
 } as unknown as DocumentNode<HospitalOptionQuery, HospitalOptionQueryVariables>;
-export const StaffCreateDocument = {
+export const UserCreateDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "staffCreate" },
+      name: { kind: "Name", value: "UserCreate" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -1604,7 +2184,7 @@ export const StaffCreateDocument = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "StaffCreateInput" },
+              name: { kind: "Name", value: "UserCreateInput" },
             },
           },
         },
@@ -1614,7 +2194,7 @@ export const StaffCreateDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "staffCreate" },
+            name: { kind: "Name", value: "userCreate" },
             arguments: [
               {
                 kind: "Argument",
@@ -1630,20 +2210,20 @@ export const StaffCreateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<StaffCreateMutation, StaffCreateMutationVariables>;
-export const StaffUpdateDocument = {
+} as unknown as DocumentNode<UserCreateMutation, UserCreateMutationVariables>;
+export const UserUpdateDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "StaffUpdate" },
+      name: { kind: "Name", value: "UserUpdate" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "staffUpdateId" },
+            name: { kind: "Name", value: "userUpdateId" },
           },
           type: {
             kind: "NonNullType",
@@ -1663,7 +2243,7 @@ export const StaffUpdateDocument = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "StaffCreateInput" },
+              name: { kind: "Name", value: "UserUpdateInput" },
             },
           },
         },
@@ -1673,14 +2253,14 @@ export const StaffUpdateDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "staffUpdate" },
+            name: { kind: "Name", value: "userUpdate" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "staffUpdateId" },
+                  name: { kind: "Name", value: "userUpdateId" },
                 },
               },
               {
@@ -1697,26 +2277,85 @@ export const StaffUpdateDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<StaffUpdateMutation, StaffUpdateMutationVariables>;
-export const StaffsDocument = {
+} as unknown as DocumentNode<UserUpdateMutation, UserUpdateMutationVariables>;
+export const MembershipUpdateDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "Staffs" },
+      operation: "mutation",
+      name: { kind: "Name", value: "MembershipUpdate" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "where" },
+            name: { kind: "Name", value: "membershipUpdateId" },
           },
           type: {
-            kind: "NamedType",
-            name: { kind: "Name", value: "StaffsWhereInput" },
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
           },
         },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "MembershipUpdateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "membershipUpdate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "membershipUpdateId" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  MembershipUpdateMutation,
+  MembershipUpdateMutationVariables
+>;
+export const MembershipsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Memberships" },
+      variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "take" } },
@@ -1733,33 +2372,14 @@ export const StaffsDocument = {
             type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
           },
         },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "orderBy" },
-          },
-          type: {
-            kind: "NamedType",
-            name: { kind: "Name", value: "StaffsOrderByInput" },
-          },
-        },
       ],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "staffs" },
+            name: { kind: "Name", value: "memberships" },
             arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "where" },
-                },
-              },
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "take" },
@@ -1776,14 +2396,6 @@ export const StaffsDocument = {
                   name: { kind: "Name", value: "skip" },
                 },
               },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "orderBy" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "orderBy" },
-                },
-              },
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -1795,12 +2407,10 @@ export const StaffsDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "email" } },
-                      { kind: "Field", name: { kind: "Name", value: "phone" } },
+                      { kind: "Field", name: { kind: "Name", value: "role" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "hospital" },
+                        name: { kind: "Name", value: "user" },
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
@@ -1812,18 +2422,34 @@ export const StaffsDocument = {
                               kind: "Field",
                               name: { kind: "Name", value: "name" },
                             },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "email" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "phone" },
+                            },
                           ],
                         },
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "roles" },
+                        name: { kind: "Name", value: "organization" },
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "Field",
-                              name: { kind: "Name", value: "key" },
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "type" },
                             },
                           ],
                         },
@@ -1839,20 +2465,20 @@ export const StaffsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<StaffsQuery, StaffsQueryVariables>;
-export const StaffDetailDocument = {
+} as unknown as DocumentNode<MembershipsQuery, MembershipsQueryVariables>;
+export const UserDetailDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "StaffDetail" },
+      name: { kind: "Name", value: "UserDetail" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "staffDetailId" },
+            name: { kind: "Name", value: "userDetailId" },
           },
           type: {
             kind: "NonNullType",
@@ -1868,14 +2494,14 @@ export const StaffDetailDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "staffDetail" },
+            name: { kind: "Name", value: "userDetail" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "staffDetailId" },
+                  name: { kind: "Name", value: "userDetailId" },
                 },
               },
             ],
@@ -1883,31 +2509,12 @@ export const StaffDetailDocument = {
               kind: "SelectionSet",
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "email" } },
                 { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
                 { kind: "Field", name: { kind: "Name", value: "phone" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "roles" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "key" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "hospital" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                    ],
-                  },
+                  name: { kind: "Name", value: "isPlatformAdmin" },
                 },
               ],
             },
@@ -1916,4 +2523,4 @@ export const StaffDetailDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<StaffDetailQuery, StaffDetailQueryVariables>;
+} as unknown as DocumentNode<UserDetailQuery, UserDetailQueryVariables>;
