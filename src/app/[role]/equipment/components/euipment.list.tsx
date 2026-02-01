@@ -1,4 +1,7 @@
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -7,6 +10,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
@@ -18,6 +22,10 @@ type EquipmentListTableProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  canUpdate: boolean;
+  canDelete: boolean;
   // sortBy: { field: UserSortField; order: EnumSortOrder };
   // onSort: (field: UserSortField, order: EnumSortOrder) => void;
   loading: boolean;
@@ -29,15 +37,38 @@ export default function EquipmentListTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  onEdit,
+  onDelete,
+  canUpdate,
+  canDelete,
   // sortBy,
   // onSort,
   loading,
 }: EquipmentListTableProps) {
-  const columnCount = 4; // Name, Category, SerialNu, AssignedTo with HospitalName, State
+  const columnCount = 6; // Name, Category, SerialNum, AssignedTo/Hospital, State, Actions
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 600 }}>
-        <Table stickyHeader>
+    <Paper
+      sx={{
+        width: "100%",
+        overflow: "hidden",
+        borderRadius: 3,
+        border: "1px solid",
+        borderColor: "divider",
+      }}
+      className="shadow-sm"
+    >
+      <TableContainer sx={{ maxHeight: 640 }}>
+        <Table
+          stickyHeader
+          sx={{
+            "& tbody tr:hover": {
+              backgroundColor: "action.hover",
+            },
+            "& th": {
+              backgroundColor: "background.paper",
+            },
+          }}
+        >
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
@@ -45,6 +76,7 @@ export default function EquipmentListTable({
               <TableCell>SerialNum</TableCell>
               <TableCell>AssignedTo</TableCell>
               <TableCell>State</TableCell>
+              <TableCell align="right">Үйлдэл</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -53,7 +85,7 @@ export default function EquipmentListTable({
             ) : equipments.count === 0 ? (
               <TableRow>
                 <TableCell colSpan={columnCount} align="center" sx={{ py: 4 }}>
-                  Эмнэлэг олдсонгүй
+                  Тоног төхөөрөмж олдсонгүй
                 </TableCell>
               </TableRow>
             ) : (
@@ -68,6 +100,35 @@ export default function EquipmentListTable({
                     {equipment.hospital?.name ?? "-"}
                   </TableCell>
                   <TableCell>{equipment.state ?? "-"}</TableCell>
+                  <TableCell align="right">
+                    {canUpdate ? (
+                      <Tooltip title="Засах">
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            if (!equipment.id) return;
+                            onEdit(equipment.id);
+                          }}
+                        >
+                          <EditOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
+                    {canDelete ? (
+                      <Tooltip title="Устгах">
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => {
+                            if (!equipment.id) return;
+                            onDelete(equipment.id);
+                          }}
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
+                  </TableCell>
                 </TableRow>
               ))
             )}

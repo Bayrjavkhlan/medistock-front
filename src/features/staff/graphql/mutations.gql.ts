@@ -20,3 +20,9 @@ export const MEMBERSHIP_UPDATE = gql`
     membershipUpdate(id: $membershipUpdateId, input: $input)
   }
 `;
+
+export const MEMBERSHIP_DELETE = gql`
+  mutation MembershipDelete($membershipDeleteId: String!) {
+    membershipDelete(id: $membershipDeleteId)
+  }
+`;

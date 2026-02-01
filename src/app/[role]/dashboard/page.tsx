@@ -1,5 +1,5 @@
-import AdminDashboardContainer from "./container/dashboard.containter";
+import DashboardContainer from "./container/dashboard.containter";
 
 export default function DashboardPage() {
-  return <AdminDashboardContainer />;
+  return <DashboardContainer />;
 }

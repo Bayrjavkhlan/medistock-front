@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-import AppLayout from "./admin";
+import RoleLayout from "./RoleLayout";
 
 const NO_LAYOUT_PATHS = ["/login", "/forgot-password", "/new-password", "/404"];
 
@@ -13,10 +13,8 @@ interface RenderLayoutProps {
 export const RenderLayout = ({ children }: RenderLayoutProps) => {
   const pathname = usePathname() ?? "";
 
-  const protectedPrefixes = ["/admin", "/staff", "/hospital", "/profile"];
-
-  if (protectedPrefixes.some((prefix) => pathname.startsWith(prefix))) {
-    return <AppLayout>{children}</AppLayout>;
+  if (pathname.startsWith("/profile")) {
+    return <RoleLayout>{children}</RoleLayout>;
   }
 
   if (NO_LAYOUT_PATHS.some((path) => pathname.startsWith(path))) {

@@ -1,4 +1,5 @@
 "use client";
+
 import { useMutation } from "@apollo/client/react";
 import { debounce } from "lodash";
 import { useParams } from "next/navigation";
@@ -9,19 +10,18 @@ import ConfirmDialog from "@/components/core/ConfirmDialog";
 import StateView from "@/components/core/StateView";
 import Toast from "@/components/core/Toast";
 import PageToolbar from "@/components/forms/toolbar";
-import { HOSPITAL_DELETE } from "@/features/hospital/graphql/mutation.gql";
-import { useHospitalsQuery } from "@/generated/hooks";
+import { PHARMACY_DELETE } from "@/features/pharmacy/graphql/mutations.gql";
+import { usePharmaciesQuery } from "@/generated/hooks";
 import { useAbility } from "@/lib/casl/useAbility";
 
-import HospitalListTable from "../components/hospital.list";
-import HospitalModal from "../components/hospital.modal";
+import PharmacyListTable from "../components/pharmacy.list";
+import PharmacyModal from "../components/pharmacy.modal";
 
-export default function HospitalContainer() {
+export default function PharmacyContainer() {
   const params = useParams();
   const roleParam = typeof params?.role === "string" ? params.role : "user";
   const role = roleParam.toLowerCase();
-  const subject = role === "user" ? "User_Hospital" : "Admin_Hospital";
-
+  const subject = role === "user" ? "User_Pharmacy" : "Admin_Pharmacy";
   const ability = useAbility();
   const canRead = ability.can("read", subject);
   const canCreate = ability.can("create", subject);
@@ -46,11 +46,10 @@ export default function HospitalContainer() {
     return () => handler.cancel();
   }, [search]);
 
-  const { data, loading, error, refetch } = useHospitalsQuery({
+  const { data, loading, error, refetch } = usePharmaciesQuery({
     variables: {
       where: {
         search: debouncedSearch || undefined,
-        address: undefined,
       },
       take: rowsPerPage,
       skip: page * rowsPerPage,
@@ -59,13 +58,13 @@ export default function HospitalContainer() {
     skip: !canRead,
   });
 
-  const hospitalsData = data?.hospitals ?? { data: [], count: 0 };
-  const editingHospital = useMemo(
-    () => hospitalsData.data?.find((item) => item.id === editingId) ?? null,
-    [editingId, hospitalsData.data],
+  const pharmaciesData = data?.pharmacies ?? { data: [], count: 0 };
+  const editingPharmacy = useMemo(
+    () => pharmaciesData.data?.find((item) => item.id === editingId) ?? null,
+    [editingId, pharmaciesData.data],
   );
 
-  const [deleteHospital, deleteState] = useMutation(HOSPITAL_DELETE, {
+  const [deletePharmacy, deleteState] = useMutation(PHARMACY_DELETE, {
     onCompleted: async () => {
       setToast({ message: "Амжилттай устгалаа.", severity: "success" });
       setDeleteId(null);
@@ -100,14 +99,14 @@ export default function HospitalContainer() {
             search={search}
             onSearchChange={setSearch}
             onCreateClick={handleCreate}
-            placeholder="Эмнэлэг хайх..."
-            buttonText="Шинэ эмнэлэг нэмэх"
+            placeholder="Эмийн сан хайх..."
+            buttonText="Шинэ эмийн сан нэмэх"
             createDisabled={!canCreate}
           />
-          <HospitalModal
+          <PharmacyModal
             open={open}
             mode={editingId ? "update" : "create"}
-            initialData={editingHospital}
+            initialData={editingPharmacy}
             onClose={() => {
               setOpen(false);
               setEditingId(null);
@@ -118,8 +117,8 @@ export default function HospitalContainer() {
               )
             }
           />
-          <HospitalListTable
-            hospitals={hospitalsData}
+          <PharmacyListTable
+            pharmacies={pharmaciesData}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={(newPage) => {
@@ -140,13 +139,13 @@ export default function HospitalContainer() {
           />
           <ConfirmDialog
             open={!!deleteId}
-            title="Эмнэлэг устгах уу?"
+            title="Эмийн сан устгах уу?"
             confirmText="Устгах"
             loading={deleteState.loading}
             onClose={() => setDeleteId(null)}
             onConfirm={() => {
               if (!deleteId) return;
-              deleteHospital({ variables: { hospitalDeleteId: deleteId } });
+              deletePharmacy({ variables: { pharmacyDeleteId: deleteId } });
             }}
           />
           <Toast

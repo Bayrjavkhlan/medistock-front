@@ -2,15 +2,19 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
+import RoleLayoutComponent from "@/components/layout/RoleLayout";
+import type { UserMembership } from "@/generated/graphql";
 import { authOptions } from "@/lib/next-auth";
 
 const getRouteRole = (
-  role: string | null | undefined,
+  activeMembership: UserMembership | null | undefined,
   isPlatformAdmin: boolean | undefined,
 ) => {
   if (isPlatformAdmin) return "admin";
-  if (!role) return null;
-  return role === "STAFF" ? "staff" : "hospital";
+  if (!activeMembership) return "user";
+  return activeMembership.organization.type === "PHARMACY"
+    ? "pharmacy"
+    : "hospital";
 };
 
 export default async function RoleLayout({
@@ -24,7 +28,7 @@ export default async function RoleLayout({
   const urlRole = role.toLowerCase();
 
   const session = await getServerSession(authOptions);
-  const activeOrgId = cookies().get("x-org-id")?.value ?? null;
+  const activeOrgId = (await cookies()).get("x-org-id")?.value ?? null;
   const memberships = session?.user?.memberships ?? [];
   const activeMembership =
     memberships.find(
@@ -32,7 +36,7 @@ export default async function RoleLayout({
     ) ?? memberships[0];
 
   const sessionRole = getRouteRole(
-    activeMembership?.role ?? null,
+    activeMembership ?? null,
     session?.user?.isPlatformAdmin,
   );
 
@@ -40,5 +44,5 @@ export default async function RoleLayout({
     redirect(`/${sessionRole}/dashboard`);
   }
 
-  return <>{children}</>;
+  return <RoleLayoutComponent>{children}</RoleLayoutComponent>;
 }

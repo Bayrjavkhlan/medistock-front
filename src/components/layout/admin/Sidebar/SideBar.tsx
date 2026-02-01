@@ -19,9 +19,9 @@ import { useTheme } from "@mui/material/styles";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
+import AbilityGuard from "@/components/AbilityGuard";
+import { resolveRoleKey, SIDEBARS } from "@/config/sidebars";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-
-import { getSidebarOptions } from "./SideBarOptions";
 
 type Props = {
   collapsed: boolean;
@@ -43,10 +43,8 @@ export default function Sidebar({
   const { activeOrganization } = useActiveOrganization();
   const router = useRouter();
 
-  const sidebarItems = getSidebarOptions(
-    session,
-    activeOrganization?.role ?? null,
-  );
+  const roleKey = resolveRoleKey(session ?? null, activeOrganization ?? null);
+  const sidebarItems = SIDEBARS[roleKey] ?? [];
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -103,59 +101,59 @@ export default function Sidebar({
       <List sx={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}>
         {sidebarItems.map((item) => {
           const active = isActive(item.path);
+          const Icon = item.icon;
           return (
-            <Tooltip
+            <AbilityGuard
               key={item.path}
-              title={collapsed ? item.text : ""}
-              placement="right"
+              action={item.action}
+              subject={item.subject}
+              fallback={null}
             >
-              <ListItem
-                onClick={() => {
-                  if (item.path.startsWith("/api/auth")) {
-                    window.location.href = item.path;
-                  } else {
+              <Tooltip title={collapsed ? item.label : ""} placement="right">
+                <ListItem
+                  onClick={() => {
                     router.push(item.path);
                     if (isMobile) setMobileOpen(false);
-                  }
-                }}
-                sx={{
-                  px: collapsed ? 0 : 2,
-                  py: 2,
-                  justifyContent: collapsed ? "center" : "flex-start",
-                  transition: "all 0.3s ease",
-                  borderRadius: 0,
-                  "&:hover": {
-                    bgcolor: "primary.100",
-                    ".dark &": {
-                      bgcolor: "primary.800",
-                    },
-                  },
-
-                  ...(active && {
-                    bgcolor: "primary.50",
-                    ".dark &": {
-                      bgcolor: "primary.900",
-                      "&:hover": { bgcolor: "primary.800" },
-                    },
-                  }),
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    justifyContent: collapsed ? "center" : "flex-start",
-                    mr: collapsed ? 0 : 2,
-                    "& svg": {
-                      fontSize: "32px",
-                    },
                   }}
-                  className="text-primary dark:text-white"
+                  sx={{
+                    px: collapsed ? 0 : 2,
+                    py: 2,
+                    justifyContent: collapsed ? "center" : "flex-start",
+                    transition: "all 0.3s ease",
+                    borderRadius: 0,
+                    "&:hover": {
+                      bgcolor: "primary.100",
+                      ".dark &": {
+                        bgcolor: "primary.800",
+                      },
+                    },
+
+                    ...(active && {
+                      bgcolor: "primary.50",
+                      ".dark &": {
+                        bgcolor: "primary.900",
+                        "&:hover": { bgcolor: "primary.800" },
+                      },
+                    }),
+                  }}
                 >
-                  {item.icon}
-                </ListItemIcon>
-                {!collapsed && <ListItemText primary={item.text} />}
-              </ListItem>
-            </Tooltip>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      justifyContent: collapsed ? "center" : "flex-start",
+                      mr: collapsed ? 0 : 2,
+                      "& svg": {
+                        fontSize: "32px",
+                      },
+                    }}
+                    className="text-primary dark:text-white"
+                  >
+                    <Icon />
+                  </ListItemIcon>
+                  {!collapsed && <ListItemText primary={item.label} />}
+                </ListItem>
+              </Tooltip>
+            </AbilityGuard>
           );
         })}
       </List>

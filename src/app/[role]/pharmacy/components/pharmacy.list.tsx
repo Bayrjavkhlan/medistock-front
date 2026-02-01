@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
-import type { HospitalsQuery } from "@/generated/graphql";
+import type { PharmaciesQuery } from "@/generated/hooks";
 
-type HospitalListTableProps = {
-  hospitals: NonNullable<HospitalsQuery["hospitals"]>;
+type PharmacyListTableProps = {
+  pharmacies: NonNullable<PharmaciesQuery["pharmacies"]>;
   page: number;
   rowsPerPage: number;
   onPageChange: (page: number) => void;
@@ -26,13 +26,11 @@ type HospitalListTableProps = {
   onDelete: (id: string) => void;
   canUpdate: boolean;
   canDelete: boolean;
-  // sortBy: { field: UserSortField; order: EnumSortOrder };
-  // onSort: (field: UserSortField, order: EnumSortOrder) => void;
   loading: boolean;
 };
 
-export default function HospitalListTable({
-  hospitals,
+export default function PharmacyListTable({
+  pharmacies,
   page,
   rowsPerPage,
   onPageChange,
@@ -41,11 +39,9 @@ export default function HospitalListTable({
   onDelete,
   canUpdate,
   canDelete,
-  // sortBy,
-  // onSort,
   loading,
-}: HospitalListTableProps) {
-  const columnCount = 5; // Name, Email, Phone, Address, Actions
+}: PharmacyListTableProps) {
+  const columnCount = 5;
   return (
     <Paper
       sx={{
@@ -71,60 +67,36 @@ export default function HospitalListTable({
         >
           <TableHead>
             <TableRow>
-              {/* <SortableTableHeader
-                field="name"
-                label="Name"
-                currentSort={{
-                  field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
-                }}
-                onSort={(field, order) => {
-                  onSort(
-                    field as UserSortField,
-                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
-                  );
-                }}
-              />
-              <SortableTableHeader
-                field="email"
-                label="Email"
-                currentSort={{
-                  field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
-                }}
-                onSort={(field, order) => {
-                  onSort(
-                    field as UserSortField,
-                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
-                  );
-                }}
-              /> */}
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Address</TableCell>
+              <TableCell>Нэр</TableCell>
+              <TableCell>И-мэйл</TableCell>
+              <TableCell>Утас</TableCell>
+              <TableCell>Хаяг</TableCell>
               <TableCell align="right">Үйлдэл</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableSkeleton rows={rowsPerPage} columns={columnCount} />
-            ) : hospitals.count === 0 ? (
+            ) : pharmacies.count === 0 ? (
               <TableRow>
                 <TableCell colSpan={columnCount} align="center" sx={{ py: 4 }}>
-                  Эмнэлэг олдсонгүй
+                  Эмийн сан олдсонгүй
                 </TableCell>
               </TableRow>
             ) : (
-              hospitals.data?.map((hospital) => (
-                <TableRow key={hospital.id}>
-                  <TableCell>{hospital.name ?? "-"}</TableCell>
-                  <TableCell>{hospital.email ?? "-"}</TableCell>
-                  <TableCell>{hospital.phone ?? "-"}</TableCell>
+              pharmacies.data?.map((pharmacy) => (
+                <TableRow key={pharmacy.id}>
+                  <TableCell>{pharmacy.name ?? "-"}</TableCell>
+                  <TableCell>{pharmacy.email ?? "-"}</TableCell>
+                  <TableCell>{pharmacy.phone ?? "-"}</TableCell>
                   <TableCell>
-                    {hospital.address?.address1 ?? "-"}
-                    {hospital.address?.address2 ?? "-"}
-                    {hospital.address?.province ?? "-"}
+                    {pharmacy.address?.address1 ?? "-"}
+                    {pharmacy.address?.address2
+                      ? ` ${pharmacy.address.address2}`
+                      : ""}
+                    {pharmacy.address?.province
+                      ? ` • ${pharmacy.address.province}`
+                      : ""}
                   </TableCell>
                   <TableCell align="right">
                     {canUpdate ? (
@@ -132,8 +104,8 @@ export default function HospitalListTable({
                         <IconButton
                           size="small"
                           onClick={() => {
-                            if (!hospital.id) return;
-                            onEdit(hospital.id);
+                            if (!pharmacy.id) return;
+                            onEdit(pharmacy.id);
                           }}
                         >
                           <EditOutlinedIcon fontSize="small" />
@@ -146,8 +118,8 @@ export default function HospitalListTable({
                           size="small"
                           color="error"
                           onClick={() => {
-                            if (!hospital.id) return;
-                            onDelete(hospital.id);
+                            if (!pharmacy.id) return;
+                            onDelete(pharmacy.id);
                           }}
                         >
                           <DeleteOutlineIcon fontSize="small" />
@@ -165,7 +137,7 @@ export default function HospitalListTable({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={hospitals.count}
+        count={pharmacies.count}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={(_, newPage) => onPageChange(newPage)}

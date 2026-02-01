@@ -1,4 +1,7 @@
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -7,6 +10,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 
 import SortableTableHeader from "@/components/forms/table/sortableTableHeader";
@@ -25,6 +29,10 @@ type StaffListTableProps = {
   onRowsPerPageChange: (rows: number) => void;
   sortBy: { field: StaffSortField; order: EnumSortOrder };
   onSort: (field: StaffSortField, order: EnumSortOrder) => void;
+  onEdit: (membershipId: string) => void;
+  onDelete: (membershipId: string) => void;
+  canUpdate: boolean;
+  canDelete: boolean;
   loading: boolean;
 };
 
@@ -37,13 +45,36 @@ export default function StaffListTable({
   onRowsPerPageChange,
   sortBy,
   onSort,
+  onEdit,
+  onDelete,
+  canUpdate,
+  canDelete,
   loading,
 }: StaffListTableProps) {
-  const columnCount = 5; // Name, Email, Phone, Organization, Role
+  const columnCount = 6; // Name, Email, Phone, Organization, Role, Actions
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 600 }}>
-        <Table stickyHeader>
+    <Paper
+      sx={{
+        width: "100%",
+        overflow: "hidden",
+        borderRadius: 3,
+        border: "1px solid",
+        borderColor: "divider",
+      }}
+      className="shadow-sm"
+    >
+      <TableContainer sx={{ maxHeight: 640 }}>
+        <Table
+          stickyHeader
+          sx={{
+            "& tbody tr:hover": {
+              backgroundColor: "action.hover",
+            },
+            "& th": {
+              backgroundColor: "background.paper",
+            },
+          }}
+        >
           <TableHead>
             <TableRow>
               <SortableTableHeader
@@ -77,6 +108,7 @@ export default function StaffListTable({
               <StyledTableHeadCell>Phone</StyledTableHeadCell>
               <StyledTableHeadCell>Organization</StyledTableHeadCell>
               <StyledTableHeadCell>Role</StyledTableHeadCell>
+              <StyledTableHeadCell align="right">Үйлдэл</StyledTableHeadCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,6 +128,35 @@ export default function StaffListTable({
                   <TableCell>{membership.user?.phone ?? "-"}</TableCell>
                   <TableCell>{membership.organization?.name ?? "-"}</TableCell>
                   <TableCell>{membership.role ?? "-"}</TableCell>
+                  <TableCell align="right">
+                    {canUpdate ? (
+                      <Tooltip title="Засах">
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            if (!membership.id) return;
+                            onEdit(membership.id);
+                          }}
+                        >
+                          <EditOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
+                    {canDelete ? (
+                      <Tooltip title="Устгах">
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => {
+                            if (!membership.id) return;
+                            onDelete(membership.id);
+                          }}
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
+                  </TableCell>
                 </TableRow>
               ))
             )}

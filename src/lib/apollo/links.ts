@@ -18,6 +18,8 @@ export const httpLink = new HttpLink({
 export const authLink = new SetContextLink(async (prevContext) => {
   let token = "";
   let orgId = "";
+  let isPlatformAdmin = false;
+  let membershipOrgIds: string[] = [];
 
   if (typeof window === "undefined") {
     // Server-side (SSR)
@@ -27,12 +29,32 @@ export const authLink = new SetContextLink(async (prevContext) => {
     const session = await getServerSession(authOptions);
     token = session?.accessToken || "";
     orgId = (await cookies()).get("x-org-id")?.value ?? "";
+    isPlatformAdmin = !!session?.user?.isPlatformAdmin;
+    membershipOrgIds = (session?.user?.memberships ?? []).map(
+      (membership) => membership.organization.id,
+    );
   } else {
     // Client-side
     const { getSession } = await import("next-auth/react");
     const session = await getSession();
     token = session?.accessToken || "";
     orgId = localStorage.getItem("medistock.activeOrgId") ?? "";
+    isPlatformAdmin = !!session?.user?.isPlatformAdmin;
+    membershipOrgIds = (session?.user?.memberships ?? []).map(
+      (membership) => membership.organization.id,
+    );
+  }
+
+  if (isPlatformAdmin) {
+    if (typeof window !== "undefined" && orgId) {
+      localStorage.removeItem("medistock.activeOrgId");
+    }
+    orgId = "";
+  } else if (orgId && !membershipOrgIds.includes(orgId)) {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("medistock.activeOrgId");
+    }
+    orgId = "";
   }
 
   return {

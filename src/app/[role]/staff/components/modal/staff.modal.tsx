@@ -11,13 +11,21 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { z } from "zod";
 
-import { USER_CREATE } from "@/features/staff/graphql/mutations.gql";
+import {
+  MEMBERSHIP_UPDATE,
+  USER_CREATE,
+  USER_UPDATE,
+} from "@/features/staff/graphql/mutations.gql";
+import type { Membership } from "@/generated/graphql";
 import { OrganizationRole } from "@/generated/graphql";
 
-interface CreateStaffModalProps {
+interface StaffModalProps {
   open: boolean;
+  mode: "create" | "update";
+  initialData?: Membership | null;
   onClose: () => void;
   onSuccess: () => void;
   activeOrgId: string | null;
@@ -29,70 +37,144 @@ const ROLES = [
   { value: OrganizationRole.Staff, label: "Staff" },
 ];
 
-export default function CreateStaffModal({
+type StaffForm = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: OrganizationRole | "";
+};
+
+const baseSchema = z.object({
+  name: z.string().min(1, "Нэр шаардлагатай"),
+  email: z.string().email("Имэйл буруу байна"),
+  phone: z.string().min(1, "Утас шаардлагатай"),
+  password: z.string().optional(),
+  role: z.string().min(1, "Үүрэг сонгоно уу"),
+});
+
+const emptyForm: StaffForm = {
+  name: "",
+  email: "",
+  phone: "",
+  password: "",
+  role: "",
+};
+
+export default function StaffModal({
   open,
+  mode,
+  initialData,
   onClose,
   onSuccess,
   activeOrgId,
-}: CreateStaffModalProps) {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
-    role: "" as OrganizationRole,
-  });
-
+}: StaffModalProps) {
+  const [form, setForm] = useState<StaffForm>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const [createUser, { loading, error }] = useMutation(USER_CREATE, {
-    onCompleted: () => {
-      onSuccess();
+  const [createUser, createState] = useMutation(USER_CREATE);
+  const [updateUser, updateState] = useMutation(USER_UPDATE);
+  const [updateMembership, membershipState] = useMutation(MEMBERSHIP_UPDATE);
+
+  const loading =
+    createState.loading || updateState.loading || membershipState.loading;
+  const error = createState.error || updateState.error || membershipState.error;
+
+  useEffect(() => {
+    if (!open) return;
+    if (mode === "update" && initialData) {
       setForm({
-        name: "",
-        email: "",
-        phone: "",
+        name: initialData.user?.name ?? "",
+        email: initialData.user?.email ?? "",
+        phone: initialData.user?.phone ?? "",
         password: "",
-        role: "" as OrganizationRole,
+        role: initialData.role ?? "",
       });
-    },
-    onError: (err) => {
-      console.error("Create error:", err);
-    },
-  });
+    } else {
+      setForm(emptyForm);
+    }
+    setErrors({});
+  }, [open, mode, initialData]);
+
+  const title = useMemo(
+    () => (mode === "create" ? "Шинэ ажилтан нэмэх" : "Ажилтан засах"),
+    [mode],
+  );
+
+  const submitLabel = mode === "create" ? "Үүсгэх" : "Шинэчлэх";
 
   const validate = () => {
-    const newErrors: Record<string, string> = {};
-    if (!form.name) newErrors.name = "Нэр шаардлагатай";
-    if (!form.email) newErrors.email = "Имэйл шаардлагатай";
-    if (!form.phone) newErrors.phone = "Утас шаардлагатай";
-    if (!form.password) newErrors.password = "Нууц үг шаардлагатай";
-    if (!form.role) newErrors.role = "Үүрэг сонгоно уу";
-    if (!activeOrgId) newErrors.organizationId = "Байгууллага сонгоно уу";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const result = baseSchema.safeParse(form);
+    if (!result.success) {
+      const nextErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const key = issue.path[0] as string | undefined;
+        if (key) nextErrors[key] = issue.message;
+      });
+      setErrors(nextErrors);
+      return false;
+    }
+    if (mode === "create" && !form.password) {
+      setErrors({ password: "Нууц үг шаардлагатай" });
+      return false;
+    }
+    if (!activeOrgId) {
+      setErrors({ organizationId: "Байгууллага сонгоно уу" });
+      return false;
+    }
+    setErrors({});
+    return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) return;
 
-    createUser({
+    if (mode === "create") {
+      await createUser({
+        variables: {
+          input: {
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            password: form.password,
+            role: form.role as OrganizationRole,
+            organizationId: activeOrgId,
+          },
+        },
+      });
+      onSuccess();
+      return;
+    }
+
+    if (!initialData?.user?.id) return;
+
+    await updateUser({
       variables: {
+        userUpdateId: initialData.user.id,
         input: {
           name: form.name,
           email: form.email,
           phone: form.phone,
-          password: form.password,
-          role: form.role,
-          organizationId: activeOrgId,
+          ...(form.password ? { password: form.password } : {}),
         },
       },
     });
+
+    if (initialData.id && form.role && form.role !== initialData.role) {
+      await updateMembership({
+        variables: {
+          membershipUpdateId: initialData.id,
+          input: { role: form.role as OrganizationRole },
+        },
+      });
+    }
+
+    onSuccess();
   };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Шинэ ажилтан нэмэх</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -139,7 +221,11 @@ export default function CreateStaffModal({
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           error={!!errors.password}
-          helperText={errors.password}
+          helperText={
+            mode === "update" && !errors.password
+              ? "Хэрэв өөрчлөх бол бөглөнө үү"
+              : errors.password
+          }
         />
 
         <TextField
@@ -168,14 +254,16 @@ export default function CreateStaffModal({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Болих</Button>
+        <Button onClick={onClose} disabled={loading}>
+          Болих
+        </Button>
         <Button
           onClick={handleSubmit}
           variant="contained"
           disabled={loading || !activeOrgId}
           startIcon={loading ? <CircularProgress size={20} /> : null}
         >
-          Хадгалах
+          {submitLabel}
         </Button>
       </DialogActions>
     </Dialog>

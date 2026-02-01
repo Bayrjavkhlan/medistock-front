@@ -15,6 +15,7 @@ interface PageToolbarProps {
   onCreateClick: () => void;
   placeholder?: string;
   buttonText: string;
+  showCreate?: boolean;
   createDisabled?: boolean;
   createLoading?: boolean;
 }
@@ -25,6 +26,7 @@ export default function PageToolbar({
   onCreateClick,
   placeholder = "Хайх...",
   buttonText,
+  showCreate = true,
   createDisabled = false,
   createLoading = false,
 }: PageToolbarProps) {
@@ -72,39 +74,41 @@ export default function PageToolbar({
         }}
       />
 
-      <Button
-        variant="contained"
-        onClick={onCreateClick}
-        disabled={createDisabled || createLoading}
-        startIcon={createLoading ? null : <AddIcon />}
-        className="rounded-xl shadow-lg hover:shadow-xl h-12 whitespace-nowrap px-8 font-semibold transition-all disabled:opacity-60"
-        sx={{
-          backgroundColor: "primary.500",
-          "&:hover": {
-            backgroundColor: "primary.600",
-          },
-          "&:disabled": {
-            backgroundColor: "#94a3b8",
-          },
-          textTransform: "none",
-          fontSize: "0.95rem",
-          "&.dark, .dark &": {
-            backgroundColor: "primary.700",
+      {showCreate ? (
+        <Button
+          variant="contained"
+          onClick={onCreateClick}
+          disabled={createDisabled || createLoading}
+          startIcon={createLoading ? null : <AddIcon />}
+          className="rounded-xl shadow-lg hover:shadow-xl h-12 whitespace-nowrap px-8 font-semibold transition-all disabled:opacity-60"
+          sx={{
+            backgroundColor: "primary.500",
             "&:hover": {
               backgroundColor: "primary.600",
             },
-          },
-        }}
-      >
-        {createLoading ? (
-          <>
-            <CircularProgress size={20} color="inherit" className="mr-2" />
-            Үүсгэж байна...
-          </>
-        ) : (
-          buttonText
-        )}
-      </Button>
+            "&:disabled": {
+              backgroundColor: "#94a3b8",
+            },
+            textTransform: "none",
+            fontSize: "0.95rem",
+            "&.dark, .dark &": {
+              backgroundColor: "primary.700",
+              "&:hover": {
+                backgroundColor: "primary.600",
+              },
+            },
+          }}
+        >
+          {createLoading ? (
+            <>
+              <CircularProgress size={20} color="inherit" className="mr-2" />
+              Үүсгэж байна...
+            </>
+          ) : (
+            buttonText
+          )}
+        </Button>
+      ) : null}
     </div>
   );
 }

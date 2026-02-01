@@ -14,3 +14,9 @@ export const EQUIPMENT_UPDATE = gql`
     equipmentUpdate(id: $equipmentUpdateId, input: $input)
   }
 `;
+
+export const EQUIPMENT_DELETE = gql`
+  mutation EquipmentDelete($equipmentDeleteId: String!) {
+    equipmentDelete(id: $equipmentDeleteId)
+  }
+`;

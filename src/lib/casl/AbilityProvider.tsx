@@ -13,7 +13,10 @@ export const AbilityContext = createContext<AppAbility>(undefined!);
 export function AbilityProvider({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const { activeOrganization } = useActiveOrganization();
-  const ability = defineAbilityFor(session, activeOrganization?.role ?? null);
+  const ability = defineAbilityFor(
+    session?.user ?? null,
+    activeOrganization ?? null,
+  );
 
   return (
     <AbilityContext.Provider value={ability}>

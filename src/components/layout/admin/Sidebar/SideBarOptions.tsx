@@ -6,7 +6,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import type { Session } from "next-auth";
 
 import { Routes } from "@/constants/routes";
-import type { OrganizationRole } from "@/generated/graphql";
+import type { UserMembership } from "@/generated/graphql";
 import { defineAbilityFor } from "@/lib/casl";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -14,6 +14,8 @@ const iconMap: Record<string, React.ReactNode> = {
   Ажилчид: <PeopleIcon />,
   "Тоног төхөөрөмж": <MedicalServicesIcon />,
   Лог: <HistoryIcon />,
+  "Миний лог": <HistoryIcon />,
+  "Эмийн сангууд": <MedicalServicesIcon />,
   Гарах: <LogoutIcon />,
 };
 
@@ -25,7 +27,7 @@ export type SidebarItem = {
 
 export const getSidebarOptions = (
   session: Session | null,
-  activeRole: OrganizationRole | null = null,
+  activeMembership: UserMembership | null = null,
 ): SidebarItem[] => {
   // if (!session?.staff) {
   //   return [
@@ -37,7 +39,7 @@ export const getSidebarOptions = (
   //   ];
   // }
 
-  const ability = defineAbilityFor(session, activeRole);
+  const ability = defineAbilityFor(session?.user ?? null, activeMembership);
   const items: SidebarItem[] = [];
 
   Object.values(Routes).forEach((route) => {

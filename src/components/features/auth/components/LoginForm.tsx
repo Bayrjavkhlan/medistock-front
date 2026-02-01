@@ -76,12 +76,20 @@ export default function LoginForm({
         }
         const session = await getSession();
         const memberships = session?.user?.memberships ?? [];
-        const role = memberships[0]?.role ?? null;
+        const activeMembership = memberships[0] ?? null;
+        const orgType = activeMembership?.organization?.type ?? null;
+        const orgRole = activeMembership?.role ?? null;
         const nextRoute = session?.user?.isPlatformAdmin
           ? "/admin/dashboard"
-          : role === "STAFF"
-            ? "/staff/dashboard"
-            : "/hospital/dashboard";
+          : !activeMembership
+            ? "/user/dashboard"
+            : orgType === "PHARMACY"
+              ? orgRole === "STAFF"
+                ? "/pharmacy/medicine"
+                : "/pharmacy/dashboard"
+              : orgRole === "STAFF"
+                ? "/hospital/equipment"
+                : "/hospital/dashboard";
         router.push(nextRoute);
         router.refresh();
       }

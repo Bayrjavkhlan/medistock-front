@@ -10,6 +10,7 @@ export type Subject =
   | "Admin_Dashboard"
   | "Admin_Staff"
   | "Admin_Hospital"
+  | "Admin_Pharmacy"
   | "Admin_Equipment"
   | "Admin_EquipmentLog"
   // Hospital Admin
@@ -17,10 +18,18 @@ export type Subject =
   | "Hospital_Staff"
   | "Hospital_Equipment"
   | "Hospital_EquipmentLog"
-  // Staff
-  | "Staff_Dashboard"
-  | "Staff_Equipment"
-  | "Staff_EquipmentLog";
+  // Pharmacy
+  | "Pharmacy_Dashboard"
+  | "Pharmacy_Equipment"
+  | "Pharmacy_EquipmentLog"
+  | "Pharmacy_Medicine"
+  | "Pharmacy_Staff"
+  // User
+  | "User_Dashboard"
+  | "User_Equipment"
+  | "User_EquipmentLog"
+  | "User_Hospital"
+  | "User_Pharmacy";
 
 type PathArg = { id?: string };
 
@@ -182,6 +191,34 @@ export const Routes: RouteType = {
       (a) => `/admin/hospitals/${a?.id}`,
     ),
   },
+  Admin_Pharmacy: {
+    key: "/admin/pharmacy",
+    Index: createRoute(
+      "Эмийн сангууд",
+      "/admin/pharmacy",
+      "Admin_Pharmacy",
+      "read",
+      "/",
+      true,
+    ),
+    Create: createRoute(
+      "Эмийн сан нэмэх",
+      "/admin/pharmacy/create",
+      "Admin_Pharmacy",
+      "create",
+      "/",
+      true,
+    ),
+    Detail: createRoute(
+      "Дэлгэрэнгүй",
+      "/admin/pharmacy/detail",
+      "Admin_Pharmacy",
+      "read",
+      "/",
+      true,
+      (a) => `/admin/pharmacy/${a?.id}`,
+    ),
+  },
 
   // === HOSPITAL ADMIN ===
   Hospital_Dashboard: {
@@ -271,53 +308,152 @@ export const Routes: RouteType = {
     ),
   },
 
-  // === STAFF ===
-  Staff_Dashboard: {
-    key: "/staff/dashboard",
+  // === PHARMACY ===
+  Pharmacy_Dashboard: {
+    key: "/pharmacy/dashboard",
     Index: createRoute(
       "Хяналтын самбар",
-      "/staff/dashboard",
-      "Staff_Dashboard",
+      "/pharmacy/dashboard",
+      "Pharmacy_Dashboard",
       "read",
       "/",
       true,
     ),
   },
-  Staff_Equipment: {
-    key: "/staff/equipment",
+  Pharmacy_Equipment: {
+    key: "/pharmacy/equipment",
     Index: createRoute(
       "Тоног төхөөрөмж",
-      "/staff/equipment",
-      "Staff_Equipment",
+      "/pharmacy/equipment",
+      "Pharmacy_Equipment",
       "read",
       "/",
       true,
     ),
     Detail: createRoute(
       "Дэлгэрэнгүй",
-      "/staff/equipment/detail",
-      "Staff_Equipment",
+      "/pharmacy/equipment/detail",
+      "Pharmacy_Equipment",
       "read",
       "/",
       true,
-      (a) => `/staff/equipment/${a?.id}`,
+      (a) => `/pharmacy/equipment/${a?.id}`,
     ),
   },
-  Staff_EquipmentLog: {
-    key: "/staff/equipment/log",
+  Pharmacy_EquipmentLog: {
+    key: "/pharmacy/equipment/log",
     Index: createRoute(
-      "Миний лог",
-      "/staff/equipment/log",
-      "Staff_EquipmentLog",
+      "Лог",
+      "/pharmacy/equipment/log",
+      "Pharmacy_EquipmentLog",
       "read",
       "/",
       true,
     ),
     Create: createRoute(
       "Лог нэмэх",
-      "/staff/equipment/log/create",
-      "Staff_EquipmentLog",
+      "/pharmacy/equipment/log/create",
+      "Pharmacy_EquipmentLog",
       "create",
+      "/",
+      true,
+    ),
+  },
+
+  Pharmacy_Medicine: {
+    key: "/pharmacy/medicine",
+    Index: createRoute(
+      "Эм",
+      "/pharmacy/medicine",
+      "Pharmacy_Medicine",
+      "read",
+      "/",
+      true,
+    ),
+  },
+
+  Pharmacy_Staff: {
+    key: "/pharmacy/staff",
+    Index: createRoute(
+      "Ажилчид",
+      "/pharmacy/staff",
+      "Pharmacy_Staff",
+      "read",
+      "/",
+      true,
+    ),
+  },
+
+  // === USER ===
+  User_Dashboard: {
+    key: "/user/dashboard",
+    Index: createRoute(
+      "Хяналтын самбар",
+      "/user/dashboard",
+      "User_Dashboard",
+      "read",
+      "/",
+      true,
+    ),
+  },
+  User_Equipment: {
+    key: "/user/equipment",
+    Index: createRoute(
+      "Тоног төхөөрөмж",
+      "/user/equipment",
+      "User_Equipment",
+      "read",
+      "/",
+      true,
+    ),
+    Detail: createRoute(
+      "Дэлгэрэнгүй",
+      "/user/equipment/detail",
+      "User_Equipment",
+      "read",
+      "/",
+      true,
+      (a) => `/user/equipment/${a?.id}`,
+    ),
+  },
+  User_EquipmentLog: {
+    key: "/user/equipment/log",
+    Index: createRoute(
+      "Миний лог",
+      "/user/equipment/log",
+      "User_EquipmentLog",
+      "read",
+      "/",
+      true,
+    ),
+    Create: createRoute(
+      "Лог нэмэх",
+      "/user/equipment/log/create",
+      "User_EquipmentLog",
+      "create",
+      "/",
+      true,
+    ),
+  },
+
+  User_Hospital: {
+    key: "/user/hospital",
+    Index: createRoute(
+      "Эмнэлгүүд",
+      "/user/hospital",
+      "User_Hospital",
+      "read",
+      "/",
+      true,
+    ),
+  },
+  User_Pharmacy: {
+    key: "/user/pharmacy",
+    Index: createRoute(
+      "Эмийн сангууд",
+      "/user/pharmacy",
+      "User_Pharmacy",
+      "read",
       "/",
       true,
     ),

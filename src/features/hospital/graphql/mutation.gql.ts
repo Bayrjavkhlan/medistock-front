@@ -13,3 +13,9 @@ export const HOSPITAL_UPDATE = gql`
     hospitalUpdate(id: $hospitalUpdateId, input: $input)
   }
 `;
+
+export const HOSPITAL_DELETE = gql`
+  mutation HospitalDelete($hospitalDeleteId: String!) {
+    hospitalDelete(id: $hospitalDeleteId)
+  }
+`;
