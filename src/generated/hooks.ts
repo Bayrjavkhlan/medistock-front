@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@apollo/client/react";
+import type { QueryHookOptions } from "@apollo/client/react";
 import { gql } from "@apollo/client";
-import type { QueryHookOptions } from "@apollo/client";
 import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 
 import type {

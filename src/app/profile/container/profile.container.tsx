@@ -2,6 +2,7 @@
 
 import AbilityGuard from "@/components/AbilityGuard";
 import StateView from "@/components/core/StateView";
+import type { CurrentUserQuery } from "@/generated/graphql";
 import { useCurrentUserQuery } from "@/generated/hooks";
 
 import ProfileDetails from "../components/profile.details";
@@ -11,7 +12,9 @@ export default function ProfileContainer() {
     fetchPolicy: "cache-and-network",
   });
 
-  const user = data?.currentUser ?? null;
+  const user = (data?.currentUser ?? null) as NonNullable<
+    CurrentUserQuery["currentUser"]
+  > | null;
 
   return (
     <AbilityGuard action="read" subject="Profile">

@@ -48,7 +48,6 @@ export default function NewPasswordForm({
       return;
     }
     setLoading(true);
-    console.log("Шинэ нууц үг хадгалах:", newPassword);
     setTimeout(() => setLoading(false), 1000);
     setSnackbarOpen(true);
     setErrorMessage("Дарагдсан");

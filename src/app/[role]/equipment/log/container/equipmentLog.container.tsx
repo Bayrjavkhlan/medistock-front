@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import AbilityGuard from "@/components/AbilityGuard";
 import StateView from "@/components/core/StateView";
 import PageToolbar from "@/components/forms/toolbar";
+import type { EquipmentLogsQuery } from "@/generated/hooks";
 import { useEquipmentLogsQuery } from "@/generated/hooks";
 import { useAbility } from "@/lib/casl/useAbility";
 
@@ -50,7 +51,10 @@ export default function EquipmentLogContainer() {
     skip: !canRead,
   });
 
-  const logsData = data?.equipmentLogs ?? { data: [], count: 0 };
+  const logsData: NonNullable<EquipmentLogsQuery["equipmentLogs"]> = {
+    count: data?.equipmentLogs?.count ?? 0,
+    data: data?.equipmentLogs?.data ?? [],
+  };
 
   return (
     <AbilityGuard action="read" subject={subject}>

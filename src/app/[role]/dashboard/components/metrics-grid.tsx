@@ -16,7 +16,7 @@ export default function MetricsGrid({ items }: MetricsGridProps) {
   return (
     <Grid container spacing={2}>
       {items.map((item) => (
-        <Grid item xs={12} sm={6} lg={4} key={item.label}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={item.label}>
           <Paper
             elevation={0}
             sx={{

@@ -10,6 +10,7 @@ import StateView from "@/components/core/StateView";
 import Toast from "@/components/core/Toast";
 import PageToolbar from "@/components/forms/toolbar";
 import { EQUIPMENT_DELETE } from "@/features/equipment/graphql/mutations.gql";
+import type { EquipmentsQuery } from "@/generated/graphql";
 import { useEquipmentsQuery, useHospitalsQuery } from "@/generated/hooks";
 import { useAbility } from "@/lib/casl/useAbility";
 
@@ -68,7 +69,10 @@ export default function EquipmentContainer() {
     skip: !canRead,
   });
 
-  const equipmentsData = data?.equipments ?? { data: [], count: 0 };
+  const equipmentsData: NonNullable<EquipmentsQuery["equipments"]> = {
+    count: data?.equipments?.count ?? 0,
+    data: data?.equipments?.data ?? [],
+  };
   const editingEquipment = useMemo(
     () => equipmentsData.data?.find((item) => item.id === editingId) ?? null,
     [editingId, equipmentsData.data],

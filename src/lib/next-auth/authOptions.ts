@@ -22,7 +22,7 @@ const refreshAccessToken = async (token: JWT): Promise<JWT> => {
       ...token,
       id: payload.user.id,
       name: payload.user.name ?? "",
-      email: payload.user.email,
+      email: payload.user.email ?? "",
       phone: payload.user.phone ?? "",
       isPlatformAdmin: payload.user.isPlatformAdmin,
       memberships: payload.user.memberships as UserMembership[],
@@ -65,8 +65,8 @@ export const authOptions: NextAuthOptions = {
 
           return {
             id: payload.user.id,
-            name: payload.user.name ?? null,
-            email: payload.user.email,
+            name: payload.user.name ?? "",
+            email: payload.user.email ?? "",
             phone: payload.user.phone ?? null,
             isPlatformAdmin: payload.user.isPlatformAdmin,
             memberships: payload.user.memberships as UserMembership[],

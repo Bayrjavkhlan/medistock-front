@@ -73,7 +73,7 @@ export default function StaffContainer() {
     skip: !canRead,
   });
 
-  const memberships = data?.memberships?.data ?? [];
+  const memberships = (data?.memberships?.data ?? []) as Membership[];
   const totalCount = data?.memberships?.count ?? 0;
   const editingMembership = useMemo(
     () => memberships.find((item) => item.id === editingId) ?? null,

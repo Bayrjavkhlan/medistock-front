@@ -10,6 +10,7 @@ import StateView from "@/components/core/StateView";
 import Toast from "@/components/core/Toast";
 import PageToolbar from "@/components/forms/toolbar";
 import { HOSPITAL_DELETE } from "@/features/hospital/graphql/mutation.gql";
+import type { HospitalsQuery } from "@/generated/graphql";
 import { useHospitalsQuery } from "@/generated/hooks";
 import { useAbility } from "@/lib/casl/useAbility";
 
@@ -59,7 +60,10 @@ export default function HospitalContainer() {
     skip: !canRead,
   });
 
-  const hospitalsData = data?.hospitals ?? { data: [], count: 0 };
+  const hospitalsData: NonNullable<HospitalsQuery["hospitals"]> = {
+    count: data?.hospitals?.count ?? 0,
+    data: data?.hospitals?.data ?? [],
+  };
   const editingHospital = useMemo(
     () => hospitalsData.data?.find((item) => item.id === editingId) ?? null,
     [editingId, hospitalsData.data],

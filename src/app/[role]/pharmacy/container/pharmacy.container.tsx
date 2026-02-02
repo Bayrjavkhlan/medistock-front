@@ -11,6 +11,7 @@ import StateView from "@/components/core/StateView";
 import Toast from "@/components/core/Toast";
 import PageToolbar from "@/components/forms/toolbar";
 import { PHARMACY_DELETE } from "@/features/pharmacy/graphql/mutations.gql";
+import type { PharmaciesQuery } from "@/generated/hooks";
 import { usePharmaciesQuery } from "@/generated/hooks";
 import { useAbility } from "@/lib/casl/useAbility";
 
@@ -58,7 +59,10 @@ export default function PharmacyContainer() {
     skip: !canRead,
   });
 
-  const pharmaciesData = data?.pharmacies ?? { data: [], count: 0 };
+  const pharmaciesData: NonNullable<PharmaciesQuery["pharmacies"]> = {
+    count: data?.pharmacies?.count ?? 0,
+    data: data?.pharmacies?.data ?? [],
+  };
   const editingPharmacy = useMemo(
     () => pharmaciesData.data?.find((item) => item.id === editingId) ?? null,
     [editingId, pharmaciesData.data],
