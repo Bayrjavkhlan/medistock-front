@@ -8,12 +8,14 @@ type PharmacyDashboardProps = {
   organizationName: string;
   equipmentCount: number;
   logCount: number;
+  drugCount: number;
 };
 
 export default function PharmacyDashboard({
   organizationName,
   equipmentCount,
   logCount,
+  drugCount,
 }: PharmacyDashboardProps) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -22,6 +24,7 @@ export default function PharmacyDashboard({
       </Typography>
       <MetricsGrid
         items={[
+          { label: "Эм", value: drugCount },
           { label: "Тоног төхөөрөмж", value: equipmentCount },
           { label: "Логууд", value: logCount },
         ]}

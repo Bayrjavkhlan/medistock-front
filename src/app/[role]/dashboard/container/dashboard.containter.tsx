@@ -1,10 +1,16 @@
 "use client";
 
+import { useQuery } from "@apollo/client/react";
 import { useParams } from "next/navigation";
 
 import AbilityGuard from "@/components/AbilityGuard";
 import StateView from "@/components/core/StateView";
 import type { Subject } from "@/constants/routes";
+import {
+  PharmacyDrugsDocument,
+  type PharmacyDrugsQuery,
+  type PharmacyDrugsQueryVariables,
+} from "@/features/medicine/graphql/queries.gql";
 import {
   useEquipmentLogsQuery,
   useEquipmentsQuery,
@@ -72,25 +78,37 @@ export default function DashboardContainer() {
     skip: !canRead || (role !== "admin" && role !== "hospital"),
   });
 
+  const drugsQuery = useQuery<PharmacyDrugsQuery, PharmacyDrugsQueryVariables>(
+    PharmacyDrugsDocument,
+    {
+      variables: { ...baseVars, where: undefined },
+      fetchPolicy: "no-cache",
+      skip: !canRead || role !== "pharmacy",
+    },
+  );
+
   const loading =
     equipmentsQuery.loading ||
     logsQuery.loading ||
     hospitalsQuery.loading ||
     pharmaciesQuery.loading ||
-    staffQuery.loading;
+    staffQuery.loading ||
+    drugsQuery.loading;
 
   const error =
     equipmentsQuery.error ||
     logsQuery.error ||
     hospitalsQuery.error ||
     pharmaciesQuery.error ||
-    staffQuery.error;
+    staffQuery.error ||
+    drugsQuery.error;
 
   const equipmentCount = equipmentsQuery.data?.equipments?.count ?? 0;
   const logCount = logsQuery.data?.equipmentLogs?.count ?? 0;
   const hospitalCount = hospitalsQuery.data?.hospitals?.count ?? 0;
   const pharmacyCount = pharmaciesQuery.data?.pharmacies?.count ?? 0;
   const staffCount = staffQuery.data?.memberships?.count ?? 0;
+  const drugCount = drugsQuery.data?.pharmacyDrugs?.count ?? 0;
 
   const isEmpty =
     role === "admin"
@@ -102,7 +120,9 @@ export default function DashboardContainer() {
         0
       : role === "hospital"
         ? equipmentCount + logCount + staffCount === 0
-        : equipmentCount + logCount === 0;
+        : role === "pharmacy"
+          ? equipmentCount + logCount + drugCount === 0
+          : equipmentCount + logCount === 0;
 
   return (
     <AbilityGuard action="read" subject={subject}>
@@ -135,6 +155,7 @@ export default function DashboardContainer() {
           organizationName={organizationName}
           equipmentCount={equipmentCount}
           logCount={logCount}
+          drugCount={drugCount}
         />
       ) : (
         <UserDashboard

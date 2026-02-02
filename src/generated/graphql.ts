@@ -809,6 +809,15 @@ export type EquipmentUpdateMutation = {
   equipmentUpdate?: boolean | null;
 };
 
+export type EquipmentDeleteMutationVariables = Exact<{
+  equipmentDeleteId: Scalars["String"]["input"];
+}>;
+
+export type EquipmentDeleteMutation = {
+  __typename?: "Mutation";
+  equipmentDelete?: boolean | null;
+};
+
 export type EquipmentsQueryVariables = Exact<{
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
@@ -889,6 +898,15 @@ export type HospitalUpdateMutation = {
   hospitalUpdate?: boolean | null;
 };
 
+export type HospitalDeleteMutationVariables = Exact<{
+  hospitalDeleteId: Scalars["String"]["input"];
+}>;
+
+export type HospitalDeleteMutation = {
+  __typename?: "Mutation";
+  hospitalDelete?: boolean | null;
+};
+
 export type HospitalsQueryVariables = Exact<{
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
@@ -950,6 +968,34 @@ export type HospitalOptionQuery = {
   }>;
 };
 
+export type PharmacyCreateMutationVariables = Exact<{
+  input: PharmacyCreateInput;
+}>;
+
+export type PharmacyCreateMutation = {
+  __typename?: "Mutation";
+  pharmacyCreate?: boolean | null;
+};
+
+export type PharmacyUpdateMutationVariables = Exact<{
+  pharmacyUpdateId: Scalars["String"]["input"];
+  input: PharmacyCreateInput;
+}>;
+
+export type PharmacyUpdateMutation = {
+  __typename?: "Mutation";
+  pharmacyUpdate?: boolean | null;
+};
+
+export type PharmacyDeleteMutationVariables = Exact<{
+  pharmacyDeleteId: Scalars["String"]["input"];
+}>;
+
+export type PharmacyDeleteMutation = {
+  __typename?: "Mutation";
+  pharmacyDelete?: boolean | null;
+};
+
 export type UserCreateMutationVariables = Exact<{
   input: UserCreateInput;
 }>;
@@ -977,6 +1023,15 @@ export type MembershipUpdateMutationVariables = Exact<{
 export type MembershipUpdateMutation = {
   __typename?: "Mutation";
   membershipUpdate?: boolean | null;
+};
+
+export type MembershipDeleteMutationVariables = Exact<{
+  membershipDeleteId: Scalars["String"]["input"];
+}>;
+
+export type MembershipDeleteMutation = {
+  __typename?: "Mutation";
+  membershipDelete?: boolean | null;
 };
 
 export type MembershipsQueryVariables = Exact<{
@@ -1602,6 +1657,54 @@ export const EquipmentUpdateDocument = {
   EquipmentUpdateMutation,
   EquipmentUpdateMutationVariables
 >;
+export const EquipmentDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "EquipmentDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "equipmentDeleteId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "equipmentDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "equipmentDeleteId" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  EquipmentDeleteMutation,
+  EquipmentDeleteMutationVariables
+>;
 export const EquipmentsDocument = {
   kind: "Document",
   definitions: [
@@ -1946,6 +2049,54 @@ export const HospitalUpdateDocument = {
   HospitalUpdateMutation,
   HospitalUpdateMutationVariables
 >;
+export const HospitalDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "HospitalDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "hospitalDeleteId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hospitalDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "hospitalDeleteId" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  HospitalDeleteMutation,
+  HospitalDeleteMutationVariables
+>;
 export const HospitalsDocument = {
   kind: "Document",
   definitions: [
@@ -2166,6 +2317,172 @@ export const HospitalOptionDocument = {
     },
   ],
 } as unknown as DocumentNode<HospitalOptionQuery, HospitalOptionQueryVariables>;
+export const PharmacyCreateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "PharmacyCreate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "PharmacyCreateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pharmacyCreate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  PharmacyCreateMutation,
+  PharmacyCreateMutationVariables
+>;
+export const PharmacyUpdateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "PharmacyUpdate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "pharmacyUpdateId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "PharmacyCreateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pharmacyUpdate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "pharmacyUpdateId" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  PharmacyUpdateMutation,
+  PharmacyUpdateMutationVariables
+>;
+export const PharmacyDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "PharmacyDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "pharmacyDeleteId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pharmacyDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "pharmacyDeleteId" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  PharmacyDeleteMutation,
+  PharmacyDeleteMutationVariables
+>;
 export const UserCreateDocument = {
   kind: "Document",
   definitions: [
@@ -2347,6 +2664,54 @@ export const MembershipUpdateDocument = {
 } as unknown as DocumentNode<
   MembershipUpdateMutation,
   MembershipUpdateMutationVariables
+>;
+export const MembershipDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "MembershipDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "membershipDeleteId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "membershipDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "membershipDeleteId" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  MembershipDeleteMutation,
+  MembershipDeleteMutationVariables
 >;
 export const MembershipsDocument = {
   kind: "Document",
