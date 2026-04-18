@@ -489,6 +489,26 @@ export type PharmacyCreateInput = {
   phone: Scalars["String"]["input"];
 };
 
+export type PharmacyDrug = {
+  __typename?: "PharmacyDrug";
+  drug: Drug;
+  id?: Maybe<Scalars["String"]["output"]>;
+  price?: Maybe<Scalars["Float"]["output"]>;
+  quantity?: Maybe<Scalars["Int"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+};
+
+export type PharmacyDrugs = {
+  __typename?: "PharmacyDrugs";
+  count: Scalars["Int"]["output"];
+  data?: Maybe<Array<PharmacyDrug>>;
+};
+
+export type PharmacyDrugsWhereInput = {
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type PharmacyOption = {
   __typename?: "PharmacyOption";
   id?: Maybe<Scalars["String"]["output"]>;
@@ -519,6 +539,7 @@ export type Query = {
   memberships?: Maybe<Memberships>;
   pharmacies?: Maybe<Pharmacys>;
   pharmacyDetail?: Maybe<Pharmacy>;
+  pharmacyDrugs?: Maybe<PharmacyDrugs>;
   pharmacyOption: Array<PharmacyOption>;
   userDetail?: Maybe<User>;
   users?: Maybe<Users>;
@@ -587,6 +608,12 @@ export type QueryPharmaciesArgs = {
 
 export type QueryPharmacyDetailArgs = {
   id: Scalars["String"]["input"];
+};
+
+export type QueryPharmacyDrugsArgs = {
+  skip: Scalars["Int"]["input"];
+  take: Scalars["Int"]["input"];
+  where?: InputMaybe<PharmacyDrugsWhereInput>;
 };
 
 export type QueryUserDetailArgs = {
@@ -966,6 +993,38 @@ export type HospitalOptionQuery = {
     id?: string | null;
     name?: string | null;
   }>;
+};
+
+export type PharmacyDrugsQueryVariables = Exact<{
+  take: Scalars["Int"]["input"];
+  skip: Scalars["Int"]["input"];
+  where?: InputMaybe<PharmacyDrugsWhereInput>;
+}>;
+
+export type PharmacyDrugsQuery = {
+  __typename?: "Query";
+  pharmacyDrugs?: {
+    __typename?: "PharmacyDrugs";
+    count: number;
+    data?: Array<{
+      __typename?: "PharmacyDrug";
+      id?: string | null;
+      quantity?: number | null;
+      price?: number | null;
+      status?: string | null;
+      updatedAt?: any | null;
+      drug: {
+        __typename?: "Drug";
+        id?: string | null;
+        name?: string | null;
+        genericName?: string | null;
+        dosageForm?: string | null;
+        strength?: string | null;
+        manufacturer?: string | null;
+        description?: string | null;
+      };
+    }> | null;
+  } | null;
 };
 
 export type PharmacyCreateMutationVariables = Exact<{
@@ -2317,6 +2376,146 @@ export const HospitalOptionDocument = {
     },
   ],
 } as unknown as DocumentNode<HospitalOptionQuery, HospitalOptionQueryVariables>;
+export const PharmacyDrugsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "PharmacyDrugs" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "take" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "PharmacyDrugsWhereInput" },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pharmacyDrugs" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "take" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "take" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "skip" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "skip" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "count" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "data" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "quantity" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "price" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "status" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "drug" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "genericName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "dosageForm" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "strength" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "manufacturer" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PharmacyDrugsQuery, PharmacyDrugsQueryVariables>;
 export const PharmacyCreateDocument = {
   kind: "Document",
   definitions: [

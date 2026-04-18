@@ -37,6 +37,7 @@ const refreshAccessToken = async (token: JWT): Promise<JWT> => {
 };
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET || "medistock-front-local-secret",
   session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
   providers: [
     CredentialsProvider({

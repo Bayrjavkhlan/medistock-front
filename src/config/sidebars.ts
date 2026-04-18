@@ -59,35 +59,35 @@ export const resolveRoleKey = (
 export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
   ADMIN: [
     {
-      label: "Dashboard",
+      label: "Хяналтын самбар",
       path: "/admin/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Admin_Dashboard",
     },
     {
-      label: "Hospitals",
+      label: "Эмнэлгүүд",
       path: "/admin/hospital",
       icon: LocalHospitalIcon,
       action: "read",
       subject: "Admin_Hospital",
     },
     {
-      label: "Pharmacies",
+      label: "Эмийн сангууд",
       path: "/admin/pharmacy",
       icon: LocalPharmacyIcon,
       action: "read",
       subject: "Admin_Pharmacy",
     },
     {
-      label: "Staff",
+      label: "Ажилтнууд",
       path: "/admin/staff",
       icon: PeopleIcon,
       action: "read",
       subject: "Admin_Staff",
     },
     {
-      label: "Logs",
+      label: "Логууд",
       path: "/admin/log",
       icon: HistoryIcon,
       action: "read",
@@ -97,28 +97,28 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   HOSPITAL_OWNER: [
     {
-      label: "Dashboard",
+      label: "Хяналтын самбар",
       path: "/hospital/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Hospital_Dashboard",
     },
     {
-      label: "Staff",
+      label: "Ажилтнууд",
       path: "/hospital/staff",
       icon: PeopleIcon,
       action: "read",
       subject: "Hospital_Staff",
     },
     {
-      label: "Equipment",
+      label: "Тоног төхөөрөмж",
       path: "/hospital/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Hospital_Equipment",
     },
     {
-      label: "Logs",
+      label: "Логууд",
       path: "/hospital/log",
       icon: HistoryIcon,
       action: "read",
@@ -128,21 +128,21 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   HOSPITAL_MANAGER: [
     {
-      label: "Dashboard",
+      label: "Хяналтын самбар",
       path: "/hospital/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Hospital_Dashboard",
     },
     {
-      label: "Equipment",
+      label: "Тоног төхөөрөмж",
       path: "/hospital/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Hospital_Equipment",
     },
     {
-      label: "Logs",
+      label: "Логууд",
       path: "/hospital/log",
       icon: HistoryIcon,
       action: "read",
@@ -152,14 +152,14 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   HOSPITAL_STAFF: [
     {
-      label: "Equipment",
+      label: "Тоног төхөөрөмж",
       path: "/hospital/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Hospital_Equipment",
     },
     {
-      label: "Logs",
+      label: "Логууд",
       path: "/hospital/log",
       icon: HistoryIcon,
       action: "read",
@@ -169,35 +169,35 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   PHARMACY_OWNER: [
     {
-      label: "Dashboard",
+      label: "Хяналтын самбар",
       path: "/pharmacy/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Pharmacy_Dashboard",
     },
     {
-      label: "Staff",
+      label: "Ажилтнууд",
       path: "/pharmacy/staff",
       icon: PeopleIcon,
       action: "read",
       subject: "Pharmacy_Staff",
     },
     {
-      label: "Medicines",
+      label: "Эмүүд",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "Pharmacy_Medicine",
     },
     {
-      label: "Equipment",
+      label: "Тоног төхөөрөмж",
       path: "/pharmacy/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Pharmacy_Equipment",
     },
     {
-      label: "Logs",
+      label: "Логууд",
       path: "/pharmacy/log",
       icon: HistoryIcon,
       action: "read",
@@ -207,28 +207,28 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   PHARMACY_MANAGER: [
     {
-      label: "Dashboard",
+      label: "Хяналтын самбар",
       path: "/pharmacy/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Pharmacy_Dashboard",
     },
     {
-      label: "Medicines",
+      label: "Эмүүд",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "Pharmacy_Medicine",
     },
     {
-      label: "Equipment",
+      label: "Тоног төхөөрөмж",
       path: "/pharmacy/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Pharmacy_Equipment",
     },
     {
-      label: "Logs",
+      label: "Логууд",
       path: "/pharmacy/log",
       icon: HistoryIcon,
       action: "read",
@@ -238,14 +238,14 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   PHARMACY_STAFF: [
     {
-      label: "Medicines",
+      label: "Эмүүд",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "Pharmacy_Medicine",
     },
     {
-      label: "Equipment",
+      label: "Тоног төхөөрөмж",
       path: "/pharmacy/equipment",
       icon: ConstructionIcon,
       action: "read",
@@ -255,28 +255,28 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   USER: [
     {
-      label: "Dashboard",
+      label: "Хяналтын самбар",
       path: "/user/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "User_Dashboard",
     },
     {
-      label: "Hospitals",
+      label: "Эмнэлгүүд",
       path: "/user/hospital",
       icon: LocalHospitalIcon,
       action: "read",
       subject: "User_Hospital",
     },
     {
-      label: "Pharmacies",
+      label: "Эмийн сангууд",
       path: "/user/pharmacy",
       icon: LocalPharmacyIcon,
       action: "read",
       subject: "User_Pharmacy",
     },
     {
-      label: "Profile",
+      label: "Профайл",
       path: "/profile",
       icon: PersonIcon,
       action: "read",

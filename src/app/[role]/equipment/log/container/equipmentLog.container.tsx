@@ -1,7 +1,7 @@
 "use client";
 
 import { debounce } from "lodash";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import AbilityGuard from "@/components/AbilityGuard";
@@ -9,22 +9,20 @@ import StateView from "@/components/core/StateView";
 import PageToolbar from "@/components/forms/toolbar";
 import type { EquipmentLogsQuery } from "@/generated/hooks";
 import { useEquipmentLogsQuery } from "@/generated/hooks";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { getEquipmentLogSubjectForRole, getPortalRole } from "@/lib/casl";
 import { useAbility } from "@/lib/casl/useAbility";
 
 import EquipmentLogList from "../components/equipment-log.list";
 
 export default function EquipmentLogContainer() {
-  const params = useParams();
-  const roleParam = typeof params?.role === "string" ? params.role : "user";
-  const role = roleParam.toLowerCase();
-  const subject =
-    role === "admin"
-      ? "Admin_EquipmentLog"
-      : role === "hospital"
-        ? "Hospital_EquipmentLog"
-        : role === "pharmacy"
-          ? "Pharmacy_EquipmentLog"
-          : "User_EquipmentLog";
+  const { data: session } = useSession();
+  const { activeOrganization } = useActiveOrganization();
+  const portalRole = getPortalRole(
+    session?.user ?? null,
+    activeOrganization ?? null,
+  );
+  const subject = getEquipmentLogSubjectForRole(portalRole);
 
   const ability = useAbility();
   const canRead = ability.can("read", subject);

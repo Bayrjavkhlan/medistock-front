@@ -2,7 +2,7 @@
 
 import { useMutation } from "@apollo/client/react";
 import { debounce } from "lodash";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 
 import AbilityGuard from "@/components/AbilityGuard";
@@ -13,16 +13,16 @@ import PageToolbar from "@/components/forms/toolbar";
 import { PHARMACY_DELETE } from "@/features/pharmacy/graphql/mutations.gql";
 import type { PharmaciesQuery } from "@/generated/hooks";
 import { usePharmaciesQuery } from "@/generated/hooks";
+import { getPharmacySubjectForRole, getPortalRole } from "@/lib/casl";
 import { useAbility } from "@/lib/casl/useAbility";
 
 import PharmacyListTable from "../components/pharmacy.list";
 import PharmacyModal from "../components/pharmacy.modal";
 
 export default function PharmacyContainer() {
-  const params = useParams();
-  const roleParam = typeof params?.role === "string" ? params.role : "user";
-  const role = roleParam.toLowerCase();
-  const subject = role === "user" ? "User_Pharmacy" : "Admin_Pharmacy";
+  const { data: session } = useSession();
+  const portalRole = getPortalRole(session?.user ?? null, null);
+  const subject = getPharmacySubjectForRole(portalRole);
   const ability = useAbility();
   const canRead = ability.can("read", subject);
   const canCreate = ability.can("create", subject);

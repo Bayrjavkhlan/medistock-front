@@ -1,11 +1,14 @@
 "use client";
 
 import { useQuery } from "@apollo/client/react";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import AbilityGuard from "@/components/AbilityGuard";
 import StateView from "@/components/core/StateView";
-import type { Subject } from "@/constants/routes";
+import {
+  ADMIN_MAP_LOCATIONS,
+  type AdminMapLocationsQuery,
+} from "@/features/dashboard/graphql/queries.gql";
 import {
   PharmacyDrugsDocument,
   type PharmacyDrugsQuery,
@@ -19,6 +22,7 @@ import {
   usePharmaciesQuery,
 } from "@/generated/hooks";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { getDashboardSubjectForRole, getPortalRole } from "@/lib/casl";
 import { useAbility } from "@/lib/casl/useAbility";
 
 import AdminDashboard from "../components/admin-dashboard";
@@ -26,23 +30,25 @@ import HospitalDashboard from "../components/hospital-dashboard";
 import PharmacyDashboard from "../components/pharmacy-dashboard";
 import UserDashboard from "../components/user-dashboard";
 
-const getDashboardSubject = (role: string | null): Subject => {
-  if (role === "admin") return "Admin_Dashboard";
-  if (role === "hospital") return "Hospital_Dashboard";
-  if (role === "pharmacy") return "Pharmacy_Dashboard";
-  return "User_Dashboard";
-};
-
 export default function DashboardContainer() {
-  const params = useParams();
-  const roleParam = typeof params?.role === "string" ? params.role : "user";
-  const role = roleParam.toLowerCase();
-  const subject = getDashboardSubject(role);
+  const { data: session } = useSession();
+  const { activeOrganization } = useActiveOrganization();
+  const portalRole = getPortalRole(
+    session?.user ?? null,
+    activeOrganization ?? null,
+  );
+  const subject = getDashboardSubjectForRole(portalRole);
 
   const ability = useAbility();
   const canRead = ability.can("read", subject);
-
-  const { activeOrganization } = useActiveOrganization();
+  const role =
+    portalRole === "ADMIN"
+      ? "admin"
+      : portalRole?.startsWith("HOSPITAL_")
+        ? "hospital"
+        : portalRole?.startsWith("PHARMACY_")
+          ? "pharmacy"
+          : "user";
   const organizationName =
     activeOrganization?.organization?.name ?? "Танай байгууллага";
 
@@ -87,13 +93,22 @@ export default function DashboardContainer() {
     },
   );
 
+  const mapLocationsQuery = useQuery<AdminMapLocationsQuery>(
+    ADMIN_MAP_LOCATIONS,
+    {
+      fetchPolicy: "no-cache",
+      skip: !canRead || role !== "admin",
+    },
+  );
+
   const loading =
     equipmentsQuery.loading ||
     logsQuery.loading ||
     hospitalsQuery.loading ||
     pharmaciesQuery.loading ||
     staffQuery.loading ||
-    drugsQuery.loading;
+    drugsQuery.loading ||
+    mapLocationsQuery.loading;
 
   const error =
     equipmentsQuery.error ||
@@ -101,7 +116,8 @@ export default function DashboardContainer() {
     hospitalsQuery.error ||
     pharmaciesQuery.error ||
     staffQuery.error ||
-    drugsQuery.error;
+    drugsQuery.error ||
+    mapLocationsQuery.error;
 
   const equipmentCount = equipmentsQuery.data?.equipments?.count ?? 0;
   const logCount = logsQuery.data?.equipmentLogs?.count ?? 0;
@@ -109,6 +125,9 @@ export default function DashboardContainer() {
   const pharmacyCount = pharmaciesQuery.data?.pharmacies?.count ?? 0;
   const staffCount = staffQuery.data?.memberships?.count ?? 0;
   const drugCount = drugsQuery.data?.pharmacyDrugs?.count ?? 0;
+  const hospitals = mapLocationsQuery.data?.adminMapLocations?.hospitals ?? [];
+  const drugstores =
+    mapLocationsQuery.data?.adminMapLocations?.drugstores ?? [];
 
   const isEmpty =
     role === "admin"
@@ -142,6 +161,8 @@ export default function DashboardContainer() {
           equipmentCount={equipmentCount}
           logCount={logCount}
           staffCount={staffCount}
+          hospitals={hospitals}
+          drugstores={drugstores}
         />
       ) : role === "hospital" ? (
         <HospitalDashboard

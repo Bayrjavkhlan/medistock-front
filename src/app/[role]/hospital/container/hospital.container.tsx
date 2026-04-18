@@ -1,7 +1,7 @@
 "use client";
 import { useMutation } from "@apollo/client/react";
 import { debounce } from "lodash";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 
 import AbilityGuard from "@/components/AbilityGuard";
@@ -12,16 +12,16 @@ import PageToolbar from "@/components/forms/toolbar";
 import { HOSPITAL_DELETE } from "@/features/hospital/graphql/mutation.gql";
 import type { HospitalsQuery } from "@/generated/graphql";
 import { useHospitalsQuery } from "@/generated/hooks";
+import { getHospitalSubjectForRole, getPortalRole } from "@/lib/casl";
 import { useAbility } from "@/lib/casl/useAbility";
 
 import HospitalListTable from "../components/hospital.list";
 import HospitalModal from "../components/hospital.modal";
 
 export default function HospitalContainer() {
-  const params = useParams();
-  const roleParam = typeof params?.role === "string" ? params.role : "user";
-  const role = roleParam.toLowerCase();
-  const subject = role === "user" ? "User_Hospital" : "Admin_Hospital";
+  const { data: session } = useSession();
+  const portalRole = getPortalRole(session?.user ?? null, null);
+  const subject = getHospitalSubjectForRole(portalRole);
 
   const ability = useAbility();
   const canRead = ability.can("read", subject);

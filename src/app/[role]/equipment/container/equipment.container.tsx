@@ -1,7 +1,7 @@
 "use client";
 import { useMutation } from "@apollo/client/react";
 import { debounce } from "lodash";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 
 import AbilityGuard from "@/components/AbilityGuard";
@@ -12,6 +12,8 @@ import PageToolbar from "@/components/forms/toolbar";
 import { EQUIPMENT_DELETE } from "@/features/equipment/graphql/mutations.gql";
 import type { EquipmentsQuery } from "@/generated/graphql";
 import { useEquipmentsQuery, useHospitalsQuery } from "@/generated/hooks";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { getEquipmentSubjectForRole, getPortalRole } from "@/lib/casl";
 import { useAbility } from "@/lib/casl/useAbility";
 
 import EquipmentModal from "../components/equipment.modal";
@@ -21,17 +23,13 @@ import EquipmentListTable from "../components/euipment.list";
 // import StaffListTable from "../components/staff.list";
 
 export default function EquipmentContainer() {
-  const params = useParams();
-  const roleParam = typeof params?.role === "string" ? params.role : "user";
-  const role = roleParam.toLowerCase();
-  const subject =
-    role === "admin"
-      ? "Admin_Equipment"
-      : role === "hospital"
-        ? "Hospital_Equipment"
-        : role === "pharmacy"
-          ? "Pharmacy_Equipment"
-          : "User_Equipment";
+  const { data: session } = useSession();
+  const { activeOrganization } = useActiveOrganization();
+  const portalRole = getPortalRole(
+    session?.user ?? null,
+    activeOrganization ?? null,
+  );
+  const subject = getEquipmentSubjectForRole(portalRole);
 
   const ability = useAbility();
   const canRead = ability.can("read", subject);

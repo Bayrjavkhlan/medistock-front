@@ -1,7 +1,7 @@
 "use client";
 import { useMutation } from "@apollo/client/react";
 import { debounce } from "lodash";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 
 import AbilityGuard from "@/components/AbilityGuard";
@@ -15,21 +15,20 @@ import type { Membership } from "@/generated/graphql";
 import { EnumSortOrder } from "@/generated/graphql";
 import { useMembershipsQuery } from "@/generated/hooks";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { getPortalRole, getStaffSubjectForRole } from "@/lib/casl";
 import { useAbility } from "@/lib/casl/useAbility";
 
 import StaffModal from "../components/modal/staff.modal";
 import StaffListTable from "../components/staff.list";
 
 export default function StaffContainer() {
-  const params = useParams();
-  const roleParam = typeof params?.role === "string" ? params.role : "user";
-  const role = roleParam.toLowerCase();
-  const subject =
-    role === "admin"
-      ? "Admin_Staff"
-      : role === "pharmacy"
-        ? "Pharmacy_Staff"
-        : "Hospital_Staff";
+  const { data: session } = useSession();
+  const { activeOrganization } = useActiveOrganization();
+  const portalRole = getPortalRole(
+    session?.user ?? null,
+    activeOrganization ?? null,
+  );
+  const subject = getStaffSubjectForRole(portalRole);
 
   const ability = useAbility();
   const canRead = ability.can("read", subject);
@@ -61,8 +60,6 @@ export default function StaffContainer() {
     handler();
     return () => handler.cancel();
   }, [search]);
-
-  const { activeOrganization } = useActiveOrganization();
 
   const { data, loading, error, refetch } = useMembershipsQuery({
     variables: {

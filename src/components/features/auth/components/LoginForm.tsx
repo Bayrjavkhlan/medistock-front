@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
 import { useThemeMode } from "@/hooks/useThemeMode";
@@ -74,23 +74,7 @@ export default function LoginForm({
         } else {
           localStorage.removeItem("rememberedEmail");
         }
-        const session = await getSession();
-        const memberships = session?.user?.memberships ?? [];
-        const activeMembership = memberships[0] ?? null;
-        const orgType = activeMembership?.organization?.type ?? null;
-        const orgRole = activeMembership?.role ?? null;
-        const nextRoute = session?.user?.isPlatformAdmin
-          ? "/admin/dashboard"
-          : !activeMembership
-            ? "/user/dashboard"
-            : orgType === "PHARMACY"
-              ? orgRole === "STAFF"
-                ? "/pharmacy/medicine"
-                : "/pharmacy/dashboard"
-              : orgRole === "STAFF"
-                ? "/hospital/equipment"
-                : "/hospital/dashboard";
-        router.push(nextRoute);
+        router.push("/admin/dashboard");
         router.refresh();
       }
     } catch {

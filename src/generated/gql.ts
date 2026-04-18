@@ -30,6 +30,7 @@ type Documents = {
   "\n  query Hospitals($take: Int!, $skip: Int!, $where: HospitalsWhereInput) {\n    hospitals(take: $take, skip: $skip, where: $where) {\n      count\n      data {\n        id\n        name\n        email\n        phone\n        address {\n          address1\n          address2\n          id\n          province\n        }\n      }\n    }\n  }\n": typeof types.HospitalsDocument;
   "\n  query HospitalDetail($hospitalDetailId: String!) {\n    hospitalDetail(id: $hospitalDetailId) {\n      id\n      name\n      email\n      phone\n      address {\n        id\n        address1\n        address2\n        province\n      }\n    }\n  }\n": typeof types.HospitalDetailDocument;
   "\n  query HospitalOption {\n    hospitalOption {\n      id\n      name\n    }\n  }\n": typeof types.HospitalOptionDocument;
+  "\n  query PharmacyDrugs(\n    $take: Int!\n    $skip: Int!\n    $where: PharmacyDrugsWhereInput\n  ) {\n    pharmacyDrugs(take: $take, skip: $skip, where: $where) {\n      count\n      data {\n        id\n        quantity\n        price\n        status\n        updatedAt\n        drug {\n          id\n          name\n          genericName\n          dosageForm\n          strength\n          manufacturer\n          description\n        }\n      }\n    }\n  }\n": typeof types.PharmacyDrugsDocument;
   "\n  mutation PharmacyCreate($input: PharmacyCreateInput!) {\n    pharmacyCreate(input: $input)\n  }\n": typeof types.PharmacyCreateDocument;
   "\n  mutation PharmacyUpdate(\n    $pharmacyUpdateId: String!\n    $input: PharmacyCreateInput!\n  ) {\n    pharmacyUpdate(id: $pharmacyUpdateId, input: $input)\n  }\n": typeof types.PharmacyUpdateDocument;
   "\n  mutation PharmacyDelete($pharmacyDeleteId: String!) {\n    pharmacyDelete(id: $pharmacyDeleteId)\n  }\n": typeof types.PharmacyDeleteDocument;
@@ -73,6 +74,8 @@ const documents: Documents = {
     types.HospitalDetailDocument,
   "\n  query HospitalOption {\n    hospitalOption {\n      id\n      name\n    }\n  }\n":
     types.HospitalOptionDocument,
+  "\n  query PharmacyDrugs(\n    $take: Int!\n    $skip: Int!\n    $where: PharmacyDrugsWhereInput\n  ) {\n    pharmacyDrugs(take: $take, skip: $skip, where: $where) {\n      count\n      data {\n        id\n        quantity\n        price\n        status\n        updatedAt\n        drug {\n          id\n          name\n          genericName\n          dosageForm\n          strength\n          manufacturer\n          description\n        }\n      }\n    }\n  }\n":
+    types.PharmacyDrugsDocument,
   "\n  mutation PharmacyCreate($input: PharmacyCreateInput!) {\n    pharmacyCreate(input: $input)\n  }\n":
     types.PharmacyCreateDocument,
   "\n  mutation PharmacyUpdate(\n    $pharmacyUpdateId: String!\n    $input: PharmacyCreateInput!\n  ) {\n    pharmacyUpdate(id: $pharmacyUpdateId, input: $input)\n  }\n":
@@ -203,6 +206,12 @@ export function gql(
 export function gql(
   source: "\n  query HospitalOption {\n    hospitalOption {\n      id\n      name\n    }\n  }\n",
 ): (typeof documents)["\n  query HospitalOption {\n    hospitalOption {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "\n  query PharmacyDrugs(\n    $take: Int!\n    $skip: Int!\n    $where: PharmacyDrugsWhereInput\n  ) {\n    pharmacyDrugs(take: $take, skip: $skip, where: $where) {\n      count\n      data {\n        id\n        quantity\n        price\n        status\n        updatedAt\n        drug {\n          id\n          name\n          genericName\n          dosageForm\n          strength\n          manufacturer\n          description\n        }\n      }\n    }\n  }\n",
+): (typeof documents)["\n  query PharmacyDrugs(\n    $take: Int!\n    $skip: Int!\n    $where: PharmacyDrugsWhereInput\n  ) {\n    pharmacyDrugs(take: $take, skip: $skip, where: $where) {\n      count\n      data {\n        id\n        quantity\n        price\n        status\n        updatedAt\n        drug {\n          id\n          name\n          genericName\n          dosageForm\n          strength\n          manufacturer\n          description\n        }\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

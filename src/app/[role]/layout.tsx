@@ -28,6 +28,10 @@ export default async function RoleLayout({
   const urlRole = role.toLowerCase();
 
   const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    redirect("/login");
+  }
+
   const activeOrgId = (await cookies()).get("x-org-id")?.value ?? null;
   const memberships = session?.user?.memberships ?? [];
   const activeMembership =

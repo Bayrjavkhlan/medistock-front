@@ -7,7 +7,7 @@ import type { UserMembership } from "@/generated/graphql";
 export type AppAbility = PureAbility<[Action, Subject]>;
 export const AppAbility = PureAbility as unknown;
 
-type PortalRole =
+export type PortalRole =
   | "ADMIN"
   | "HOSPITAL_OWNER"
   | "HOSPITAL_MANAGER"
@@ -141,3 +141,90 @@ export const defineAbilityFor = (
 
   return build();
 };
+
+export const getDashboardSubjectForRole = (
+  portalRole: PortalRole | null,
+): Subject => {
+  if (portalRole === "ADMIN") return "Admin_Dashboard";
+  if (
+    portalRole === "HOSPITAL_OWNER" ||
+    portalRole === "HOSPITAL_MANAGER" ||
+    portalRole === "HOSPITAL_STAFF"
+  ) {
+    return "Hospital_Dashboard";
+  }
+  if (
+    portalRole === "PHARMACY_OWNER" ||
+    portalRole === "PHARMACY_MANAGER" ||
+    portalRole === "PHARMACY_STAFF"
+  ) {
+    return "Pharmacy_Dashboard";
+  }
+  return "User_Dashboard";
+};
+
+export const getHospitalSubjectForRole = (
+  portalRole: PortalRole | null,
+): Subject => (portalRole === "USER" ? "User_Hospital" : "Admin_Hospital");
+
+export const getPharmacySubjectForRole = (
+  portalRole: PortalRole | null,
+): Subject => (portalRole === "USER" ? "User_Pharmacy" : "Admin_Pharmacy");
+
+export const getStaffSubjectForRole = (
+  portalRole: PortalRole | null,
+): Subject => {
+  if (portalRole === "ADMIN") return "Admin_Staff";
+  if (
+    portalRole === "PHARMACY_OWNER" ||
+    portalRole === "PHARMACY_MANAGER" ||
+    portalRole === "PHARMACY_STAFF"
+  ) {
+    return "Pharmacy_Staff";
+  }
+  return "Hospital_Staff";
+};
+
+export const getEquipmentSubjectForRole = (
+  portalRole: PortalRole | null,
+): Subject => {
+  if (portalRole === "ADMIN") return "Admin_Equipment";
+  if (
+    portalRole === "HOSPITAL_OWNER" ||
+    portalRole === "HOSPITAL_MANAGER" ||
+    portalRole === "HOSPITAL_STAFF"
+  ) {
+    return "Hospital_Equipment";
+  }
+  if (
+    portalRole === "PHARMACY_OWNER" ||
+    portalRole === "PHARMACY_MANAGER" ||
+    portalRole === "PHARMACY_STAFF"
+  ) {
+    return "Pharmacy_Equipment";
+  }
+  return "User_Equipment";
+};
+
+export const getEquipmentLogSubjectForRole = (
+  portalRole: PortalRole | null,
+): Subject => {
+  if (portalRole === "ADMIN") return "Admin_EquipmentLog";
+  if (
+    portalRole === "HOSPITAL_OWNER" ||
+    portalRole === "HOSPITAL_MANAGER" ||
+    portalRole === "HOSPITAL_STAFF"
+  ) {
+    return "Hospital_EquipmentLog";
+  }
+  if (
+    portalRole === "PHARMACY_OWNER" ||
+    portalRole === "PHARMACY_MANAGER" ||
+    portalRole === "PHARMACY_STAFF"
+  ) {
+    return "Pharmacy_EquipmentLog";
+  }
+  return "User_EquipmentLog";
+};
+
+export const getPortalRole = resolvePortalRole;
