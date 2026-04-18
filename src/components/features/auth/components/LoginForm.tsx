@@ -11,16 +11,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
 import { useThemeMode } from "@/hooks/useThemeMode";
+import { resolvePostLoginPath } from "@/utils/authRedirect";
 
 type LoginFormProps = {
   setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 };
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginForm({
   setSnackbarOpen,
@@ -35,6 +39,10 @@ export default function LoginForm({
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
 
   const emailInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,9 +58,27 @@ export default function LoginForm({
     }
   }, []);
 
+  const validate = () => {
+    const nextErrors: { email?: string; password?: string } = {};
+
+    if (!email.trim()) {
+      nextErrors.email = "И-мэйл хаягаа оруулна уу.";
+    } else if (!emailRegex.test(email.trim())) {
+      nextErrors.email = "И-мэйл хаягийн формат буруу байна.";
+    }
+
+    if (!password) {
+      nextErrors.password = "Нууц үгээ оруулна уу.";
+    }
+
+    setFieldErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+
+    if (!validate()) return;
 
     setLoading(true);
     setSnackbarOpen(false);
@@ -60,23 +86,26 @@ export default function LoginForm({
 
     try {
       const result = await signIn("credentials", {
-        email,
+        email: email.trim().toLowerCase(),
         password,
         redirect: false,
       });
 
       if (result?.error) {
-        setErrorMessage("Нэвтрэх нэр эсвэл нууц үг буруу байна.");
+        setErrorMessage(result.error);
         setSnackbarOpen(true);
-      } else {
-        if (remember) {
-          localStorage.setItem("rememberedEmail", email);
-        } else {
-          localStorage.removeItem("rememberedEmail");
-        }
-        router.push("/admin/dashboard");
-        router.refresh();
+        return;
       }
+
+      if (remember) {
+        localStorage.setItem("rememberedEmail", email.trim().toLowerCase());
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
+
+      const session = await getSession();
+      router.push(resolvePostLoginPath(session?.user));
+      router.refresh();
     } catch {
       setErrorMessage("Сервертэй холбогдоход алдаа гарлаа.");
       setSnackbarOpen(true);
@@ -88,7 +117,7 @@ export default function LoginForm({
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
       <Typography variant="body1" align="center" color="text.secondary" mb={4}>
-        Medistock • Тоног төхөөрөмжийн менежмент
+        Medistock • Эмнэлгийн нөөц, тоног төхөөрөмжийн удирдлага
       </Typography>
       <TextField
         inputRef={emailInputRef}
@@ -96,7 +125,14 @@ export default function LoginForm({
         label="И-мэйл хаяг"
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => {
+          setEmail(e.target.value);
+          if (fieldErrors.email) {
+            setFieldErrors((prev) => ({ ...prev, email: undefined }));
+          }
+        }}
+        error={!!fieldErrors.email}
+        helperText={fieldErrors.email}
         required
         disabled={loading}
         slotProps={{
@@ -125,7 +161,14 @@ export default function LoginForm({
         label="Нууц үг"
         type={showPassword ? "text" : "password"}
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => {
+          setPassword(e.target.value);
+          if (fieldErrors.password) {
+            setFieldErrors((prev) => ({ ...prev, password: undefined }));
+          }
+        }}
+        error={!!fieldErrors.password}
+        helperText={fieldErrors.password}
         required
         disabled={loading}
         slotProps={{
@@ -165,6 +208,8 @@ export default function LoginForm({
           justifyContent: "space-between",
           alignItems: "center",
           mb: 3,
+          gap: 1,
+          flexWrap: "wrap",
         }}
       >
         <FormControlLabel
@@ -175,14 +220,14 @@ export default function LoginForm({
               disabled={loading}
             />
           }
-          label="Намайг сана"
+          label="И-мэйлийг сануулах"
         />
         <Button
           variant="text"
           size="small"
           onClick={() => router.push("/forgot-password")}
         >
-          Нууц үг мартсан?
+          Нууц үгээ мартсан уу?
         </Button>
       </Box>
 
@@ -191,7 +236,7 @@ export default function LoginForm({
         fullWidth
         size="large"
         variant="contained"
-        disabled={loading || !email || !password}
+        disabled={loading}
         sx={{
           py: 2,
           borderRadius: 4,
@@ -206,8 +251,18 @@ export default function LoginForm({
           },
         }}
       >
-        {loading ? "Нэвтэрж байна..." : "Нэвтрэх"}
+        {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
       </Button>
+
+      <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+        Бүртгэлгүй юу?{" "}
+        <Link
+          href="/signup"
+          style={{ color: "#1976d2", textDecoration: "none" }}
+        >
+          Бүртгүүлэх
+        </Link>
+      </Typography>
     </Box>
   );
 }

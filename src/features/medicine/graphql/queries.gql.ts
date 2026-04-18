@@ -53,3 +53,81 @@ export const PharmacyDrugsDocument = gql`
     }
   }
 ` as DocumentNode<PharmacyDrugsQuery, PharmacyDrugsQueryVariables>;
+
+export type DrugDetailQueryVariables = {
+  drugDetailId: string;
+};
+
+export type DrugDetailQuery = {
+  __typename?: "Query";
+  drugDetail?: {
+    __typename?: "Drug";
+    id?: string | null;
+    name?: string | null;
+    genericName?: string | null;
+    dosageForm?: string | null;
+    strength?: string | null;
+    manufacturer?: string | null;
+    description?: string | null;
+    totalStock: number;
+    startingPrice?: number | null;
+    availabilityCount: number;
+    createdAt?: unknown;
+    updatedAt?: unknown;
+    availability: Array<{
+      __typename?: "DrugAvailability";
+      id: string;
+      pharmacyId: string;
+      pharmacyName: string;
+      quantity: number;
+      price?: number | null;
+      status?: string | null;
+      updatedAt?: unknown;
+      address?: {
+        __typename?: "Address";
+        id?: string | null;
+        address1?: string | null;
+        address2?: string | null;
+        province?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+      } | null;
+    }>;
+  } | null;
+};
+
+export const DrugDetailDocument = gql`
+  query DrugDetail($drugDetailId: String!) {
+    drugDetail(id: $drugDetailId) {
+      id
+      name
+      genericName
+      dosageForm
+      strength
+      manufacturer
+      description
+      totalStock
+      startingPrice
+      availabilityCount
+      createdAt
+      updatedAt
+      availability {
+        id
+        pharmacyId
+        pharmacyName
+        quantity
+        price
+        status
+        updatedAt
+        address {
+          id
+          address1
+          address2
+          province
+          latitude
+          longitude
+        }
+      }
+    }
+  }
+` as DocumentNode<DrugDetailQuery, DrugDetailQueryVariables>;

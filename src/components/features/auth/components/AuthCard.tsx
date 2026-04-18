@@ -86,7 +86,7 @@ export default function AuthCard({
           color="text.secondary"
           mt={6}
         >
-          © 2025 Medistock • Mongolia
+          © 2026 Medistock • Монгол Улс
         </Typography>
       </Box>
     </Card>

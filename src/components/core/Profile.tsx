@@ -9,6 +9,12 @@ type ProfileProps = {
   image?: string | undefined;
 };
 
+const roleLabelMap = {
+  OWNER: "Эзэмшигч",
+  MANAGER: "Менежер",
+  STAFF: "Ажилтан",
+} as const;
+
 export default function Profile({ username, role, image }: ProfileProps) {
   const router = useRouter();
 
@@ -20,7 +26,7 @@ export default function Profile({ username, role, image }: ProfileProps) {
         alignItems: "center",
         gap: 2,
         padding: "8px 12px",
-        borderRadius: 1,
+        borderRadius: 999,
         cursor: "pointer",
         transition: "all 0.2s ease-in-out",
         "&:hover": {
@@ -43,13 +49,15 @@ export default function Profile({ username, role, image }: ProfileProps) {
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Box
           sx={{
-            display: "flex",
+            display: { xs: "none", sm: "flex" },
             flexDirection: "column",
             alignItems: "flex-end",
           }}
         >
-          <Typography variant="body1">{username}</Typography>
-          <Typography variant="caption">{role}</Typography>
+          <Typography variant="body1">{username ?? "Хэрэглэгч"}</Typography>
+          <Typography variant="caption">
+            {role ? (roleLabelMap[role] ?? role) : "Профайл"}
+          </Typography>
         </Box>
         <Avatar alt={username} src={image} />
       </Box>

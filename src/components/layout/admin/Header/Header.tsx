@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import Profile from "@/components/core/Profile";
+import LogoutButton from "@/components/features/auth/components/LogoutButton";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { usePageTitle } from "@/utils/getPageTitle";
 
@@ -23,6 +24,12 @@ type HeaderProps = {
   setCollapsed?: (val: boolean) => void;
   setMobileOpen?: (val: boolean) => void;
 };
+
+const roleLabelMap = {
+  OWNER: "Эзэмшигч",
+  MANAGER: "Менежер",
+  STAFF: "Ажилтан",
+} as const;
 
 export default function Header({
   collapsed,
@@ -35,7 +42,7 @@ export default function Header({
   const { data: session } = useSession();
   const { memberships, activeOrganization, setActiveOrganization } =
     useActiveOrganization();
-  const pageTitle = usePageTitle(); // ← This gets the current title!
+  const pageTitle = usePageTitle();
 
   return (
     <AppBar
@@ -58,27 +65,29 @@ export default function Header({
           justifyContent: "space-between",
           alignItems: "center",
           minHeight: "80px !important",
+          gap: 2,
         }}
       >
-        <IconButton
-          color="inherit"
-          edge="start"
-          onClick={() => setMobileOpen && setMobileOpen(!isMobileOpen)}
-          sx={{ mr: 2, display: { sm: "none" } }}
+        <Box
+          sx={{ display: "flex", alignItems: "center", gap: 2, minWidth: 0 }}
         >
-          <MenuIcon
-            sx={{
-              fontSize: "32px",
-            }}
-          />
-        </IconButton>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={() => setMobileOpen && setMobileOpen(!isMobileOpen)}
+            sx={{ display: { sm: "none" } }}
+          >
+            <MenuIcon sx={{ fontSize: "32px" }} />
+          </IconButton>
 
-        <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
-          {pageTitle}
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
+            {pageTitle}
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           {memberships.length > 0 && (
-            <FormControl size="small" sx={{ minWidth: 200 }}>
+            <FormControl size="small" sx={{ minWidth: { xs: 150, sm: 220 } }}>
               <Select
                 value={activeOrganization?.organization.id ?? ""}
                 displayEmpty
@@ -94,12 +103,14 @@ export default function Header({
                     key={membership.organization.id}
                     value={membership.organization.id}
                   >
-                    {membership.organization.name} • {membership.role}
+                    {membership.organization.name} •{" "}
+                    {roleLabelMap[membership.role] ?? membership.role}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           )}
+          <LogoutButton />
           <Profile
             username={session?.user?.name ?? undefined}
             role={activeOrganization?.role}

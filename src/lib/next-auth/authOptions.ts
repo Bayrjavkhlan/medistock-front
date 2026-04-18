@@ -2,15 +2,28 @@ import type { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import type { UserMembership } from "@/generated/graphql";
-import { LoginDocument, RefreshAccessTokenDocument } from "@/generated/graphql";
+import {
+  LOGIN,
+  REFRESH_ACCESS_TOKEN,
+} from "@/features/auth/graphql/mutation.gql";
+import type {
+  LoginMutation,
+  LoginMutationVariables,
+  RefreshAccessTokenMutation,
+  RefreshAccessTokenMutationVariables,
+  UserMembership,
+} from "@/generated/graphql";
+import { getApolloErrorMessage } from "@/utils/getApolloErrorMessage";
 
 import { getApolloClient } from "../apollo/ApolloClient";
 
 const refreshAccessToken = async (token: JWT): Promise<JWT> => {
   try {
-    const { data } = await getApolloClient().mutate({
-      mutation: RefreshAccessTokenDocument,
+    const { data } = await getApolloClient().mutate<
+      RefreshAccessTokenMutation,
+      RefreshAccessTokenMutationVariables
+    >({
+      mutation: REFRESH_ACCESS_TOKEN,
       variables: { refreshToken: token.refreshToken },
       fetchPolicy: "network-only",
     });
@@ -50,8 +63,11 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         try {
-          const { data } = await getApolloClient().mutate({
-            mutation: LoginDocument,
+          const { data } = await getApolloClient().mutate<
+            LoginMutation,
+            LoginMutationVariables
+          >({
+            mutation: LOGIN,
             variables: {
               input: {
                 email: credentials.email,
@@ -76,8 +92,9 @@ export const authOptions: NextAuthOptions = {
             accessTokenExpiresAt: Number(payload.accessTokenExpiresAt),
           };
         } catch (error) {
-          console.error("[NextAuth] Login failed:", error);
-          return null;
+          throw new Error(
+            getApolloErrorMessage(error, "Нэвтрэх үед алдаа гарлаа."),
+          );
         }
       },
     }),

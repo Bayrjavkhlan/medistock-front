@@ -73,7 +73,7 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": "eslint --fix",
+    "*.{ts,tsx,js,jsx}": "eslint --fix --no-warn-ignored",
     "*.{ts,tsx,js,jsx,json,css,md}": "prettier --write"
   },
   "config": {

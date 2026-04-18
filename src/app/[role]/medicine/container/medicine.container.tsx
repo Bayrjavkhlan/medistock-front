@@ -2,6 +2,7 @@
 
 import { useQuery } from "@apollo/client/react";
 import { debounce } from "lodash";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import AbilityGuard from "@/components/AbilityGuard";
@@ -17,6 +18,7 @@ import { useAbility } from "@/lib/casl/useAbility";
 import MedicineListTable from "../components/medicine.list";
 
 export default function MedicineContainer() {
+  const router = useRouter();
   const subject = "Pharmacy_Medicine";
   const ability = useAbility();
   const canRead = ability.can("read", subject);
@@ -74,6 +76,7 @@ export default function MedicineContainer() {
               setRowsPerPage(newRows);
               setPage(0);
             }}
+            onView={(id) => router.push(`/pharmacy/medicine/${id}`)}
             loading={loading}
           />
         </>

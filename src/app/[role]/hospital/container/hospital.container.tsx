@@ -1,6 +1,7 @@
 "use client";
 import { useMutation } from "@apollo/client/react";
 import { debounce } from "lodash";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -19,6 +20,7 @@ import HospitalListTable from "../components/hospital.list";
 import HospitalModal from "../components/hospital.modal";
 
 export default function HospitalContainer() {
+  const router = useRouter();
   const { data: session } = useSession();
   const portalRole = getPortalRole(session?.user ?? null, null);
   const subject = getHospitalSubjectForRole(portalRole);
@@ -134,6 +136,16 @@ export default function HospitalContainer() {
               setPage(0);
             }}
             loading={loading}
+            onView={(id) => {
+              const role = (
+                session?.user?.isPlatformAdmin
+                  ? "admin"
+                  : portalRole === "USER"
+                    ? "user"
+                    : "hospital"
+              ) as string;
+              router.push(`/${role}/hospital/${id}`);
+            }}
             onEdit={(id) => {
               setEditingId(id);
               setOpen(true);

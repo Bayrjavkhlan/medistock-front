@@ -41,6 +41,8 @@ export type Address = {
   address2?: Maybe<Scalars["String"]["output"]>;
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
   id?: Maybe<Scalars["String"]["output"]>;
+  latitude?: Maybe<Scalars["Float"]["output"]>;
+  longitude?: Maybe<Scalars["Float"]["output"]>;
   province?: Maybe<Scalars["String"]["output"]>;
   updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
@@ -49,6 +51,12 @@ export type AddressCreateInput = {
   address1: Scalars["String"]["input"];
   address2?: InputMaybe<Scalars["String"]["input"]>;
   province: Scalars["String"]["input"];
+};
+
+export type AdminMapLocationsPayload = {
+  __typename?: "AdminMapLocationsPayload";
+  drugstores: Array<DashboardMapLocation>;
+  hospitals: Array<DashboardMapLocation>;
 };
 
 export type AuthUser = {
@@ -102,6 +110,20 @@ export type BookingsWhereInput = {
   hospitalId?: InputMaybe<Scalars["String"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   status?: InputMaybe<BookingStatus>;
+};
+
+export type DashboardMapLocation = {
+  __typename?: "DashboardMapLocation";
+  address: Scalars["String"]["output"];
+  address2?: Maybe<Scalars["String"]["output"]>;
+  closesAt: Scalars["String"]["output"];
+  id: Scalars["String"]["output"];
+  latitude: Scalars["Float"]["output"];
+  longitude: Scalars["Float"]["output"];
+  name: Scalars["String"]["output"];
+  opensAt: Scalars["String"]["output"];
+  province: Scalars["String"]["output"];
+  type: Scalars["String"]["output"];
 };
 
 export type Drug = {
@@ -272,6 +294,11 @@ export type LoginPayload = {
   user: AuthUser;
 };
 
+export type LogoutPayload = {
+  __typename?: "LogoutPayload";
+  message: Scalars["String"]["output"];
+};
+
 export type MePayload = {
   __typename?: "MePayload";
   activeOrganization?: Maybe<UserMembership>;
@@ -320,6 +347,7 @@ export type Mutation = {
   hospitalDelete?: Maybe<Scalars["Boolean"]["output"]>;
   hospitalUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   login?: Maybe<LoginPayload>;
+  logout?: Maybe<LogoutPayload>;
   membershipCreate?: Maybe<Scalars["Boolean"]["output"]>;
   membershipDelete?: Maybe<Scalars["Boolean"]["output"]>;
   membershipUpdate?: Maybe<Scalars["Boolean"]["output"]>;
@@ -327,10 +355,13 @@ export type Mutation = {
   pharmacyDelete?: Maybe<Scalars["Boolean"]["output"]>;
   pharmacyUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   refreshAccessToken?: Maybe<LoginPayload>;
+  resendOtp?: Maybe<ResendOtpPayload>;
   selectOrganization?: Maybe<UserMembership>;
+  signUp?: Maybe<SignUpPayload>;
   userCreate?: Maybe<Scalars["Boolean"]["output"]>;
   userDelete?: Maybe<Scalars["Boolean"]["output"]>;
   userUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  verifyOtp?: Maybe<VerifyOtpPayload>;
 };
 
 export type MutationBookingCreateArgs = {
@@ -432,8 +463,16 @@ export type MutationRefreshAccessTokenArgs = {
   refreshToken: Scalars["String"]["input"];
 };
 
+export type MutationResendOtpArgs = {
+  input: ResendOtpInput;
+};
+
 export type MutationSelectOrganizationArgs = {
   orgId: Scalars["String"]["input"];
+};
+
+export type MutationSignUpArgs = {
+  input: SignUpInput;
 };
 
 export type MutationUserCreateArgs = {
@@ -447,6 +486,10 @@ export type MutationUserDeleteArgs = {
 export type MutationUserUpdateArgs = {
   id: Scalars["String"]["input"];
   input: UserUpdateInput;
+};
+
+export type MutationVerifyOtpArgs = {
+  input: VerifyOtpInput;
 };
 
 export enum OrganizationRole {
@@ -523,6 +566,7 @@ export type Pharmacys = {
 
 export type Query = {
   __typename?: "Query";
+  adminMapLocations?: Maybe<AdminMapLocationsPayload>;
   bookingDetail?: Maybe<Booking>;
   bookings?: Maybe<Bookings>;
   currentUser?: Maybe<AuthUser>;
@@ -626,6 +670,26 @@ export type QueryUsersArgs = {
   where?: InputMaybe<UsersWhereInput>;
 };
 
+export type ResendOtpInput = {
+  email: Scalars["String"]["input"];
+};
+
+export type ResendOtpPayload = {
+  __typename?: "ResendOtpPayload";
+  message: Scalars["String"]["output"];
+};
+
+export type SignUpInput = {
+  email: Scalars["String"]["input"];
+  name: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+};
+
+export type SignUpPayload = {
+  __typename?: "SignUpPayload";
+  message: Scalars["String"]["output"];
+};
+
 export type User = {
   __typename?: "User";
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -674,6 +738,16 @@ export type UsersWhereInput = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type VerifyOtpInput = {
+  email: Scalars["String"]["input"];
+  otp: Scalars["String"]["input"];
+};
+
+export type VerifyOtpPayload = {
+  __typename?: "VerifyOtpPayload";
+  message: Scalars["String"]["output"];
+};
+
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
@@ -704,6 +778,40 @@ export type LoginMutation = {
       }>;
     };
   } | null;
+};
+
+export type SignUpMutationVariables = Exact<{
+  input: SignUpInput;
+}>;
+
+export type SignUpMutation = {
+  __typename?: "Mutation";
+  signUp?: { __typename?: "SignUpPayload"; message: string } | null;
+};
+
+export type VerifyOtpMutationVariables = Exact<{
+  input: VerifyOtpInput;
+}>;
+
+export type VerifyOtpMutation = {
+  __typename?: "Mutation";
+  verifyOtp?: { __typename?: "VerifyOtpPayload"; message: string } | null;
+};
+
+export type ResendOtpMutationVariables = Exact<{
+  input: ResendOtpInput;
+}>;
+
+export type ResendOtpMutation = {
+  __typename?: "Mutation";
+  resendOtp?: { __typename?: "ResendOtpPayload"; message: string } | null;
+};
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
+
+export type LogoutMutation = {
+  __typename?: "Mutation";
+  logout?: { __typename?: "LogoutPayload"; message: string } | null;
 };
 
 export type RefreshAccessTokenMutationVariables = Exact<{
@@ -813,6 +921,41 @@ export type CurrentUserQuery = {
         name: string;
         type: OrganizationType;
       };
+    }>;
+  } | null;
+};
+
+export type AdminMapLocationsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AdminMapLocationsQuery = {
+  __typename?: "Query";
+  adminMapLocations?: {
+    __typename?: "AdminMapLocationsPayload";
+    hospitals: Array<{
+      __typename?: "DashboardMapLocation";
+      id: string;
+      name: string;
+      type: string;
+      address: string;
+      address2?: string | null;
+      province: string;
+      opensAt: string;
+      closesAt: string;
+      latitude: number;
+      longitude: number;
+    }>;
+    drugstores: Array<{
+      __typename?: "DashboardMapLocation";
+      id: string;
+      name: string;
+      type: string;
+      address: string;
+      address2?: string | null;
+      province: string;
+      opensAt: string;
+      closesAt: string;
+      latitude: number;
+      longitude: number;
     }>;
   } | null;
 };
@@ -1250,6 +1393,184 @@ export const LoginDocument = {
     },
   ],
 } as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
+export const SignUpDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SignUp" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SignUpInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "signUp" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SignUpMutation, SignUpMutationVariables>;
+export const VerifyOtpDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "VerifyOtp" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "VerifyOtpInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "verifyOtp" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<VerifyOtpMutation, VerifyOtpMutationVariables>;
+export const ResendOtpDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "ResendOtp" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "ResendOtpInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "resendOtp" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ResendOtpMutation, ResendOtpMutationVariables>;
+export const LogoutDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "Logout" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "logout" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
 export const RefreshAccessTokenDocument = {
   kind: "Document",
   definitions: [
@@ -1598,6 +1919,113 @@ export const CurrentUserDocument = {
     },
   ],
 } as unknown as DocumentNode<CurrentUserQuery, CurrentUserQueryVariables>;
+export const AdminMapLocationsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "AdminMapLocations" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "adminMapLocations" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hospitals" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address2" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "province" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "opensAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "closesAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "latitude" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "longitude" },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "drugstores" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address2" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "province" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "opensAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "closesAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "latitude" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "longitude" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  AdminMapLocationsQuery,
+  AdminMapLocationsQueryVariables
+>;
 export const EquipmentCreateDocument = {
   kind: "Document",
   definitions: [

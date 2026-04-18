@@ -11,17 +11,19 @@ import { Alert, Box, IconButton, Snackbar } from "@mui/material";
 
 import { useThemeMode } from "@/hooks/useThemeMode";
 
+type AuthBackgroundProps = {
+  children: React.ReactNode;
+  setSnackbarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  snackbarOpen?: boolean;
+  errorMessage?: string;
+};
+
 export default function AuthBackground({
   children,
   setSnackbarOpen,
-  snackbarOpen,
-  errorMessage,
-}: {
-  children: React.ReactNode;
-  setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  snackbarOpen: boolean;
-  errorMessage: string;
-}) {
+  snackbarOpen = false,
+  errorMessage = "",
+}: AuthBackgroundProps) {
   const { mode, toggleMode } = useThemeMode();
   const isDark = mode === "dark";
 
@@ -96,20 +98,23 @@ export default function AuthBackground({
       </IconButton>
 
       {children}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
+
+      {!!setSnackbarOpen && (
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
           onClose={() => setSnackbarOpen(false)}
-          severity="error"
-          variant="filled"
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          {errorMessage}
-        </Alert>
-      </Snackbar>
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity="error"
+            variant="filled"
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 }

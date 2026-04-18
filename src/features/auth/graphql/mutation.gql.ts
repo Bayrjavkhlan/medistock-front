@@ -24,6 +24,39 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const SIGN_UP = gql`
+  mutation SignUp($input: SignUpInput!) {
+    signUp(input: $input) {
+      message
+    }
+  }
+`;
+
+export const VERIFY_OTP = gql`
+  mutation VerifyOtp($input: VerifyOtpInput!) {
+    verifyOtp(input: $input) {
+      message
+    }
+  }
+`;
+
+export const RESEND_OTP = gql`
+  mutation ResendOtp($input: ResendOtpInput!) {
+    resendOtp(input: $input) {
+      message
+    }
+  }
+`;
+
+export const LOGOUT = gql`
+  mutation Logout {
+    logout {
+      message
+    }
+  }
+`;
+
 export const REFRESH_ACCESS_TOKEN = gql`
   mutation RefreshAccessToken($refreshToken: String!) {
     refreshAccessToken(refreshToken: $refreshToken) {

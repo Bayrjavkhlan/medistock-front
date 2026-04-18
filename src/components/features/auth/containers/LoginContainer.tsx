@@ -10,6 +10,7 @@ import LoginForm from "../components/LoginForm";
 export default function LoginContainer() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   return (
     <AuthBackground
       setSnackbarOpen={setSnackbarOpen}
@@ -18,6 +19,7 @@ export default function LoginContainer() {
     >
       <AuthCard
         title="Нэвтрэх"
+        subtitle="Medistock системд аюулгүй нэвтэрч ажлаа үргэлжлүүлнэ үү."
         icon={<MonitorHeartOutlined sx={{ fontSize: 50, color: "white" }} />}
       >
         <LoginForm

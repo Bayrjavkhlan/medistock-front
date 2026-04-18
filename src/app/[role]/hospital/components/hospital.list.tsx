@@ -1,5 +1,6 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import {
   IconButton,
   Paper,
@@ -22,12 +23,11 @@ type HospitalListTableProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  onView: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   canUpdate: boolean;
   canDelete: boolean;
-  // sortBy: { field: UserSortField; order: EnumSortOrder };
-  // onSort: (field: UserSortField, order: EnumSortOrder) => void;
   loading: boolean;
 };
 
@@ -37,15 +37,15 @@ export default function HospitalListTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  onView,
   onEdit,
   onDelete,
   canUpdate,
   canDelete,
-  // sortBy,
-  // onSort,
   loading,
 }: HospitalListTableProps) {
-  const columnCount = 5; // Name, Email, Phone, Address, Actions
+  const columnCount = 5;
+
   return (
     <Paper
       sx={{
@@ -71,38 +71,10 @@ export default function HospitalListTable({
         >
           <TableHead>
             <TableRow>
-              {/* <SortableTableHeader
-                field="name"
-                label="Name"
-                currentSort={{
-                  field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
-                }}
-                onSort={(field, order) => {
-                  onSort(
-                    field as UserSortField,
-                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
-                  );
-                }}
-              />
-              <SortableTableHeader
-                field="email"
-                label="Email"
-                currentSort={{
-                  field: sortBy.field,
-                  order: sortBy.order === EnumSortOrder.Asc ? "asc" : "desc",
-                }}
-                onSort={(field, order) => {
-                  onSort(
-                    field as UserSortField,
-                    order === "asc" ? EnumSortOrder.Asc : EnumSortOrder.Desc,
-                  );
-                }}
-              /> */}
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Address</TableCell>
+              <TableCell>Нэр</TableCell>
+              <TableCell>И-мэйл</TableCell>
+              <TableCell>Утас</TableCell>
+              <TableCell>Хаяг</TableCell>
               <TableCell align="right">Үйлдэл</TableCell>
             </TableRow>
           </TableHead>
@@ -122,11 +94,25 @@ export default function HospitalListTable({
                   <TableCell>{hospital.email ?? "-"}</TableCell>
                   <TableCell>{hospital.phone ?? "-"}</TableCell>
                   <TableCell>
-                    {hospital.address?.address1 ?? "-"}
-                    {hospital.address?.address2 ?? "-"}
-                    {hospital.address?.province ?? "-"}
+                    {[
+                      hospital.address?.address1,
+                      hospital.address?.address2,
+                      hospital.address?.province,
+                    ]
+                      .filter(Boolean)
+                      .join(", ") || "-"}
                   </TableCell>
                   <TableCell align="right">
+                    {hospital.id ? (
+                      <Tooltip title="Дэлгэрэнгүй харах">
+                        <IconButton
+                          size="small"
+                          onClick={() => onView(hospital.id!)}
+                        >
+                          <VisibilityOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
                     {canUpdate ? (
                       <Tooltip title="Засах">
                         <IconButton

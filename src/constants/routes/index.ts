@@ -188,7 +188,7 @@ export const Routes: RouteType = {
       "read",
       "/",
       true,
-      (a) => `/admin/hospitals/${a?.id}`,
+      (a) => `/admin/hospital/${a?.id}`,
     ),
   },
   Admin_Pharmacy: {
@@ -370,6 +370,15 @@ export const Routes: RouteType = {
       "/",
       true,
     ),
+    Detail: createRoute(
+      "Дэлгэрэнгүй",
+      "/pharmacy/medicine/detail",
+      "Pharmacy_Medicine",
+      "read",
+      "/",
+      true,
+      (a) => `/pharmacy/medicine/${a?.id}`,
+    ),
   },
 
   Pharmacy_Staff: {
@@ -446,6 +455,15 @@ export const Routes: RouteType = {
       "/",
       true,
     ),
+    Detail: createRoute(
+      "Дэлгэрэнгүй",
+      "/user/hospital/detail",
+      "User_Hospital",
+      "read",
+      "/",
+      true,
+      (a) => `/user/hospital/${a?.id}`,
+    ),
   },
   User_Pharmacy: {
     key: "/user/pharmacy",
@@ -456,6 +474,15 @@ export const Routes: RouteType = {
       "read",
       "/",
       true,
+    ),
+    Detail: createRoute(
+      "Дэлгэрэнгүй",
+      "/user/pharmacy/detail",
+      "User_Pharmacy",
+      "read",
+      "/",
+      true,
+      (a) => `/user/pharmacy/${a?.id}`,
     ),
   },
   Admin_Equipment: {

@@ -15,10 +15,15 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
  */
 type Documents = {
   "\n  mutation Login($input: LoginInput!) {\n    login(input: $input) {\n      user {\n        id\n        name\n        email\n        phone\n        isPlatformAdmin\n        memberships {\n          role\n          organization {\n            id\n            name\n            type\n          }\n        }\n      }\n      accessToken\n      refreshToken\n      accessTokenExpiresAt\n    }\n  }\n": typeof types.LoginDocument;
+  "\n  mutation SignUp($input: SignUpInput!) {\n    signUp(input: $input) {\n      message\n    }\n  }\n": typeof types.SignUpDocument;
+  "\n  mutation VerifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input) {\n      message\n    }\n  }\n": typeof types.VerifyOtpDocument;
+  "\n  mutation ResendOtp($input: ResendOtpInput!) {\n    resendOtp(input: $input) {\n      message\n    }\n  }\n": typeof types.ResendOtpDocument;
+  "\n  mutation Logout {\n    logout {\n      message\n    }\n  }\n": typeof types.LogoutDocument;
   "\n  mutation RefreshAccessToken($refreshToken: String!) {\n    refreshAccessToken(refreshToken: $refreshToken) {\n      user {\n        id\n        name\n        email\n        phone\n        isPlatformAdmin\n        memberships {\n          role\n          organization {\n            id\n            name\n            type\n          }\n        }\n      }\n      accessToken\n      refreshToken\n      accessTokenExpiresAt\n    }\n  }\n": typeof types.RefreshAccessTokenDocument;
   "\n  mutation SelectOrganization($orgId: String!) {\n    selectOrganization(orgId: $orgId) {\n      role\n      organization {\n        id\n        name\n        type\n      }\n    }\n  }\n": typeof types.SelectOrganizationDocument;
   "\n  query Me {\n    me {\n      activeOrganization {\n        role\n        organization {\n          id\n          name\n          type\n        }\n      }\n      user {\n        id\n        name\n        email\n        phone\n        isPlatformAdmin\n        memberships {\n          role\n          organization {\n            id\n            name\n            type\n          }\n        }\n      }\n    }\n  }\n": typeof types.MeDocument;
   "\n  query CurrentUser {\n    currentUser {\n      id\n      name\n      email\n      phone\n      isPlatformAdmin\n      memberships {\n        role\n        organization {\n          id\n          name\n          type\n        }\n      }\n    }\n  }\n": typeof types.CurrentUserDocument;
+  "\n  query AdminMapLocations {\n    adminMapLocations {\n      hospitals {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n      drugstores {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n    }\n  }\n": typeof types.AdminMapLocationsDocument;
   "\n  mutation EquipmentCreate($input: EquipmentCreateInput!) {\n    equipmentCreate(input: $input)\n  }\n": typeof types.EquipmentCreateDocument;
   "\n  mutation EquipmentUpdate(\n    $equipmentUpdateId: String!\n    $input: EquipmentCreateInput!\n  ) {\n    equipmentUpdate(id: $equipmentUpdateId, input: $input)\n  }\n": typeof types.EquipmentUpdateDocument;
   "\n  mutation EquipmentDelete($equipmentDeleteId: String!) {\n    equipmentDelete(id: $equipmentDeleteId)\n  }\n": typeof types.EquipmentDeleteDocument;
@@ -44,6 +49,14 @@ type Documents = {
 const documents: Documents = {
   "\n  mutation Login($input: LoginInput!) {\n    login(input: $input) {\n      user {\n        id\n        name\n        email\n        phone\n        isPlatformAdmin\n        memberships {\n          role\n          organization {\n            id\n            name\n            type\n          }\n        }\n      }\n      accessToken\n      refreshToken\n      accessTokenExpiresAt\n    }\n  }\n":
     types.LoginDocument,
+  "\n  mutation SignUp($input: SignUpInput!) {\n    signUp(input: $input) {\n      message\n    }\n  }\n":
+    types.SignUpDocument,
+  "\n  mutation VerifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input) {\n      message\n    }\n  }\n":
+    types.VerifyOtpDocument,
+  "\n  mutation ResendOtp($input: ResendOtpInput!) {\n    resendOtp(input: $input) {\n      message\n    }\n  }\n":
+    types.ResendOtpDocument,
+  "\n  mutation Logout {\n    logout {\n      message\n    }\n  }\n":
+    types.LogoutDocument,
   "\n  mutation RefreshAccessToken($refreshToken: String!) {\n    refreshAccessToken(refreshToken: $refreshToken) {\n      user {\n        id\n        name\n        email\n        phone\n        isPlatformAdmin\n        memberships {\n          role\n          organization {\n            id\n            name\n            type\n          }\n        }\n      }\n      accessToken\n      refreshToken\n      accessTokenExpiresAt\n    }\n  }\n":
     types.RefreshAccessTokenDocument,
   "\n  mutation SelectOrganization($orgId: String!) {\n    selectOrganization(orgId: $orgId) {\n      role\n      organization {\n        id\n        name\n        type\n      }\n    }\n  }\n":
@@ -52,6 +65,8 @@ const documents: Documents = {
     types.MeDocument,
   "\n  query CurrentUser {\n    currentUser {\n      id\n      name\n      email\n      phone\n      isPlatformAdmin\n      memberships {\n        role\n        organization {\n          id\n          name\n          type\n        }\n      }\n    }\n  }\n":
     types.CurrentUserDocument,
+  "\n  query AdminMapLocations {\n    adminMapLocations {\n      hospitals {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n      drugstores {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n    }\n  }\n":
+    types.AdminMapLocationsDocument,
   "\n  mutation EquipmentCreate($input: EquipmentCreateInput!) {\n    equipmentCreate(input: $input)\n  }\n":
     types.EquipmentCreateDocument,
   "\n  mutation EquipmentUpdate(\n    $equipmentUpdateId: String!\n    $input: EquipmentCreateInput!\n  ) {\n    equipmentUpdate(id: $equipmentUpdateId, input: $input)\n  }\n":
@@ -120,6 +135,30 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
+  source: "\n  mutation SignUp($input: SignUpInput!) {\n    signUp(input: $input) {\n      message\n    }\n  }\n",
+): (typeof documents)["\n  mutation SignUp($input: SignUpInput!) {\n    signUp(input: $input) {\n      message\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "\n  mutation VerifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input) {\n      message\n    }\n  }\n",
+): (typeof documents)["\n  mutation VerifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input) {\n      message\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "\n  mutation ResendOtp($input: ResendOtpInput!) {\n    resendOtp(input: $input) {\n      message\n    }\n  }\n",
+): (typeof documents)["\n  mutation ResendOtp($input: ResendOtpInput!) {\n    resendOtp(input: $input) {\n      message\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "\n  mutation Logout {\n    logout {\n      message\n    }\n  }\n",
+): (typeof documents)["\n  mutation Logout {\n    logout {\n      message\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
   source: "\n  mutation RefreshAccessToken($refreshToken: String!) {\n    refreshAccessToken(refreshToken: $refreshToken) {\n      user {\n        id\n        name\n        email\n        phone\n        isPlatformAdmin\n        memberships {\n          role\n          organization {\n            id\n            name\n            type\n          }\n        }\n      }\n      accessToken\n      refreshToken\n      accessTokenExpiresAt\n    }\n  }\n",
 ): (typeof documents)["\n  mutation RefreshAccessToken($refreshToken: String!) {\n    refreshAccessToken(refreshToken: $refreshToken) {\n      user {\n        id\n        name\n        email\n        phone\n        isPlatformAdmin\n        memberships {\n          role\n          organization {\n            id\n            name\n            type\n          }\n        }\n      }\n      accessToken\n      refreshToken\n      accessTokenExpiresAt\n    }\n  }\n"];
 /**
@@ -140,6 +179,12 @@ export function gql(
 export function gql(
   source: "\n  query CurrentUser {\n    currentUser {\n      id\n      name\n      email\n      phone\n      isPlatformAdmin\n      memberships {\n        role\n        organization {\n          id\n          name\n          type\n        }\n      }\n    }\n  }\n",
 ): (typeof documents)["\n  query CurrentUser {\n    currentUser {\n      id\n      name\n      email\n      phone\n      isPlatformAdmin\n      memberships {\n        role\n        organization {\n          id\n          name\n          type\n        }\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "\n  query AdminMapLocations {\n    adminMapLocations {\n      hospitals {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n      drugstores {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n    }\n  }\n",
+): (typeof documents)["\n  query AdminMapLocations {\n    adminMapLocations {\n      hospitals {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n      drugstores {\n        id\n        name\n        type\n        address\n        address2\n        province\n        opensAt\n        closesAt\n        latitude\n        longitude\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

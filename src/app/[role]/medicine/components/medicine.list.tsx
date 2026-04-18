@@ -1,6 +1,8 @@
 "use client";
 
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -9,6 +11,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
@@ -20,6 +23,7 @@ type MedicineListTableProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  onView: (id: string) => void;
   loading: boolean;
 };
 
@@ -29,9 +33,10 @@ export default function MedicineListTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  onView,
   loading,
 }: MedicineListTableProps) {
-  const columnCount = 8;
+  const columnCount = 9;
   return (
     <Paper
       sx={{
@@ -65,6 +70,7 @@ export default function MedicineListTable({
               <TableCell align="right">Тоо ширхэг</TableCell>
               <TableCell align="right">Үнэ</TableCell>
               <TableCell>Төлөв</TableCell>
+              <TableCell align="right">Үйлдэл</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -89,6 +95,18 @@ export default function MedicineListTable({
                     {entry.price != null ? entry.price.toFixed(2) : "-"}
                   </TableCell>
                   <TableCell>{entry.status ?? "-"}</TableCell>
+                  <TableCell align="right">
+                    {entry.drug?.id ? (
+                      <Tooltip title="Дэлгэрэнгүй харах">
+                        <IconButton
+                          size="small"
+                          onClick={() => onView(entry.drug!.id!)}
+                        >
+                          <VisibilityOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
+                  </TableCell>
                 </TableRow>
               ))
             )}

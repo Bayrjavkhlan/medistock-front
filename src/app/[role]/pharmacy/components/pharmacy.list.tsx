@@ -1,5 +1,6 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import {
   IconButton,
   Paper,
@@ -22,6 +23,7 @@ type PharmacyListTableProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  onView: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   canUpdate: boolean;
@@ -35,6 +37,7 @@ export default function PharmacyListTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  onView,
   onEdit,
   onDelete,
   canUpdate,
@@ -90,15 +93,25 @@ export default function PharmacyListTable({
                   <TableCell>{pharmacy.email ?? "-"}</TableCell>
                   <TableCell>{pharmacy.phone ?? "-"}</TableCell>
                   <TableCell>
-                    {pharmacy.address?.address1 ?? "-"}
-                    {pharmacy.address?.address2
-                      ? ` ${pharmacy.address.address2}`
-                      : ""}
-                    {pharmacy.address?.province
-                      ? ` • ${pharmacy.address.province}`
-                      : ""}
+                    {[
+                      pharmacy.address?.address1,
+                      pharmacy.address?.address2,
+                      pharmacy.address?.province,
+                    ]
+                      .filter(Boolean)
+                      .join(", ") || "-"}
                   </TableCell>
                   <TableCell align="right">
+                    {pharmacy.id ? (
+                      <Tooltip title="Дэлгэрэнгүй харах">
+                        <IconButton
+                          size="small"
+                          onClick={() => onView(pharmacy.id!)}
+                        >
+                          <VisibilityOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
                     {canUpdate ? (
                       <Tooltip title="Засах">
                         <IconButton

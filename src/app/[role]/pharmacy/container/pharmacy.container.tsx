@@ -2,6 +2,7 @@
 
 import { useMutation } from "@apollo/client/react";
 import { debounce } from "lodash";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -20,6 +21,7 @@ import PharmacyListTable from "../components/pharmacy.list";
 import PharmacyModal from "../components/pharmacy.modal";
 
 export default function PharmacyContainer() {
+  const router = useRouter();
   const { data: session } = useSession();
   const portalRole = getPortalRole(session?.user ?? null, null);
   const subject = getPharmacySubjectForRole(portalRole);
@@ -133,6 +135,16 @@ export default function PharmacyContainer() {
               setPage(0);
             }}
             loading={loading}
+            onView={(id) => {
+              const role = (
+                session?.user?.isPlatformAdmin
+                  ? "admin"
+                  : portalRole === "USER"
+                    ? "user"
+                    : "pharmacy"
+              ) as string;
+              router.push(`/${role}/pharmacy/${id}`);
+            }}
             onEdit={(id) => {
               setEditingId(id);
               setOpen(true);
