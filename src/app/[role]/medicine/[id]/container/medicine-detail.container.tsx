@@ -5,6 +5,7 @@ import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import MedicationRoundedIcon from "@mui/icons-material/MedicationRounded";
 import SellRoundedIcon from "@mui/icons-material/SellRounded";
 import { Alert, Box, Chip, Stack, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 import AbilityGuard from "@/components/AbilityGuard";
 import StateView from "@/components/core/StateView";
@@ -17,6 +18,8 @@ import {
   type DrugDetailQuery,
   type DrugDetailQueryVariables,
 } from "@/features/medicine/graphql/queries.gql";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { getMedicineSubjectForRole, getPortalRole } from "@/lib/casl";
 import {
   formatAddress,
   formatDateTime,
@@ -38,7 +41,13 @@ const statusLabelMap: Record<string, string> = {
 export default function MedicineDetailContainer({
   id,
 }: MedicineDetailContainerProps) {
-  const subject = "Pharmacy_Medicine";
+  const { data: session } = useSession();
+  const { activeOrganization } = useActiveOrganization();
+  const portalRole = getPortalRole(
+    session?.user ?? null,
+    activeOrganization ?? null,
+  );
+  const subject = getMedicineSubjectForRole(portalRole);
 
   const { data, loading, error } = useQuery<
     DrugDetailQuery,

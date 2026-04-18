@@ -1,5 +1,7 @@
 "use client";
 
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import {
   IconButton,
@@ -15,15 +17,20 @@ import {
 } from "@mui/material";
 
 import TableSkeleton from "@/components/forms/table/tableSkeleton";
-import type { PharmacyDrugsQuery } from "@/features/medicine/graphql/queries.gql";
+import type { DrugsQuery } from "@/features/medicine/graphql/queries.gql";
+import { formatDateTime, formatPrice } from "@/utils/detailFormatters";
 
 type MedicineListTableProps = {
-  drugs: NonNullable<PharmacyDrugsQuery["pharmacyDrugs"]>;
+  drugs: NonNullable<DrugsQuery["drugs"]>;
   page: number;
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
   onView: (id: string) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  canUpdate: boolean;
+  canDelete: boolean;
   loading: boolean;
 };
 
@@ -34,9 +41,14 @@ export default function MedicineListTable({
   onPageChange,
   onRowsPerPageChange,
   onView,
+  onEdit,
+  onDelete,
+  canUpdate,
+  canDelete,
   loading,
 }: MedicineListTableProps) {
-  const columnCount = 9;
+  const columnCount = 10;
+
   return (
     <Paper
       sx={{
@@ -48,7 +60,7 @@ export default function MedicineListTable({
       }}
       className="shadow-sm"
     >
-      <TableContainer sx={{ maxHeight: 640 }}>
+      <TableContainer sx={{ maxHeight: 680 }}>
         <Table
           stickyHeader
           sx={{
@@ -62,14 +74,15 @@ export default function MedicineListTable({
         >
           <TableHead>
             <TableRow>
-              <TableCell>Нэр</TableCell>
+              <TableCell>Эмийн нэр</TableCell>
               <TableCell>Ерөнхий нэр</TableCell>
               <TableCell>Хэлбэр</TableCell>
-              <TableCell>Хүч</TableCell>
+              <TableCell>Тун / хүч</TableCell>
               <TableCell>Үйлдвэрлэгч</TableCell>
-              <TableCell align="right">Тоо ширхэг</TableCell>
-              <TableCell align="right">Үнэ</TableCell>
-              <TableCell>Төлөв</TableCell>
+              <TableCell align="right">Нийт нөөц</TableCell>
+              <TableCell align="right">Доод үнэ</TableCell>
+              <TableCell align="right">Салбар</TableCell>
+              <TableCell>Үүсгэсэн</TableCell>
               <TableCell align="right">Үйлдэл</TableCell>
             </TableRow>
           </TableHead>
@@ -79,30 +92,56 @@ export default function MedicineListTable({
             ) : drugs.count === 0 ? (
               <TableRow>
                 <TableCell colSpan={columnCount} align="center" sx={{ py: 4 }}>
-                  Эм олдсонгүй
+                  Эмийн бүртгэл олдсонгүй
                 </TableCell>
               </TableRow>
             ) : (
-              drugs.data?.map((entry) => (
-                <TableRow key={entry.id}>
-                  <TableCell>{entry.drug?.name ?? "-"}</TableCell>
-                  <TableCell>{entry.drug?.genericName ?? "-"}</TableCell>
-                  <TableCell>{entry.drug?.dosageForm ?? "-"}</TableCell>
-                  <TableCell>{entry.drug?.strength ?? "-"}</TableCell>
-                  <TableCell>{entry.drug?.manufacturer ?? "-"}</TableCell>
-                  <TableCell align="right">{entry.quantity ?? 0}</TableCell>
+              drugs.data?.map((drug) => (
+                <TableRow key={drug.id}>
+                  <TableCell>{drug.name ?? "-"}</TableCell>
+                  <TableCell>{drug.genericName ?? "-"}</TableCell>
+                  <TableCell>{drug.dosageForm ?? "-"}</TableCell>
+                  <TableCell>{drug.strength ?? "-"}</TableCell>
+                  <TableCell>{drug.manufacturer ?? "-"}</TableCell>
+                  <TableCell align="right">{drug.totalStock ?? 0}</TableCell>
                   <TableCell align="right">
-                    {entry.price != null ? entry.price.toFixed(2) : "-"}
+                    {drug.startingPrice != null
+                      ? formatPrice(drug.startingPrice)
+                      : "-"}
                   </TableCell>
-                  <TableCell>{entry.status ?? "-"}</TableCell>
                   <TableCell align="right">
-                    {entry.drug?.id ? (
+                    {drug.availabilityCount ?? 0}
+                  </TableCell>
+                  <TableCell>{formatDateTime(drug.createdAt)}</TableCell>
+                  <TableCell align="right">
+                    {drug.id ? (
                       <Tooltip title="Дэлгэрэнгүй харах">
                         <IconButton
                           size="small"
-                          onClick={() => onView(entry.drug!.id!)}
+                          onClick={() => onView(drug.id!)}
                         >
                           <VisibilityOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
+                    {canUpdate && drug.id ? (
+                      <Tooltip title="Засах">
+                        <IconButton
+                          size="small"
+                          onClick={() => onEdit(drug.id!)}
+                        >
+                          <EditOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : null}
+                    {canDelete && drug.id ? (
+                      <Tooltip title="Устгах">
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => onDelete(drug.id!)}
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                     ) : null}
@@ -121,8 +160,8 @@ export default function MedicineListTable({
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={(_, newPage) => onPageChange(newPage)}
-        onRowsPerPageChange={(e) =>
-          onRowsPerPageChange(parseInt(e.target.value, 10))
+        onRowsPerPageChange={(event) =>
+          onRowsPerPageChange(parseInt(event.target.value, 10))
         }
         labelRowsPerPage="Хуудасны тоо:"
         labelDisplayedRows={({ from, to, count }) => `${from}–${to} / ${count}`}

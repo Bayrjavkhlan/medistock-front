@@ -2,6 +2,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import MedicationIcon from "@mui/icons-material/Medication";
 import PeopleIcon from "@mui/icons-material/People";
 import type { Session } from "next-auth";
 
@@ -16,6 +17,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Лог: <HistoryIcon />,
   "Миний лог": <HistoryIcon />,
   "Эмийн сангууд": <MedicalServicesIcon />,
+  Эмүүд: <MedicationIcon />,
   Гарах: <LogoutIcon />,
 };
 

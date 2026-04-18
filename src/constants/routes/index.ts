@@ -11,6 +11,7 @@ export type Subject =
   | "Admin_Staff"
   | "Admin_Hospital"
   | "Admin_Pharmacy"
+  | "Admin_Medicine"
   | "Admin_Equipment"
   | "Admin_EquipmentLog"
   // Hospital Admin
@@ -219,6 +220,26 @@ export const Routes: RouteType = {
       (a) => `/admin/pharmacy/${a?.id}`,
     ),
   },
+  Admin_Medicine: {
+    key: "/admin/medicine",
+    Index: createRoute(
+      "Эмүүд",
+      "/admin/medicine",
+      "Admin_Medicine",
+      "read",
+      "/",
+      true,
+    ),
+    Detail: createRoute(
+      "Дэлгэрэнгүй",
+      "/admin/medicine/detail",
+      "Admin_Medicine",
+      "read",
+      "/",
+      true,
+      (a) => `/admin/medicine/${a?.id}`,
+    ),
+  },
 
   // === HOSPITAL ADMIN ===
   Hospital_Dashboard: {
@@ -363,7 +384,7 @@ export const Routes: RouteType = {
   Pharmacy_Medicine: {
     key: "/pharmacy/medicine",
     Index: createRoute(
-      "Эм",
+      "Эмүүд",
       "/pharmacy/medicine",
       "Pharmacy_Medicine",
       "read",

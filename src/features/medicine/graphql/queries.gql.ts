@@ -15,6 +15,29 @@ export type DrugsQueryVariables = {
   where?: InputMaybe<DrugsWhereInput>;
 };
 
+export type DrugsQuery = {
+  __typename?: "Query";
+  drugs?: {
+    __typename?: "Drugs";
+    count: number;
+    data?: Array<{
+      __typename?: "Drug";
+      id?: string | null;
+      name?: string | null;
+      genericName?: string | null;
+      dosageForm?: string | null;
+      strength?: string | null;
+      manufacturer?: string | null;
+      description?: string | null;
+      totalStock: number;
+      startingPrice?: number | null;
+      availabilityCount: number;
+      createdAt?: unknown;
+      updatedAt?: unknown;
+    }> | null;
+  } | null;
+};
+
 export type PharmacyDrugsQueryVariables = {
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
@@ -25,6 +48,28 @@ export type PharmacyDrugsQuery = {
   __typename?: "Query";
   pharmacyDrugs?: PharmacyDrugs | null;
 };
+
+export const DrugsDocument = gql`
+  query Drugs($take: Int!, $skip: Int!, $where: DrugsWhereInput) {
+    drugs(take: $take, skip: $skip, where: $where) {
+      count
+      data {
+        id
+        name
+        genericName
+        dosageForm
+        strength
+        manufacturer
+        description
+        totalStock
+        startingPrice
+        availabilityCount
+        createdAt
+        updatedAt
+      }
+    }
+  }
+` as DocumentNode<DrugsQuery, DrugsQueryVariables>;
 
 export const PharmacyDrugsDocument = gql`
   query PharmacyDrugs(
