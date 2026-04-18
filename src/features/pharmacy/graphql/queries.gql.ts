@@ -15,6 +15,7 @@ export type PharmacyDetailQuery = {
     phone?: string | null;
     createdAt?: unknown;
     updatedAt?: unknown;
+    inventoryCount: number;
     address?: {
       __typename?: "Address";
       id?: string | null;
@@ -24,6 +25,23 @@ export type PharmacyDetailQuery = {
       latitude?: number | null;
       longitude?: number | null;
     } | null;
+    inventory: Array<{
+      __typename?: "PharmacyDrug";
+      id?: string | null;
+      quantity?: number | null;
+      price?: number | null;
+      status?: string | null;
+      updatedAt?: unknown;
+      drug: {
+        __typename?: "Drug";
+        id?: string | null;
+        name?: string | null;
+        genericName?: string | null;
+        dosageForm?: string | null;
+        strength?: string | null;
+        manufacturer?: string | null;
+      };
+    }>;
   } | null;
 };
 
@@ -36,6 +54,7 @@ export const PharmacyDetailDocument = gql`
       phone
       createdAt
       updatedAt
+      inventoryCount
       address {
         id
         address1
@@ -43,6 +62,21 @@ export const PharmacyDetailDocument = gql`
         province
         latitude
         longitude
+      }
+      inventory {
+        id
+        quantity
+        price
+        status
+        updatedAt
+        drug {
+          id
+          name
+          genericName
+          dosageForm
+          strength
+          manufacturer
+        }
       }
     }
   }

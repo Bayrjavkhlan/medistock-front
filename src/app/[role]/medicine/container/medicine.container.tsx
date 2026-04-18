@@ -104,7 +104,11 @@ export default function MedicineContainer() {
     },
   });
 
-  const rolePrefix = session?.user?.isPlatformAdmin ? "admin" : "pharmacy";
+  const rolePrefix = session?.user?.isPlatformAdmin
+    ? "admin"
+    : portalRole === "USER"
+      ? "user"
+      : "pharmacy";
 
   const handleSuccess = async (message: string) => {
     setToast({ message, severity: "success" });

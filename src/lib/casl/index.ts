@@ -137,7 +137,12 @@ export const defineAbilityFor = (
   }
 
   if (portalRole === "USER") {
-    can("read", ["User_Dashboard", "User_Hospital", "User_Pharmacy"]);
+    can("read", [
+      "User_Dashboard",
+      "User_Hospital",
+      "User_Pharmacy",
+      "User_Medicine",
+    ]);
     can("read", "Profile");
   }
 
@@ -231,6 +236,10 @@ export const getEquipmentLogSubjectForRole = (
 
 export const getMedicineSubjectForRole = (
   portalRole: PortalRole | null,
-): Subject => (portalRole === "ADMIN" ? "Admin_Medicine" : "Pharmacy_Medicine");
+): Subject => {
+  if (portalRole === "ADMIN") return "Admin_Medicine";
+  if (portalRole === "USER") return "User_Medicine";
+  return "Pharmacy_Medicine";
+};
 
 export const getPortalRole = resolvePortalRole;

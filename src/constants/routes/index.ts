@@ -30,6 +30,7 @@ export type Subject =
   | "User_Equipment"
   | "User_EquipmentLog"
   | "User_Hospital"
+  | "User_Medicine"
   | "User_Pharmacy";
 
 type PathArg = { id?: string };
@@ -484,6 +485,26 @@ export const Routes: RouteType = {
       "/",
       true,
       (a) => `/user/hospital/${a?.id}`,
+    ),
+  },
+  User_Medicine: {
+    key: "/user/medicine",
+    Index: createRoute(
+      "Эмүүд",
+      "/user/medicine",
+      "User_Medicine",
+      "read",
+      "/",
+      true,
+    ),
+    Detail: createRoute(
+      "Дэлгэрэнгүй",
+      "/user/medicine/detail",
+      "User_Medicine",
+      "read",
+      "/",
+      true,
+      (a) => `/user/medicine/${a?.id}`,
     ),
   },
   User_Pharmacy: {

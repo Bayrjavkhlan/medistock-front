@@ -123,7 +123,10 @@ export type DrugDetailQuery = {
       __typename?: "DrugAvailability";
       id: string;
       pharmacyId: string;
+      organizationId: string;
       pharmacyName: string;
+      pharmacyEmail?: string | null;
+      pharmacyPhone?: string | null;
       quantity: number;
       price?: number | null;
       status?: string | null;
@@ -159,7 +162,10 @@ export const DrugDetailDocument = gql`
       availability {
         id
         pharmacyId
+        organizationId
         pharmacyName
+        pharmacyEmail
+        pharmacyPhone
         quantity
         price
         status

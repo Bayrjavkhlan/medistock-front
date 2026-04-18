@@ -48,3 +48,44 @@ export const DRUG_DELETE = gql`
     drugDelete(id: $id)
   }
 ` as DocumentNode<DrugDeleteMutation, DrugDeleteMutationVariables>;
+
+export type PharmacyDrugUpsertMutationVariables = {
+  input: {
+    drugId: string;
+    quantity: number;
+    price?: number | null;
+    status: string;
+  };
+};
+
+export type PharmacyDrugUpsertMutation = {
+  __typename?: "Mutation";
+  pharmacyDrugUpsert?: boolean | null;
+};
+
+export const PHARMACY_DRUG_UPSERT = gql`
+  mutation PharmacyDrugUpsert($input: PharmacyDrugUpsertInput!) {
+    pharmacyDrugUpsert(input: $input)
+  }
+` as DocumentNode<
+  PharmacyDrugUpsertMutation,
+  PharmacyDrugUpsertMutationVariables
+>;
+
+export type PharmacyDrugDeleteMutationVariables = {
+  drugId: Scalars["String"]["input"];
+};
+
+export type PharmacyDrugDeleteMutation = {
+  __typename?: "Mutation";
+  pharmacyDrugDelete?: boolean | null;
+};
+
+export const PHARMACY_DRUG_DELETE = gql`
+  mutation PharmacyDrugDelete($drugId: String!) {
+    pharmacyDrugDelete(drugId: $drugId)
+  }
+` as DocumentNode<
+  PharmacyDrugDeleteMutation,
+  PharmacyDrugDeleteMutationVariables
+>;
