@@ -17,7 +17,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Лог: <HistoryIcon />,
   "Миний лог": <HistoryIcon />,
   "Эмийн сангууд": <MedicalServicesIcon />,
-  Эмүүд: <MedicationIcon />,
+  Эм: <MedicationIcon />,
   Гарах: <LogoutIcon />,
 };
 

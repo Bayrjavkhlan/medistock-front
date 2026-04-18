@@ -14,7 +14,6 @@ type AdminLocationMapProps = {
 
 type MarkerRecord = DashboardMapLocation & {
   color: string;
-  label: string;
 };
 
 const hospitalIcon = L.divIcon({
@@ -27,7 +26,7 @@ const hospitalIcon = L.divIcon({
       width:18px;
       height:18px;
       border-radius:9999px;
-      background:#d32f2f;
+      background:#dc2626;
       border:3px solid #ffffff;
       box-shadow:0 2px 8px rgba(0,0,0,0.35);
     "></span>
@@ -47,7 +46,7 @@ const drugstoreIcon = L.divIcon({
       width:18px;
       height:18px;
       border-radius:9999px;
-      background:#2e7d32;
+      background:#16a34a;
       border:3px solid #ffffff;
       box-shadow:0 2px 8px rgba(0,0,0,0.35);
     "></span>
@@ -84,16 +83,8 @@ export default function AdminLocationMap({
 }: AdminLocationMapProps) {
   const markers = useMemo<MarkerRecord[]>(
     () => [
-      ...hospitals.map((marker) => ({
-        ...marker,
-        color: "#d32f2f",
-        label: "Hospital",
-      })),
-      ...drugstores.map((marker) => ({
-        ...marker,
-        color: "#2e7d32",
-        label: "Drugstore",
-      })),
+      ...hospitals.map((marker) => ({ ...marker, color: "#dc2626" })),
+      ...drugstores.map((marker) => ({ ...marker, color: "#16a34a" })),
     ],
     [drugstores, hospitals],
   );
@@ -104,18 +95,18 @@ export default function AdminLocationMap({
         sx={{
           border: "1px dashed",
           borderColor: "divider",
-          borderRadius: 3,
+          borderRadius: 4,
           p: 4,
           textAlign: "center",
           bgcolor: "background.paper",
         }}
       >
-        <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
+        <Typography variant="h6" fontWeight={800} sx={{ mb: 1 }}>
           Газрын зургийн мэдээлэл алга
         </Typography>
         <Typography color="text.secondary">
-          Эмнэлэг болон эмийн сангийн байршлыг оруулсны дараа зураг дээр
-          харагдана.
+          Эмнэлэг болон эмийн сангуудын координатыг бүртгэсний дараа байршлын
+          зураг энд харагдана.
         </Typography>
       </Box>
     );
@@ -124,11 +115,12 @@ export default function AdminLocationMap({
   return (
     <Box
       sx={{
-        borderRadius: 3,
+        borderRadius: 4,
         overflow: "hidden",
         border: "1px solid",
         borderColor: "divider",
         bgcolor: "background.paper",
+        boxShadow: "0 14px 32px rgba(15,23,42,0.06)",
       }}
     >
       <Stack
@@ -139,34 +131,35 @@ export default function AdminLocationMap({
         sx={{ p: 2.5, borderBottom: "1px solid", borderColor: "divider" }}
       >
         <Box>
-          <Typography variant="h6" fontWeight={700}>
-            Байршлын зураг
+          <Typography variant="h6" fontWeight={800}>
+            Байршлын нэгдсэн зураг
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Системд бүртгэлтэй эмнэлэг, эмийн сангууд.
+            Платформд бүртгэлтэй эмнэлэг болон эмийн сангуудын байршлыг нэг
+            газрын зураг дээр харуулна.
           </Typography>
         </Box>
-        <Stack direction="row" spacing={1} flexWrap="wrap">
+        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
           <Chip
             label={`Эмнэлэг: ${hospitals.length}`}
             sx={{
-              bgcolor: "rgba(211,47,47,0.12)",
-              color: "#8e1b1b",
-              fontWeight: 600,
+              bgcolor: "rgba(220,38,38,0.12)",
+              color: "#991b1b",
+              fontWeight: 700,
             }}
           />
           <Chip
             label={`Эмийн сан: ${drugstores.length}`}
             sx={{
-              bgcolor: "rgba(46,125,50,0.12)",
-              color: "#1f5d24",
-              fontWeight: 600,
+              bgcolor: "rgba(22,163,74,0.12)",
+              color: "#166534",
+              fontWeight: 700,
             }}
           />
         </Stack>
       </Stack>
 
-      <Box sx={{ position: "relative", height: { xs: 360, md: 460 } }}>
+      <Box sx={{ position: "relative", height: { xs: 360, md: 480 } }}>
         <MapContainer
           center={[47.9184, 106.9177]}
           zoom={12}
@@ -232,7 +225,7 @@ export default function AdminLocationMap({
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  bgcolor: "#d32f2f",
+                  bgcolor: "#dc2626",
                 }}
               />
               <Typography variant="caption">Эмнэлэг</Typography>
@@ -243,7 +236,7 @@ export default function AdminLocationMap({
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  bgcolor: "#2e7d32",
+                  bgcolor: "#16a34a",
                 }}
               />
               <Typography variant="caption">Эмийн сан</Typography>

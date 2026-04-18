@@ -80,7 +80,7 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
       subject: "Admin_Pharmacy",
     },
     {
-      label: "Эмүүд",
+      label: "Эм",
       path: "/admin/medicine",
       icon: MedicationIcon,
       action: "read",
@@ -190,7 +190,7 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
       subject: "Pharmacy_Staff",
     },
     {
-      label: "Эмүүд",
+      label: "Эм",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
@@ -221,7 +221,7 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
       subject: "Pharmacy_Dashboard",
     },
     {
-      label: "Эмүүд",
+      label: "Эм",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
@@ -245,7 +245,7 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
 
   PHARMACY_STAFF: [
     {
-      label: "Эмүүд",
+      label: "Эм",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
@@ -283,7 +283,7 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
       subject: "User_Pharmacy",
     },
     {
-      label: "Эмүүд",
+      label: "Эм",
       path: "/user/medicine",
       icon: MedicationIcon,
       action: "read",

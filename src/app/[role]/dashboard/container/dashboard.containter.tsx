@@ -6,21 +6,10 @@ import { useSession } from "next-auth/react";
 import AbilityGuard from "@/components/AbilityGuard";
 import StateView from "@/components/core/StateView";
 import {
-  ADMIN_MAP_LOCATIONS,
-  type AdminMapLocationsQuery,
+  DASHBOARD_OVERVIEW,
+  type DashboardOverviewQuery,
 } from "@/features/dashboard/graphql/queries.gql";
-import {
-  PharmacyDrugsDocument,
-  type PharmacyDrugsQuery,
-  type PharmacyDrugsQueryVariables,
-} from "@/features/medicine/graphql/queries.gql";
-import {
-  useEquipmentLogsQuery,
-  useEquipmentsQuery,
-  useHospitalsQuery,
-  useMembershipsQuery,
-  usePharmaciesQuery,
-} from "@/generated/hooks";
+import { useEquipmentLogsQuery, useEquipmentsQuery } from "@/generated/hooks";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { getDashboardSubjectForRole, getPortalRole } from "@/lib/casl";
 import { useAbility } from "@/lib/casl/useAbility";
@@ -50,98 +39,38 @@ export default function DashboardContainer() {
           ? "pharmacy"
           : "user";
   const organizationName =
-    activeOrganization?.organization?.name ?? "Танай байгууллага";
+    activeOrganization?.organization?.name ?? "Таны байгууллага";
 
-  const baseVars = { take: 1, skip: 0 };
-
-  const equipmentsQuery = useEquipmentsQuery({
-    variables: { ...baseVars },
+  const overviewQuery = useQuery<DashboardOverviewQuery>(DASHBOARD_OVERVIEW, {
     fetchPolicy: "no-cache",
-    skip: !canRead,
+    skip: !canRead || role === "user",
   });
 
-  const logsQuery = useEquipmentLogsQuery({
-    variables: { ...baseVars },
+  const userEquipmentsQuery = useEquipmentsQuery({
+    variables: { take: 1, skip: 0, where: undefined },
     fetchPolicy: "no-cache",
-    skip: !canRead,
+    skip: !canRead || role !== "user",
   });
 
-  const hospitalsQuery = useHospitalsQuery({
-    variables: { ...baseVars, where: undefined },
+  const userLogsQuery = useEquipmentLogsQuery({
+    variables: { take: 1, skip: 0, where: undefined },
     fetchPolicy: "no-cache",
-    skip: !canRead || role !== "admin",
+    skip: !canRead || role !== "user",
   });
-
-  const pharmaciesQuery = usePharmaciesQuery({
-    variables: { ...baseVars, where: undefined },
-    fetchPolicy: "no-cache",
-    skip: !canRead || role !== "admin",
-  });
-
-  const staffQuery = useMembershipsQuery({
-    variables: { ...baseVars },
-    fetchPolicy: "no-cache",
-    skip: !canRead || (role !== "admin" && role !== "hospital"),
-  });
-
-  const drugsQuery = useQuery<PharmacyDrugsQuery, PharmacyDrugsQueryVariables>(
-    PharmacyDrugsDocument,
-    {
-      variables: { ...baseVars, where: undefined },
-      fetchPolicy: "no-cache",
-      skip: !canRead || role !== "pharmacy",
-    },
-  );
-
-  const mapLocationsQuery = useQuery<AdminMapLocationsQuery>(
-    ADMIN_MAP_LOCATIONS,
-    {
-      fetchPolicy: "no-cache",
-      skip: !canRead || role !== "admin",
-    },
-  );
 
   const loading =
-    equipmentsQuery.loading ||
-    logsQuery.loading ||
-    hospitalsQuery.loading ||
-    pharmaciesQuery.loading ||
-    staffQuery.loading ||
-    drugsQuery.loading ||
-    mapLocationsQuery.loading;
+    role === "user"
+      ? userEquipmentsQuery.loading || userLogsQuery.loading
+      : overviewQuery.loading;
 
   const error =
-    equipmentsQuery.error ||
-    logsQuery.error ||
-    hospitalsQuery.error ||
-    pharmaciesQuery.error ||
-    staffQuery.error ||
-    drugsQuery.error ||
-    mapLocationsQuery.error;
+    role === "user"
+      ? userEquipmentsQuery.error || userLogsQuery.error
+      : overviewQuery.error;
 
-  const equipmentCount = equipmentsQuery.data?.equipments?.count ?? 0;
-  const logCount = logsQuery.data?.equipmentLogs?.count ?? 0;
-  const hospitalCount = hospitalsQuery.data?.hospitals?.count ?? 0;
-  const pharmacyCount = pharmaciesQuery.data?.pharmacies?.count ?? 0;
-  const staffCount = staffQuery.data?.memberships?.count ?? 0;
-  const drugCount = drugsQuery.data?.pharmacyDrugs?.count ?? 0;
-  const hospitals = mapLocationsQuery.data?.adminMapLocations?.hospitals ?? [];
-  const drugstores =
-    mapLocationsQuery.data?.adminMapLocations?.drugstores ?? [];
-
-  const isEmpty =
-    role === "admin"
-      ? hospitalCount +
-          pharmacyCount +
-          equipmentCount +
-          logCount +
-          staffCount ===
-        0
-      : role === "hospital"
-        ? equipmentCount + logCount + staffCount === 0
-        : role === "pharmacy"
-          ? equipmentCount + logCount + drugCount === 0
-          : equipmentCount + logCount === 0;
+  const overview = overviewQuery.data?.dashboardOverview;
+  const equipmentCount = userEquipmentsQuery.data?.equipments?.count ?? 0;
+  const logCount = userLogsQuery.data?.equipmentLogs?.count ?? 0;
 
   return (
     <AbilityGuard action="read" subject={subject}>
@@ -149,40 +78,22 @@ export default function DashboardContainer() {
         <StateView title="Уншиж байна..." loading />
       ) : error ? (
         <StateView title="Алдаа гарлаа" description={error.message} />
-      ) : isEmpty ? (
-        <StateView
-          title="Өгөгдөл байхгүй байна"
-          description="Ирсэн өгөгдөл алга."
-        />
-      ) : role === "admin" ? (
-        <AdminDashboard
-          hospitalCount={hospitalCount}
-          pharmacyCount={pharmacyCount}
-          equipmentCount={equipmentCount}
-          logCount={logCount}
-          staffCount={staffCount}
-          hospitals={hospitals}
-          drugstores={drugstores}
-        />
-      ) : role === "hospital" ? (
-        <HospitalDashboard
-          organizationName={organizationName}
-          equipmentCount={equipmentCount}
-          logCount={logCount}
-          staffCount={staffCount}
-        />
-      ) : role === "pharmacy" ? (
-        <PharmacyDashboard
-          organizationName={organizationName}
-          equipmentCount={equipmentCount}
-          logCount={logCount}
-          drugCount={drugCount}
-        />
-      ) : (
+      ) : role === "admin" && overview?.admin ? (
+        <AdminDashboard data={overview.admin} />
+      ) : role === "hospital" && overview?.hospital ? (
+        <HospitalDashboard data={overview.hospital} />
+      ) : role === "pharmacy" && overview?.pharmacy ? (
+        <PharmacyDashboard data={overview.pharmacy} />
+      ) : role === "user" ? (
         <UserDashboard
           organizationName={organizationName}
           equipmentCount={equipmentCount}
           logCount={logCount}
+        />
+      ) : (
+        <StateView
+          title="Самбарын мэдээлэл олдсонгүй"
+          description="Таны рольд зориулсан dashboard мэдээлэл бэлэн биш байна."
         />
       )}
     </AbilityGuard>
