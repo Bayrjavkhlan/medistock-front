@@ -14,6 +14,8 @@ export const HOSPITALS = gql`
           address2
           id
           province
+          latitude
+          longitude
         }
       }
     }
@@ -32,6 +34,8 @@ export const HOSPITAL_DETAIL = gql`
         address1
         address2
         province
+        latitude
+        longitude
       }
     }
   }

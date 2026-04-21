@@ -88,6 +88,7 @@ export const defineAbilityFor = (
         ["Hospital_Staff", "Hospital_Equipment", "Hospital_EquipmentLog"],
       );
       can("read", "Hospital_Dashboard");
+      can(["create", "read", "update"], "Admin_Hospital");
     }
     if (portalRole === "HOSPITAL_MANAGER") {
       can(
@@ -120,6 +121,7 @@ export const defineAbilityFor = (
         ],
       );
       can("read", "Pharmacy_Dashboard");
+      can(["create", "read", "update"], "Admin_Pharmacy");
     }
     if (portalRole === "PHARMACY_MANAGER") {
       can(

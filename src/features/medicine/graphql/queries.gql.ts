@@ -1,13 +1,7 @@
 import { gql } from "@apollo/client";
 import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 
-import type {
-  DrugsWhereInput,
-  InputMaybe,
-  PharmacyDrugs,
-  PharmacyDrugsWhereInput,
-  Scalars,
-} from "@/generated/graphql";
+import type { DrugsWhereInput, InputMaybe, Scalars } from "@/generated/graphql";
 
 export type DrugsQueryVariables = {
   take: Scalars["Int"]["input"];
@@ -18,12 +12,36 @@ export type DrugsQueryVariables = {
 export type PharmacyDrugsQueryVariables = {
   take: Scalars["Int"]["input"];
   skip: Scalars["Int"]["input"];
-  where?: InputMaybe<PharmacyDrugsWhereInput>;
+  where?: InputMaybe<{
+    search?: InputMaybe<Scalars["String"]["input"]>;
+    pharmacyId?: InputMaybe<Scalars["String"]["input"]>;
+  }>;
 };
 
 export type PharmacyDrugsQuery = {
   __typename?: "Query";
-  pharmacyDrugs?: PharmacyDrugs | null;
+  pharmacyDrugs?: {
+    __typename?: "PharmacyDrugs";
+    count: number;
+    data?: Array<{
+      __typename?: "PharmacyDrug";
+      id?: string | null;
+      quantity?: number | null;
+      price?: number | null;
+      status?: string | null;
+      updatedAt?: unknown;
+      drug?: {
+        __typename?: "Drug";
+        id?: string | null;
+        name?: string | null;
+        genericName?: string | null;
+        dosageForm?: string | null;
+        strength?: string | null;
+        manufacturer?: string | null;
+        description?: string | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export const PharmacyDrugsDocument = gql`

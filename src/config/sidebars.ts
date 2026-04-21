@@ -3,6 +3,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import HomeIcon from "@mui/icons-material/Home";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
+import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import MedicationIcon from "@mui/icons-material/Medication";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
@@ -104,6 +105,13 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
       subject: "Hospital_Dashboard",
     },
     {
+      label: "Hospital Profile",
+      path: "/hospital/hospital",
+      icon: LocalHospitalIcon,
+      action: "read",
+      subject: "Admin_Hospital",
+    },
+    {
       label: "Staff",
       path: "/hospital/staff",
       icon: PeopleIcon,
@@ -174,6 +182,13 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
       icon: HomeIcon,
       action: "read",
       subject: "Pharmacy_Dashboard",
+    },
+    {
+      label: "Pharmacy Profile",
+      path: "/pharmacy/pharmacy",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Admin_Pharmacy",
     },
     {
       label: "Staff",
@@ -274,6 +289,13 @@ export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
       icon: LocalPharmacyIcon,
       action: "read",
       subject: "User_Pharmacy",
+    },
+    {
+      label: "Explore Map",
+      path: "/user/explore",
+      icon: MapOutlinedIcon,
+      action: "read",
+      subject: "User_Hospital",
     },
     {
       label: "Profile",

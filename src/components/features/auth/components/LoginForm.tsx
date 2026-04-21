@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getSession, signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -27,6 +27,7 @@ export default function LoginForm({
   setErrorMessage,
 }: LoginFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { mode } = useThemeMode();
   const isDark = mode === "dark";
 
@@ -79,6 +80,13 @@ export default function LoginForm({
         const activeMembership = memberships[0] ?? null;
         const orgType = activeMembership?.organization?.type ?? null;
         const orgRole = activeMembership?.role ?? null;
+        const nextFromQuery = searchParams.get("next");
+        const safeNext =
+          nextFromQuery &&
+          nextFromQuery.startsWith("/") &&
+          !nextFromQuery.startsWith("//")
+            ? nextFromQuery
+            : null;
         const nextRoute = session?.user?.isPlatformAdmin
           ? "/admin/dashboard"
           : !activeMembership
@@ -90,7 +98,7 @@ export default function LoginForm({
               : orgRole === "STAFF"
                 ? "/hospital/equipment"
                 : "/hospital/dashboard";
-        router.push(nextRoute);
+        router.push(safeNext ?? nextRoute);
         router.refresh();
       }
     } catch {
@@ -199,6 +207,16 @@ export default function LoginForm({
           onClick={() => router.push("/forgot-password")}
         >
           Нууц үг мартсан?
+        </Button>
+      </Box>
+
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Button
+          variant="text"
+          size="small"
+          onClick={() => router.push("/register")}
+        >
+          Бүртгүүлэх
         </Button>
       </Box>
 

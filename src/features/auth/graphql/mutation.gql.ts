@@ -24,6 +24,12 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const REGISTER = gql`
+  mutation Register($input: RegisterInput!) {
+    register(input: $input)
+  }
+`;
 export const REFRESH_ACCESS_TOKEN = gql`
   mutation RefreshAccessToken($refreshToken: String!) {
     refreshAccessToken(refreshToken: $refreshToken) {

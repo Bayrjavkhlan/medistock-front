@@ -8,7 +8,7 @@ export const HOSPITAL_CREATE = gql`
 export const HOSPITAL_UPDATE = gql`
   mutation HospitalUpdate(
     $hospitalUpdateId: String!
-    $input: HospitalCreateInput!
+    $input: HospitalUpdateInput!
   ) {
     hospitalUpdate(id: $hospitalUpdateId, input: $input)
   }

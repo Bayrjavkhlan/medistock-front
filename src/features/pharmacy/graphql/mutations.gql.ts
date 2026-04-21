@@ -9,7 +9,7 @@ export const PHARMACY_CREATE = gql`
 export const PHARMACY_UPDATE = gql`
   mutation PharmacyUpdate(
     $pharmacyUpdateId: String!
-    $input: PharmacyCreateInput!
+    $input: PharmacyUpdateInput!
   ) {
     pharmacyUpdate(id: $pharmacyUpdateId, input: $input)
   }

@@ -4,7 +4,13 @@ import { usePathname } from "next/navigation";
 
 import RoleLayout from "./RoleLayout";
 
-const NO_LAYOUT_PATHS = ["/login", "/forgot-password", "/new-password", "/404"];
+const NO_LAYOUT_PATHS = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/new-password",
+  "/404",
+];
 
 interface RenderLayoutProps {
   children: React.ReactNode;

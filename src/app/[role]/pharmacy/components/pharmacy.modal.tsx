@@ -11,14 +11,21 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 
+import type { LatLng } from "@/features/explore/types";
 import {
   PHARMACY_CREATE,
   PHARMACY_UPDATE,
 } from "@/features/pharmacy/graphql/mutations.gql";
 import type { Pharmacy } from "@/generated/graphql";
+
+const LocationPickerMap = dynamic(
+  () => import("@/components/maps/location-picker.map"),
+  { ssr: false },
+);
 
 type PharmacyForm = {
   name: string;
@@ -27,6 +34,8 @@ type PharmacyForm = {
   address1: string;
   address2: string;
   province: string;
+  latitude: string;
+  longitude: string;
 };
 
 type PharmacyModalProps = {
@@ -53,6 +62,8 @@ const emptyForm: PharmacyForm = {
   address1: "",
   address2: "",
   province: "",
+  latitude: "",
+  longitude: "",
 };
 
 export default function PharmacyModal({
@@ -64,6 +75,8 @@ export default function PharmacyModal({
 }: PharmacyModalProps) {
   const [form, setForm] = useState<PharmacyForm>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerValue, setPickerValue] = useState<LatLng | null>(null);
 
   const [createPharmacy, createState] = useMutation(PHARMACY_CREATE);
   const [updatePharmacy, updateState] = useMutation(PHARMACY_UPDATE);
@@ -81,6 +94,20 @@ export default function PharmacyModal({
         address1: initialData.address?.address1 ?? "",
         address2: initialData.address?.address2 ?? "",
         province: initialData.address?.province ?? "",
+        latitude:
+          initialData.address &&
+          "latitude" in initialData.address &&
+          initialData.address.latitude !== null &&
+          initialData.address.latitude !== undefined
+            ? String(initialData.address.latitude)
+            : "",
+        longitude:
+          initialData.address &&
+          "longitude" in initialData.address &&
+          initialData.address.longitude !== null &&
+          initialData.address.longitude !== undefined
+            ? String(initialData.address.longitude)
+            : "",
       });
     } else {
       setForm(emptyForm);
@@ -110,8 +137,49 @@ export default function PharmacyModal({
     return false;
   };
 
+  const parseCoordinate = (value: string): number | null => {
+    if (!value.trim()) return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : NaN;
+  };
+
   const handleSubmit = async () => {
     if (!validate()) return;
+
+    const latitude = parseCoordinate(form.latitude);
+    const longitude = parseCoordinate(form.longitude);
+
+    const nextErrors: Record<string, string> = {};
+    if (Number.isNaN(latitude))
+      nextErrors.latitude = "Latitude must be a number";
+    if (Number.isNaN(longitude))
+      nextErrors.longitude = "Longitude must be a number";
+    if ((latitude === null) !== (longitude === null)) {
+      nextErrors.latitude = "Provide both latitude and longitude";
+      nextErrors.longitude = "Provide both latitude and longitude";
+    }
+    if (
+      latitude !== null &&
+      latitude !== undefined &&
+      !Number.isNaN(latitude)
+    ) {
+      if (latitude < -90 || latitude > 90) {
+        nextErrors.latitude = "Latitude must be between -90 and 90";
+      }
+    }
+    if (
+      longitude !== null &&
+      longitude !== undefined &&
+      !Number.isNaN(longitude)
+    ) {
+      if (longitude < -180 || longitude > 180) {
+        nextErrors.longitude = "Longitude must be between -180 and 180";
+      }
+    }
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors((prev) => ({ ...prev, ...nextErrors }));
+      return;
+    }
 
     const input = {
       name: form.name,
@@ -121,6 +189,8 @@ export default function PharmacyModal({
         address1: form.address1,
         address2: form.address2 || undefined,
         province: form.province,
+        latitude: latitude ?? undefined,
+        longitude: longitude ?? undefined,
       },
     };
 
@@ -205,6 +275,51 @@ export default function PharmacyModal({
           error={!!errors.province}
           helperText={errors.province}
         />
+        <TextField
+          label="Latitude"
+          fullWidth
+          margin="normal"
+          value={form.latitude}
+          onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+          error={!!errors.latitude}
+          helperText={errors.latitude}
+        />
+        <TextField
+          label="Longitude"
+          fullWidth
+          margin="normal"
+          value={form.longitude}
+          onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+          error={!!errors.longitude}
+          helperText={errors.longitude}
+        />
+        <DialogActions sx={{ px: 0 }}>
+          <Button
+            onClick={() => {
+              const currentLat = parseCoordinate(form.latitude);
+              const currentLng = parseCoordinate(form.longitude);
+              if (
+                currentLat !== null &&
+                currentLng !== null &&
+                !Number.isNaN(currentLat) &&
+                !Number.isNaN(currentLng)
+              ) {
+                setPickerValue({ latitude: currentLat, longitude: currentLng });
+              } else {
+                setPickerValue(null);
+              }
+              setPickerOpen(true);
+            }}
+          >
+            Pick on map
+          </Button>
+          <Button
+            color="inherit"
+            onClick={() => setForm({ ...form, latitude: "", longitude: "" })}
+          >
+            Clear coordinates
+          </Button>
+        </DialogActions>
       </DialogContent>
 
       <DialogActions>
@@ -220,6 +335,36 @@ export default function PharmacyModal({
           {submitLabel}
         </Button>
       </DialogActions>
+
+      <Dialog
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle>Pick pharmacy location</DialogTitle>
+        <DialogContent dividers>
+          <LocationPickerMap value={pickerValue} onChange={setPickerValue} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPickerOpen(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (pickerValue) {
+                setForm({
+                  ...form,
+                  latitude: pickerValue.latitude.toFixed(6),
+                  longitude: pickerValue.longitude.toFixed(6),
+                });
+              }
+              setPickerOpen(false);
+            }}
+          >
+            Use selected point
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 }

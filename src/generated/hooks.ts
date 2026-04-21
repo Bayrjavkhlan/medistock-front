@@ -100,6 +100,8 @@ export const PharmaciesDocument = gql`
           address1
           address2
           province
+          latitude
+          longitude
         }
       }
     }

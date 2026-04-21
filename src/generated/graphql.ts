@@ -41,6 +41,8 @@ export type Address = {
   address2?: Maybe<Scalars["String"]["output"]>;
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
   id?: Maybe<Scalars["String"]["output"]>;
+  latitude?: Maybe<Scalars["Float"]["output"]>;
+  longitude?: Maybe<Scalars["Float"]["output"]>;
   province?: Maybe<Scalars["String"]["output"]>;
   updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
@@ -48,6 +50,8 @@ export type Address = {
 export type AddressCreateInput = {
   address1: Scalars["String"]["input"];
   address2?: InputMaybe<Scalars["String"]["input"]>;
+  latitude?: InputMaybe<Scalars["Float"]["input"]>;
+  longitude?: InputMaybe<Scalars["Float"]["input"]>;
   province: Scalars["String"]["input"];
 };
 
@@ -2200,6 +2204,14 @@ export const HospitalsDocument = {
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "province" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "latitude" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "longitude" },
                             },
                           ],
                         },

@@ -9,6 +9,7 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Tooltip,
@@ -17,7 +18,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import AbilityGuard from "@/components/AbilityGuard";
 import { resolveRoleKey, SIDEBARS } from "@/config/sidebars";
@@ -165,9 +166,9 @@ export default function Sidebar({
         }}
       >
         <Tooltip title={collapsed ? "Гарах" : ""} placement="right">
-          <ListItem
+          <ListItemButton
             onClick={() => {
-              window.location.href = "/api/auth/signout";
+              void signOut({ callbackUrl: "/login" });
             }}
             sx={{
               px: collapsed ? 0 : 2,
@@ -177,7 +178,6 @@ export default function Sidebar({
               borderRadius: 0,
               "&:hover": {
                 bgcolor: "error.100",
-
                 ".dark &": {
                   bgcolor: "error.900",
                 },
@@ -206,7 +206,7 @@ export default function Sidebar({
                 }}
               />
             )}
-          </ListItem>
+          </ListItemButton>
         </Tooltip>
       </Box>
     </Box>
