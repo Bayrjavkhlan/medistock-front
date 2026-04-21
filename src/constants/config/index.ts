@@ -6,5 +6,5 @@ const constants = {
 export const env = {
   ...constants,
   // BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000",
-  BACKEND_URL: "medistock-api-production.up.railway.app",
+  BACKEND_URL: "https://medistock-api-production.up.railway.app",
 };
