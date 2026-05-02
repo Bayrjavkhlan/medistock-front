@@ -11,7 +11,7 @@ type ApolloLikeError = {
 };
 
 export const httpLink = new HttpLink({
-  uri:
+  uri: () =>
     typeof window === "undefined"
       ? getServerGraphqlUrl()
       : getClientGraphqlUrl(),

@@ -12,24 +12,37 @@ const toGraphqlUrl = (value: string) =>
     ? value
     : `${trimTrailingSlash(value)}/api/graphql`;
 
-const resolveProductionUrl = (value: string | undefined, message: string) => {
+const resolveUrl = (
+  value: string | undefined,
+  options: {
+    allowEmptyInProduction?: boolean;
+    message: string;
+  },
+) => {
   if (value) return toGraphqlUrl(value);
   if (process.env.NODE_ENV === "development") return LOCAL_GRAPHQL_URL;
-  throw new Error(message);
+  if (options.allowEmptyInProduction) return "";
+  throw new Error(options.message);
 };
 
 export const getClientGraphqlUrl = () =>
-  resolveProductionUrl(
+  resolveUrl(
     process.env.NEXT_PUBLIC_GRAPHQL_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL,
-    "NEXT_PUBLIC_GRAPHQL_URL is required in production",
+    {
+      allowEmptyInProduction: typeof window === "undefined",
+      message: "NEXT_PUBLIC_GRAPHQL_URL is required in production",
+    },
   );
 
 export const getServerGraphqlUrl = () =>
-  resolveProductionUrl(
+  resolveUrl(
     process.env.GRAPHQL_URL ??
       process.env.NEXT_PUBLIC_GRAPHQL_URL ??
       process.env.NEXT_PUBLIC_BACKEND_URL,
-    "GRAPHQL_URL or NEXT_PUBLIC_GRAPHQL_URL is required in production",
+    {
+      message:
+        "GRAPHQL_URL or NEXT_PUBLIC_GRAPHQL_URL is required in production",
+    },
   );
 
 export const env = {
