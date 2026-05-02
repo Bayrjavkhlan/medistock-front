@@ -3,7 +3,7 @@ import { SetContextLink } from "@apollo/client/link/context";
 import { ErrorLink } from "@apollo/client/link/error";
 import type { GraphQLError } from "graphql";
 
-import { env } from "@/constants/config";
+import { getClientGraphqlUrl, getServerGraphqlUrl } from "@/constants/config";
 
 type ApolloLikeError = {
   graphQLErrors?: readonly GraphQLError[];
@@ -11,7 +11,10 @@ type ApolloLikeError = {
 };
 
 export const httpLink = new HttpLink({
-  uri: `${env.BACKEND_URL}/api/graphql`,
+  uri:
+    typeof window === "undefined"
+      ? getServerGraphqlUrl()
+      : getClientGraphqlUrl(),
   credentials: "include",
 });
 
