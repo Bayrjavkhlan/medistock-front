@@ -1,6 +1,8 @@
 "use client";
 
 import { useQuery } from "@apollo/client/react";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 import AbilityGuard from "@/components/AbilityGuard";
@@ -37,13 +39,15 @@ export default function DashboardContainer() {
         ? "hospital"
         : portalRole?.startsWith("PHARMACY_")
           ? "pharmacy"
-          : "user";
+          : portalRole?.startsWith("SUPPLIER_")
+            ? "supplier"
+            : "user";
   const organizationName =
     activeOrganization?.organization?.name ?? "Таны байгууллага";
 
   const overviewQuery = useQuery<DashboardOverviewQuery>(DASHBOARD_OVERVIEW, {
     fetchPolicy: "no-cache",
-    skip: !canRead || role === "user",
+    skip: !canRead || role === "user" || role === "supplier",
   });
 
   const userEquipmentsQuery = useEquipmentsQuery({
@@ -90,6 +94,44 @@ export default function DashboardContainer() {
           equipmentCount={equipmentCount}
           logCount={logCount}
         />
+      ) : role === "supplier" ? (
+        <Box
+          sx={{
+            borderRadius: 4,
+            border: "1px solid",
+            borderColor: "divider",
+            p: 4,
+            background:
+              "linear-gradient(135deg, #eff6ff 0%, #f0fdf4 45%, #fefce8 100%)",
+          }}
+        >
+          <Stack spacing={2}>
+            <Typography variant="h4" fontWeight={900}>
+              Нийлүүлэгчийн ажлын хэсэг
+            </Typography>
+            <Typography color="text.secondary" sx={{ maxWidth: 720 }}>
+              Эмнэлэг, лабораторийн тоног төхөөрөмжийн бүртгэлээ удирдаж,
+              нийлүүлэгчийн мэдээллээ шинэчилж, шинэ хангамжийг нийлүүлэгчийн
+              цэснээс нийтлээрэй.
+            </Typography>
+            <Stack direction="row" spacing={1.5} useFlexGap flexWrap="wrap">
+              <Button
+                component={Link}
+                href="/supplier/supply-management"
+                variant="contained"
+              >
+                Бүртгэл удирдах
+              </Button>
+              <Button
+                component={Link}
+                href="/supplier/supplier-management"
+                variant="outlined"
+              >
+                Нийлүүлэгчийн мэдээлэл засах
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
       ) : (
         <StateView
           title="Самбарын мэдээлэл олдсонгүй"

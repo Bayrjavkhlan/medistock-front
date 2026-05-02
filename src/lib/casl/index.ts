@@ -15,6 +15,9 @@ export type PortalRole =
   | "PHARMACY_OWNER"
   | "PHARMACY_MANAGER"
   | "PHARMACY_STAFF"
+  | "SUPPLIER_OWNER"
+  | "SUPPLIER_MANAGER"
+  | "SUPPLIER_STAFF"
   | "USER";
 
 const resolvePortalRole = (
@@ -38,6 +41,12 @@ const resolvePortalRole = (
     if (role === "OWNER") return "PHARMACY_OWNER";
     if (role === "MANAGER") return "PHARMACY_MANAGER";
     return "PHARMACY_STAFF";
+  }
+
+  if (orgType === "SUPPLIER") {
+    if (role === "OWNER") return "SUPPLIER_OWNER";
+    if (role === "MANAGER") return "SUPPLIER_MANAGER";
+    return "SUPPLIER_STAFF";
   }
 
   return "USER";
@@ -70,6 +79,11 @@ export const defineAbilityFor = (
         "Admin_Medicine",
         "Admin_Equipment",
         "Admin_EquipmentLog",
+        "Supply_Marketplace",
+        "Supply_Detail",
+        "Supplier_Detail",
+        "Supply_Management",
+        "Supplier_Management",
       ],
     );
     can("read", "Profile");
@@ -101,6 +115,7 @@ export const defineAbilityFor = (
       can("read", ["Hospital_Equipment", "Hospital_EquipmentLog"]);
     }
     can("read", "Profile");
+    can("read", ["Supply_Marketplace", "Supply_Detail", "Supplier_Detail"]);
   }
 
   if (
@@ -132,6 +147,23 @@ export const defineAbilityFor = (
     if (portalRole === "PHARMACY_STAFF") {
       can(["create", "read", "update", "delete"], "Pharmacy_Medicine");
       can("read", "Pharmacy_Equipment");
+    }
+    can("read", "Profile");
+    can("read", ["Supply_Marketplace", "Supply_Detail", "Supplier_Detail"]);
+  }
+
+  if (
+    (portalRole === "SUPPLIER_OWNER" ||
+      portalRole === "SUPPLIER_MANAGER" ||
+      portalRole === "SUPPLIER_STAFF") &&
+    organizationType === "SUPPLIER" &&
+    organizationId
+  ) {
+    can("read", ["Supply_Marketplace", "Supply_Detail", "Supplier_Detail"]);
+    can("read", "Supplier_Dashboard");
+    if (portalRole === "SUPPLIER_OWNER" || portalRole === "SUPPLIER_MANAGER") {
+      can(["create", "read", "update", "delete"], "Supply_Management");
+      can(["read", "update"], "Supplier_Management");
     }
     can("read", "Profile");
   }
@@ -166,6 +198,13 @@ export const getDashboardSubjectForRole = (
     portalRole === "PHARMACY_STAFF"
   ) {
     return "Pharmacy_Dashboard";
+  }
+  if (
+    portalRole === "SUPPLIER_OWNER" ||
+    portalRole === "SUPPLIER_MANAGER" ||
+    portalRole === "SUPPLIER_STAFF"
+  ) {
+    return "Supplier_Dashboard";
   }
   return "User_Dashboard";
 };
@@ -243,3 +282,14 @@ export const getMedicineSubjectForRole = (
 };
 
 export const getPortalRole = resolvePortalRole;
+
+export const getSupplyMarketplaceSubject = (): Subject => "Supply_Marketplace";
+
+export const getSupplyDetailSubject = (): Subject => "Supply_Detail";
+
+export const getSupplierDetailSubject = (): Subject => "Supplier_Detail";
+
+export const getSupplyManagementSubject = (): Subject => "Supply_Management";
+
+export const getSupplierManagementSubject = (): Subject =>
+  "Supplier_Management";

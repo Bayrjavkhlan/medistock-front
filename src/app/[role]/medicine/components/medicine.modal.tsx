@@ -18,7 +18,6 @@ import {
   DRUG_CREATE,
   DRUG_UPDATE,
 } from "@/features/medicine/graphql/mutation.gql";
-import type { Drug } from "@/generated/graphql";
 import { getApolloErrorMessage } from "@/utils/getApolloErrorMessage";
 
 type MedicineForm = {
@@ -30,10 +29,20 @@ type MedicineForm = {
   description: string;
 };
 
+type MedicineModalDrug = {
+  id?: string | null;
+  name?: string | null;
+  genericName?: string | null;
+  dosageForm?: string | null;
+  strength?: string | null;
+  manufacturer?: string | null;
+  description?: string | null;
+};
+
 type MedicineModalProps = {
   open: boolean;
   mode: "create" | "update";
-  initialData?: Drug | null;
+  initialData?: MedicineModalDrug | null;
   onClose: () => void;
   onSuccess: () => void;
 };

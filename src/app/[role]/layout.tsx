@@ -12,9 +12,17 @@ const getRouteRole = (
 ) => {
   if (isPlatformAdmin) return "admin";
   if (!activeMembership) return "user";
-  return activeMembership.organization.type === "PHARMACY"
-    ? "pharmacy"
-    : "hospital";
+  if (activeMembership.organization.type === "PHARMACY") return "pharmacy";
+  if (activeMembership.organization.type === "SUPPLIER") return "supplier";
+  return "hospital";
+};
+
+const getRoleLandingPath = (role: string) => {
+  if (role === "admin") return "/admin/dashboard";
+  if (role === "hospital") return "/hospital/dashboard";
+  if (role === "pharmacy") return "/pharmacy/dashboard";
+  if (role === "supplier") return "/supplier/supply-management";
+  return "/user/dashboard";
 };
 
 export default async function RoleLayout({
@@ -45,7 +53,7 @@ export default async function RoleLayout({
   );
 
   if (sessionRole && sessionRole !== urlRole) {
-    redirect(`/${sessionRole}/dashboard`);
+    redirect(getRoleLandingPath(sessionRole));
   }
 
   return <RoleLayoutComponent>{children}</RoleLayoutComponent>;

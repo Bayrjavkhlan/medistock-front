@@ -21,6 +21,12 @@ export const resolvePostLoginPath = (
       : "/pharmacy/dashboard";
   }
 
+  if (membership.organization.type === "SUPPLIER") {
+    return membership.role === "STAFF"
+      ? "/supplier/supply"
+      : "/supplier/supply-management";
+  }
+
   return membership.role === "STAFF"
     ? "/hospital/equipment"
     : "/hospital/dashboard";

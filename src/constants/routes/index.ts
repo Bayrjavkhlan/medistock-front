@@ -6,6 +6,11 @@ export type Subject =
   | "Auth_Forgot"
   | "Auth_NewPassword"
   | "Profile"
+  | "Supply_Marketplace"
+  | "Supply_Detail"
+  | "Supplier_Detail"
+  | "Supply_Management"
+  | "Supplier_Management"
   // Admin
   | "Admin_Dashboard"
   | "Admin_Staff"
@@ -25,6 +30,8 @@ export type Subject =
   | "Pharmacy_EquipmentLog"
   | "Pharmacy_Medicine"
   | "Pharmacy_Staff"
+  // Supplier
+  | "Supplier_Dashboard"
   // User
   | "User_Dashboard"
   | "User_Equipment"
@@ -110,6 +117,61 @@ export const Routes: RouteType = {
       "Профайл",
       "/profile",
       "Profile", // ← new shared subject
+      "read",
+      "/",
+      true,
+    ),
+  },
+  Supply_Marketplace: {
+    key: "/supply",
+    Index: createRoute(
+      "Тоног төхөөрөмжийн хангамж",
+      "/supply",
+      "Supply_Marketplace",
+      "read",
+      "/",
+      true,
+    ),
+  },
+  Supply_Detail: {
+    key: "/supply/detail",
+    Index: createRoute(
+      "Хангамжийн дэлгэрэнгүй",
+      "/supply/detail",
+      "Supply_Detail",
+      "read",
+      "/",
+      true,
+    ),
+  },
+  Supplier_Detail: {
+    key: "/suppliers/detail",
+    Index: createRoute(
+      "Нийлүүлэгчийн дэлгэрэнгүй",
+      "/suppliers/detail",
+      "Supplier_Detail",
+      "read",
+      "/",
+      true,
+    ),
+  },
+  Supply_Management: {
+    key: "/supply-management",
+    Index: createRoute(
+      "Хангамжийн удирдлага",
+      "/supply-management",
+      "Supply_Management",
+      "read",
+      "/",
+      true,
+    ),
+  },
+  Supplier_Management: {
+    key: "/supplier-management",
+    Index: createRoute(
+      "Нийлүүлэгчийн удирдлага",
+      "/supplier-management",
+      "Supplier_Management",
       "read",
       "/",
       true,
@@ -409,6 +471,17 @@ export const Routes: RouteType = {
       "Ажилчид",
       "/pharmacy/staff",
       "Pharmacy_Staff",
+      "read",
+      "/",
+      true,
+    ),
+  },
+  Supplier_Dashboard: {
+    key: "/supplier/dashboard",
+    Index: createRoute(
+      "Нийлүүлэгчийн самбар",
+      "/supplier/dashboard",
+      "Supplier_Dashboard",
       "read",
       "/",
       true,

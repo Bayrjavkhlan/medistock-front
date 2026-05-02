@@ -53,6 +53,18 @@ export type AddressCreateInput = {
   province: Scalars["String"]["input"];
 };
 
+export type AdminDashboardOverview = {
+  __typename?: "AdminDashboardOverview";
+  alerts: Array<DashboardAlertItem>;
+  growthSeries: Array<DashboardSeries>;
+  inventoryStatus: Array<DashboardStat>;
+  map: AdminMapLocationsPayload;
+  recentItems: Array<DashboardActivityItem>;
+  stats: Array<DashboardStat>;
+  topHospitals: Array<DashboardStat>;
+  topPharmacies: Array<DashboardStat>;
+};
+
 export type AdminMapLocationsPayload = {
   __typename?: "AdminMapLocationsPayload";
   drugstores: Array<DashboardMapLocation>;
@@ -112,6 +124,24 @@ export type BookingsWhereInput = {
   status?: InputMaybe<BookingStatus>;
 };
 
+export type DashboardActivityItem = {
+  __typename?: "DashboardActivityItem";
+  createdAt?: Maybe<Scalars["String"]["output"]>;
+  href?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["String"]["output"];
+  meta?: Maybe<Scalars["String"]["output"]>;
+  subtitle?: Maybe<Scalars["String"]["output"]>;
+  title: Scalars["String"]["output"];
+};
+
+export type DashboardAlertItem = {
+  __typename?: "DashboardAlertItem";
+  description: Scalars["String"]["output"];
+  id: Scalars["String"]["output"];
+  severity: Scalars["String"]["output"];
+  title: Scalars["String"]["output"];
+};
+
 export type DashboardMapLocation = {
   __typename?: "DashboardMapLocation";
   address: Scalars["String"]["output"];
@@ -126,8 +156,52 @@ export type DashboardMapLocation = {
   type: Scalars["String"]["output"];
 };
 
+export type DashboardOverview = {
+  __typename?: "DashboardOverview";
+  admin?: Maybe<AdminDashboardOverview>;
+  hospital?: Maybe<HospitalDashboardOverview>;
+  pharmacy?: Maybe<PharmacyDashboardOverview>;
+  role?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type DashboardProfile = {
+  __typename?: "DashboardProfile";
+  address: Scalars["String"]["output"];
+  email?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["String"]["output"];
+  latitude?: Maybe<Scalars["Float"]["output"]>;
+  longitude?: Maybe<Scalars["Float"]["output"]>;
+  name: Scalars["String"]["output"];
+  phone?: Maybe<Scalars["String"]["output"]>;
+  province?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type DashboardSeries = {
+  __typename?: "DashboardSeries";
+  color?: Maybe<Scalars["String"]["output"]>;
+  key: Scalars["String"]["output"];
+  label: Scalars["String"]["output"];
+  points: Array<DashboardSeriesPoint>;
+};
+
+export type DashboardSeriesPoint = {
+  __typename?: "DashboardSeriesPoint";
+  label: Scalars["String"]["output"];
+  value: Scalars["Int"]["output"];
+};
+
+export type DashboardStat = {
+  __typename?: "DashboardStat";
+  helper?: Maybe<Scalars["String"]["output"]>;
+  label: Scalars["String"]["output"];
+  tone?: Maybe<Scalars["String"]["output"]>;
+  value: Scalars["Int"]["output"];
+};
+
 export type Drug = {
   __typename?: "Drug";
+  availability: Array<DrugAvailability>;
+  availabilityCount: Scalars["Int"]["output"];
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
   description?: Maybe<Scalars["String"]["output"]>;
   dosageForm?: Maybe<Scalars["String"]["output"]>;
@@ -135,7 +209,24 @@ export type Drug = {
   id?: Maybe<Scalars["String"]["output"]>;
   manufacturer?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
+  startingPrice?: Maybe<Scalars["Float"]["output"]>;
   strength?: Maybe<Scalars["String"]["output"]>;
+  totalStock: Scalars["Int"]["output"];
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+};
+
+export type DrugAvailability = {
+  __typename?: "DrugAvailability";
+  address?: Maybe<Address>;
+  id: Scalars["String"]["output"];
+  organizationId: Scalars["String"]["output"];
+  pharmacyEmail?: Maybe<Scalars["String"]["output"]>;
+  pharmacyId: Scalars["String"]["output"];
+  pharmacyName: Scalars["String"]["output"];
+  pharmacyPhone?: Maybe<Scalars["String"]["output"]>;
+  price?: Maybe<Scalars["Float"]["output"]>;
+  quantity: Scalars["Int"]["output"];
+  status?: Maybe<Scalars["String"]["output"]>;
   updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
@@ -264,6 +355,18 @@ export type HospitalCreateInput = {
   phone: Scalars["String"]["input"];
 };
 
+export type HospitalDashboardOverview = {
+  __typename?: "HospitalDashboardOverview";
+  activitySeries: Array<DashboardSeries>;
+  alerts: Array<DashboardAlertItem>;
+  equipmentStates: Array<DashboardStat>;
+  nearbyPharmacies: Array<DashboardActivityItem>;
+  profile: DashboardProfile;
+  recentLogs: Array<DashboardActivityItem>;
+  stats: Array<DashboardStat>;
+  upcomingBookings: Array<DashboardActivityItem>;
+};
+
 export type HospitalOption = {
   __typename?: "HospitalOption";
   id?: Maybe<Scalars["String"]["output"]>;
@@ -353,11 +456,19 @@ export type Mutation = {
   membershipUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   pharmacyCreate?: Maybe<Scalars["Boolean"]["output"]>;
   pharmacyDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  pharmacyDrugDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  pharmacyDrugUpsert?: Maybe<Scalars["Boolean"]["output"]>;
   pharmacyUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   refreshAccessToken?: Maybe<LoginPayload>;
   resendOtp?: Maybe<ResendOtpPayload>;
   selectOrganization?: Maybe<UserMembership>;
   signUp?: Maybe<SignUpPayload>;
+  supplierCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  supplierDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  supplierUpdate?: Maybe<Scalars["Boolean"]["output"]>;
+  supplyItemCreate?: Maybe<Scalars["Boolean"]["output"]>;
+  supplyItemDelete?: Maybe<Scalars["Boolean"]["output"]>;
+  supplyItemUpdate?: Maybe<Scalars["Boolean"]["output"]>;
   userCreate?: Maybe<Scalars["Boolean"]["output"]>;
   userDelete?: Maybe<Scalars["Boolean"]["output"]>;
   userUpdate?: Maybe<Scalars["Boolean"]["output"]>;
@@ -454,6 +565,14 @@ export type MutationPharmacyDeleteArgs = {
   id: Scalars["String"]["input"];
 };
 
+export type MutationPharmacyDrugDeleteArgs = {
+  drugId: Scalars["String"]["input"];
+};
+
+export type MutationPharmacyDrugUpsertArgs = {
+  input: PharmacyDrugUpsertInput;
+};
+
 export type MutationPharmacyUpdateArgs = {
   id: Scalars["String"]["input"];
   input: PharmacyCreateInput;
@@ -473,6 +592,32 @@ export type MutationSelectOrganizationArgs = {
 
 export type MutationSignUpArgs = {
   input: SignUpInput;
+};
+
+export type MutationSupplierCreateArgs = {
+  input: SupplierCreateInput;
+};
+
+export type MutationSupplierDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type MutationSupplierUpdateArgs = {
+  id: Scalars["String"]["input"];
+  input: SupplierUpdateInput;
+};
+
+export type MutationSupplyItemCreateArgs = {
+  input: SupplyItemCreateInput;
+};
+
+export type MutationSupplyItemDeleteArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type MutationSupplyItemUpdateArgs = {
+  id: Scalars["String"]["input"];
+  input: SupplyItemUpdateInput;
 };
 
 export type MutationUserCreateArgs = {
@@ -508,6 +653,7 @@ export type OrganizationSummary = {
 export enum OrganizationType {
   Hospital = "HOSPITAL",
   Pharmacy = "PHARMACY",
+  Supplier = "SUPPLIER",
 }
 
 export type PharmaciesWhereInput = {
@@ -520,6 +666,8 @@ export type Pharmacy = {
   createdAt?: Maybe<Scalars["DateTime"]["output"]>;
   email?: Maybe<Scalars["String"]["output"]>;
   id?: Maybe<Scalars["String"]["output"]>;
+  inventory: Array<PharmacyDrug>;
+  inventoryCount: Scalars["Int"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
   phone?: Maybe<Scalars["String"]["output"]>;
   updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -532,6 +680,18 @@ export type PharmacyCreateInput = {
   phone: Scalars["String"]["input"];
 };
 
+export type PharmacyDashboardOverview = {
+  __typename?: "PharmacyDashboardOverview";
+  activitySeries: Array<DashboardSeries>;
+  alerts: Array<DashboardAlertItem>;
+  inventoryStatus: Array<DashboardStat>;
+  lowStockItems: Array<DashboardActivityItem>;
+  profile: DashboardProfile;
+  recentUpdates: Array<DashboardActivityItem>;
+  stats: Array<DashboardStat>;
+  topDrugs: Array<DashboardActivityItem>;
+};
+
 export type PharmacyDrug = {
   __typename?: "PharmacyDrug";
   drug: Drug;
@@ -540,6 +700,13 @@ export type PharmacyDrug = {
   quantity?: Maybe<Scalars["Int"]["output"]>;
   status?: Maybe<Scalars["String"]["output"]>;
   updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+};
+
+export type PharmacyDrugUpsertInput = {
+  drugId: Scalars["String"]["input"];
+  price?: InputMaybe<Scalars["Float"]["input"]>;
+  quantity: Scalars["Int"]["input"];
+  status: Scalars["String"]["input"];
 };
 
 export type PharmacyDrugs = {
@@ -570,6 +737,7 @@ export type Query = {
   bookingDetail?: Maybe<Booking>;
   bookings?: Maybe<Bookings>;
   currentUser?: Maybe<AuthUser>;
+  dashboardOverview?: Maybe<DashboardOverview>;
   drugDetail?: Maybe<Drug>;
   drugs?: Maybe<Drugs>;
   equipmentDetail?: Maybe<Equipment>;
@@ -585,6 +753,11 @@ export type Query = {
   pharmacyDetail?: Maybe<Pharmacy>;
   pharmacyDrugs?: Maybe<PharmacyDrugs>;
   pharmacyOption: Array<PharmacyOption>;
+  supplierDetail?: Maybe<Supplier>;
+  supplierSupplyItems?: Maybe<SupplyItems>;
+  suppliers?: Maybe<Suppliers>;
+  supplyItemDetail?: Maybe<SupplyItem>;
+  supplyItems?: Maybe<SupplyItems>;
   userDetail?: Maybe<User>;
   users?: Maybe<Users>;
 };
@@ -660,6 +833,32 @@ export type QueryPharmacyDrugsArgs = {
   where?: InputMaybe<PharmacyDrugsWhereInput>;
 };
 
+export type QuerySupplierDetailArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type QuerySupplierSupplyItemsArgs = {
+  skip: Scalars["Int"]["input"];
+  supplierId: Scalars["String"]["input"];
+  take: Scalars["Int"]["input"];
+};
+
+export type QuerySuppliersArgs = {
+  skip: Scalars["Int"]["input"];
+  take: Scalars["Int"]["input"];
+  where?: InputMaybe<SuppliersWhereInput>;
+};
+
+export type QuerySupplyItemDetailArgs = {
+  id: Scalars["String"]["input"];
+};
+
+export type QuerySupplyItemsArgs = {
+  skip: Scalars["Int"]["input"];
+  take: Scalars["Int"]["input"];
+  where?: InputMaybe<SupplyItemsWhereInput>;
+};
+
 export type QueryUserDetailArgs = {
   id: Scalars["String"]["input"];
 };
@@ -688,6 +887,179 @@ export type SignUpInput = {
 export type SignUpPayload = {
   __typename?: "SignUpPayload";
   message: Scalars["String"]["output"];
+};
+
+export type Supplier = {
+  __typename?: "Supplier";
+  address?: Maybe<Address>;
+  categoriesSupplied: Array<Scalars["String"]["output"]>;
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  logoUrl?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
+  organizationId: Scalars["String"]["output"];
+  phone?: Maybe<Scalars["String"]["output"]>;
+  status: SupplierStatus;
+  supplyItemCount: Scalars["Int"]["output"];
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  website?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type SupplierAddressInput = {
+  address1: Scalars["String"]["input"];
+  address2?: InputMaybe<Scalars["String"]["input"]>;
+  province: Scalars["String"]["input"];
+};
+
+export type SupplierCreateInput = {
+  address?: InputMaybe<SupplierAddressInput>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  logoUrl?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  ownerUserId?: InputMaybe<Scalars["String"]["input"]>;
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<SupplierStatus>;
+  website?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export enum SupplierStatus {
+  Active = "ACTIVE",
+  PendingVerification = "PENDING_VERIFICATION",
+  Suspended = "SUSPENDED",
+}
+
+export type SupplierUpdateInput = {
+  address?: InputMaybe<SupplierAddressInput>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  logoUrl?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  ownerUserId?: InputMaybe<Scalars["String"]["input"]>;
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<SupplierStatus>;
+  website?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type Suppliers = {
+  __typename?: "Suppliers";
+  count: Scalars["Int"]["output"];
+  data?: Maybe<Array<Supplier>>;
+};
+
+export type SuppliersWhereInput = {
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<SupplierStatus>;
+};
+
+export enum SupplyAvailabilityStatus {
+  Available = "AVAILABLE",
+  Discontinued = "DISCONTINUED",
+  Limited = "LIMITED",
+  OutOfStock = "OUT_OF_STOCK",
+  Preorder = "PREORDER",
+}
+
+export type SupplyItem = {
+  __typename?: "SupplyItem";
+  availability: SupplyAvailabilityStatus;
+  brand?: Maybe<Scalars["String"]["output"]>;
+  category: SupplyItemCategory;
+  contactInfo?: Maybe<Scalars["String"]["output"]>;
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  currency?: Maybe<Scalars["String"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
+  documentUrls: Array<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["String"]["output"]>;
+  imageUrls: Array<Scalars["String"]["output"]>;
+  manufacturer?: Maybe<Scalars["String"]["output"]>;
+  model?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
+  price?: Maybe<Scalars["Float"]["output"]>;
+  shortDescription?: Maybe<Scalars["String"]["output"]>;
+  specifications?: Maybe<Scalars["JSON"]["output"]>;
+  supplier: Supplier;
+  supplierId: Scalars["String"]["output"];
+  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  warranty?: Maybe<Scalars["String"]["output"]>;
+};
+
+export enum SupplyItemCategory {
+  DiagnosticDevice = "DIAGNOSTIC_DEVICE",
+  HospitalFurniture = "HOSPITAL_FURNITURE",
+  IcuSupport = "ICU_SUPPORT",
+  ImagingSystem = "IMAGING_SYSTEM",
+  LabAnalyzer = "LAB_ANALYZER",
+  LabConsumable = "LAB_CONSUMABLE",
+  Other = "OTHER",
+  PatientMonitoring = "PATIENT_MONITORING",
+  Ppe = "PPE",
+  Sterilization = "STERILIZATION",
+  SurgicalSupply = "SURGICAL_SUPPLY",
+}
+
+export type SupplyItemCreateInput = {
+  availability?: InputMaybe<SupplyAvailabilityStatus>;
+  brand?: InputMaybe<Scalars["String"]["input"]>;
+  category: SupplyItemCategory;
+  contactInfo?: InputMaybe<Scalars["String"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  documentUrls: Array<Scalars["String"]["input"]>;
+  imageUrls: Array<Scalars["String"]["input"]>;
+  manufacturer?: InputMaybe<Scalars["String"]["input"]>;
+  model?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  price?: InputMaybe<Scalars["Float"]["input"]>;
+  shortDescription?: InputMaybe<Scalars["String"]["input"]>;
+  specifications?: InputMaybe<Scalars["JSON"]["input"]>;
+  supplierId: Scalars["String"]["input"];
+  warranty?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export enum SupplyItemSortField {
+  CreatedAt = "CREATED_AT",
+  Name = "NAME",
+  Price = "PRICE",
+  UpdatedAt = "UPDATED_AT",
+}
+
+export type SupplyItemUpdateInput = {
+  availability?: InputMaybe<SupplyAvailabilityStatus>;
+  brand?: InputMaybe<Scalars["String"]["input"]>;
+  category: SupplyItemCategory;
+  contactInfo?: InputMaybe<Scalars["String"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  documentUrls: Array<Scalars["String"]["input"]>;
+  imageUrls: Array<Scalars["String"]["input"]>;
+  manufacturer?: InputMaybe<Scalars["String"]["input"]>;
+  model?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  price?: InputMaybe<Scalars["Float"]["input"]>;
+  shortDescription?: InputMaybe<Scalars["String"]["input"]>;
+  specifications?: InputMaybe<Scalars["JSON"]["input"]>;
+  supplierId: Scalars["String"]["input"];
+  warranty?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type SupplyItems = {
+  __typename?: "SupplyItems";
+  count: Scalars["Int"]["output"];
+  data?: Maybe<Array<SupplyItem>>;
+};
+
+export type SupplyItemsWhereInput = {
+  availability?: InputMaybe<SupplyAvailabilityStatus>;
+  category?: InputMaybe<SupplyItemCategory>;
+  maxPrice?: InputMaybe<Scalars["Float"]["input"]>;
+  minPrice?: InputMaybe<Scalars["Float"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sortBy?: InputMaybe<SupplyItemSortField>;
+  sortOrder?: InputMaybe<EnumSortOrder>;
+  supplierId?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type User = {
@@ -925,6 +1297,249 @@ export type CurrentUserQuery = {
   } | null;
 };
 
+export type DashboardOverviewQueryVariables = Exact<{ [key: string]: never }>;
+
+export type DashboardOverviewQuery = {
+  __typename?: "Query";
+  dashboardOverview?: {
+    __typename?: "DashboardOverview";
+    role?: string | null;
+    admin?: {
+      __typename?: "AdminDashboardOverview";
+      stats: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      growthSeries: Array<{
+        __typename?: "DashboardSeries";
+        key: string;
+        label: string;
+        color?: string | null;
+        points: Array<{
+          __typename?: "DashboardSeriesPoint";
+          label: string;
+          value: number;
+        }>;
+      }>;
+      inventoryStatus: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      recentItems: Array<{
+        __typename?: "DashboardActivityItem";
+        id: string;
+        title: string;
+        subtitle?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        createdAt?: string | null;
+      }>;
+      topHospitals: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      topPharmacies: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      alerts: Array<{
+        __typename?: "DashboardAlertItem";
+        id: string;
+        title: string;
+        description: string;
+        severity: string;
+      }>;
+      map: {
+        __typename?: "AdminMapLocationsPayload";
+        hospitals: Array<{
+          __typename?: "DashboardMapLocation";
+          id: string;
+          name: string;
+          type: string;
+          address: string;
+          address2?: string | null;
+          province: string;
+          opensAt: string;
+          closesAt: string;
+          latitude: number;
+          longitude: number;
+        }>;
+        drugstores: Array<{
+          __typename?: "DashboardMapLocation";
+          id: string;
+          name: string;
+          type: string;
+          address: string;
+          address2?: string | null;
+          province: string;
+          opensAt: string;
+          closesAt: string;
+          latitude: number;
+          longitude: number;
+        }>;
+      };
+    } | null;
+    hospital?: {
+      __typename?: "HospitalDashboardOverview";
+      profile: {
+        __typename?: "DashboardProfile";
+        id: string;
+        name: string;
+        email?: string | null;
+        phone?: string | null;
+        address: string;
+        province?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+      };
+      stats: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      activitySeries: Array<{
+        __typename?: "DashboardSeries";
+        key: string;
+        label: string;
+        color?: string | null;
+        points: Array<{
+          __typename?: "DashboardSeriesPoint";
+          label: string;
+          value: number;
+        }>;
+      }>;
+      equipmentStates: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      recentLogs: Array<{
+        __typename?: "DashboardActivityItem";
+        id: string;
+        title: string;
+        subtitle?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        createdAt?: string | null;
+      }>;
+      upcomingBookings: Array<{
+        __typename?: "DashboardActivityItem";
+        id: string;
+        title: string;
+        subtitle?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        createdAt?: string | null;
+      }>;
+      nearbyPharmacies: Array<{
+        __typename?: "DashboardActivityItem";
+        id: string;
+        title: string;
+        subtitle?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        createdAt?: string | null;
+      }>;
+      alerts: Array<{
+        __typename?: "DashboardAlertItem";
+        id: string;
+        title: string;
+        description: string;
+        severity: string;
+      }>;
+    } | null;
+    pharmacy?: {
+      __typename?: "PharmacyDashboardOverview";
+      profile: {
+        __typename?: "DashboardProfile";
+        id: string;
+        name: string;
+        email?: string | null;
+        phone?: string | null;
+        address: string;
+        province?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+      };
+      stats: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      activitySeries: Array<{
+        __typename?: "DashboardSeries";
+        key: string;
+        label: string;
+        color?: string | null;
+        points: Array<{
+          __typename?: "DashboardSeriesPoint";
+          label: string;
+          value: number;
+        }>;
+      }>;
+      inventoryStatus: Array<{
+        __typename?: "DashboardStat";
+        label: string;
+        value: number;
+        helper?: string | null;
+        tone?: string | null;
+      }>;
+      topDrugs: Array<{
+        __typename?: "DashboardActivityItem";
+        id: string;
+        title: string;
+        subtitle?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        createdAt?: string | null;
+      }>;
+      lowStockItems: Array<{
+        __typename?: "DashboardActivityItem";
+        id: string;
+        title: string;
+        subtitle?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        createdAt?: string | null;
+      }>;
+      recentUpdates: Array<{
+        __typename?: "DashboardActivityItem";
+        id: string;
+        title: string;
+        subtitle?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        createdAt?: string | null;
+      }>;
+      alerts: Array<{
+        __typename?: "DashboardAlertItem";
+        id: string;
+        title: string;
+        description: string;
+        severity: string;
+      }>;
+    } | null;
+  } | null;
+};
+
 export type AdminMapLocationsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AdminMapLocationsQuery = {
@@ -1117,12 +1732,16 @@ export type HospitalDetailQuery = {
     name?: string | null;
     email?: string | null;
     phone?: string | null;
+    createdAt?: any | null;
+    updatedAt?: any | null;
     address?: {
       __typename?: "Address";
       id?: string | null;
       address1?: string | null;
       address2?: string | null;
       province?: string | null;
+      latitude?: number | null;
+      longitude?: number | null;
     } | null;
   } | null;
 };
@@ -1136,6 +1755,81 @@ export type HospitalOptionQuery = {
     id?: string | null;
     name?: string | null;
   }>;
+};
+
+export type DrugCreateMutationVariables = Exact<{
+  input: DrugCreateInput;
+}>;
+
+export type DrugCreateMutation = {
+  __typename?: "Mutation";
+  drugCreate?: boolean | null;
+};
+
+export type DrugUpdateMutationVariables = Exact<{
+  drugUpdateId: Scalars["String"]["input"];
+  input: DrugCreateInput;
+}>;
+
+export type DrugUpdateMutation = {
+  __typename?: "Mutation";
+  drugUpdate?: boolean | null;
+};
+
+export type DrugDeleteMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type DrugDeleteMutation = {
+  __typename?: "Mutation";
+  drugDelete?: boolean | null;
+};
+
+export type PharmacyDrugUpsertMutationVariables = Exact<{
+  input: PharmacyDrugUpsertInput;
+}>;
+
+export type PharmacyDrugUpsertMutation = {
+  __typename?: "Mutation";
+  pharmacyDrugUpsert?: boolean | null;
+};
+
+export type PharmacyDrugDeleteMutationVariables = Exact<{
+  drugId: Scalars["String"]["input"];
+}>;
+
+export type PharmacyDrugDeleteMutation = {
+  __typename?: "Mutation";
+  pharmacyDrugDelete?: boolean | null;
+};
+
+export type DrugsQueryVariables = Exact<{
+  take: Scalars["Int"]["input"];
+  skip: Scalars["Int"]["input"];
+  where?: InputMaybe<DrugsWhereInput>;
+}>;
+
+export type DrugsQuery = {
+  __typename?: "Query";
+  drugs?: {
+    __typename?: "Drugs";
+    count: number;
+    data?: Array<{
+      __typename?: "Drug";
+      id?: string | null;
+      name?: string | null;
+      genericName?: string | null;
+      dosageForm?: string | null;
+      strength?: string | null;
+      manufacturer?: string | null;
+      description?: string | null;
+      totalStock: number;
+      startingPrice?: number | null;
+      availabilityCount: number;
+      createdAt?: any | null;
+      updatedAt?: any | null;
+    }> | null;
+  } | null;
 };
 
 export type PharmacyDrugsQueryVariables = Exact<{
@@ -1170,6 +1864,51 @@ export type PharmacyDrugsQuery = {
   } | null;
 };
 
+export type DrugDetailQueryVariables = Exact<{
+  drugDetailId: Scalars["String"]["input"];
+}>;
+
+export type DrugDetailQuery = {
+  __typename?: "Query";
+  drugDetail?: {
+    __typename?: "Drug";
+    id?: string | null;
+    name?: string | null;
+    genericName?: string | null;
+    dosageForm?: string | null;
+    strength?: string | null;
+    manufacturer?: string | null;
+    description?: string | null;
+    totalStock: number;
+    startingPrice?: number | null;
+    availabilityCount: number;
+    createdAt?: any | null;
+    updatedAt?: any | null;
+    availability: Array<{
+      __typename?: "DrugAvailability";
+      id: string;
+      pharmacyId: string;
+      organizationId: string;
+      pharmacyName: string;
+      pharmacyEmail?: string | null;
+      pharmacyPhone?: string | null;
+      quantity: number;
+      price?: number | null;
+      status?: string | null;
+      updatedAt?: any | null;
+      address?: {
+        __typename?: "Address";
+        id?: string | null;
+        address1?: string | null;
+        address2?: string | null;
+        province?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+      } | null;
+    }>;
+  } | null;
+};
+
 export type PharmacyCreateMutationVariables = Exact<{
   input: PharmacyCreateInput;
 }>;
@@ -1196,6 +1935,50 @@ export type PharmacyDeleteMutationVariables = Exact<{
 export type PharmacyDeleteMutation = {
   __typename?: "Mutation";
   pharmacyDelete?: boolean | null;
+};
+
+export type PharmacyDetailQueryVariables = Exact<{
+  pharmacyDetailId: Scalars["String"]["input"];
+}>;
+
+export type PharmacyDetailQuery = {
+  __typename?: "Query";
+  pharmacyDetail?: {
+    __typename?: "Pharmacy";
+    id?: string | null;
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    createdAt?: any | null;
+    updatedAt?: any | null;
+    inventoryCount: number;
+    address?: {
+      __typename?: "Address";
+      id?: string | null;
+      address1?: string | null;
+      address2?: string | null;
+      province?: string | null;
+      latitude?: number | null;
+      longitude?: number | null;
+    } | null;
+    inventory: Array<{
+      __typename?: "PharmacyDrug";
+      id?: string | null;
+      quantity?: number | null;
+      price?: number | null;
+      status?: string | null;
+      updatedAt?: any | null;
+      drug: {
+        __typename?: "Drug";
+        id?: string | null;
+        name?: string | null;
+        genericName?: string | null;
+        dosageForm?: string | null;
+        strength?: string | null;
+        manufacturer?: string | null;
+      };
+    }>;
+  } | null;
 };
 
 export type UserCreateMutationVariables = Exact<{
@@ -1280,6 +2063,311 @@ export type UserDetailQuery = {
     email?: string | null;
     phone?: string | null;
     isPlatformAdmin?: boolean | null;
+  } | null;
+};
+
+export type SupplyItemCreateMutationVariables = Exact<{
+  input: SupplyItemCreateInput;
+}>;
+
+export type SupplyItemCreateMutation = {
+  __typename?: "Mutation";
+  supplyItemCreate?: boolean | null;
+};
+
+export type SupplyItemUpdateMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+  input: SupplyItemUpdateInput;
+}>;
+
+export type SupplyItemUpdateMutation = {
+  __typename?: "Mutation";
+  supplyItemUpdate?: boolean | null;
+};
+
+export type SupplyItemDeleteMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type SupplyItemDeleteMutation = {
+  __typename?: "Mutation";
+  supplyItemDelete?: boolean | null;
+};
+
+export type SupplierCreateMutationVariables = Exact<{
+  input: SupplierCreateInput;
+}>;
+
+export type SupplierCreateMutation = {
+  __typename?: "Mutation";
+  supplierCreate?: boolean | null;
+};
+
+export type SupplierUpdateMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+  input: SupplierUpdateInput;
+}>;
+
+export type SupplierUpdateMutation = {
+  __typename?: "Mutation";
+  supplierUpdate?: boolean | null;
+};
+
+export type SupplierDeleteMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type SupplierDeleteMutation = {
+  __typename?: "Mutation";
+  supplierDelete?: boolean | null;
+};
+
+export type SupplyItemsQueryVariables = Exact<{
+  take: Scalars["Int"]["input"];
+  skip: Scalars["Int"]["input"];
+  where?: InputMaybe<SupplyItemsWhereInput>;
+}>;
+
+export type SupplyItemsQuery = {
+  __typename?: "Query";
+  supplyItems?: {
+    __typename?: "SupplyItems";
+    count: number;
+    data?: Array<{
+      __typename?: "SupplyItem";
+      id?: string | null;
+      supplierId: string;
+      name: string;
+      shortDescription?: string | null;
+      description?: string | null;
+      category: SupplyItemCategory;
+      model?: string | null;
+      brand?: string | null;
+      manufacturer?: string | null;
+      price?: number | null;
+      currency?: string | null;
+      availability: SupplyAvailabilityStatus;
+      warranty?: string | null;
+      contactInfo?: string | null;
+      imageUrls: Array<string>;
+      documentUrls: Array<string>;
+      specifications?: any | null;
+      createdAt?: any | null;
+      updatedAt?: any | null;
+      supplier: {
+        __typename?: "Supplier";
+        id?: string | null;
+        organizationId: string;
+        name: string;
+        description?: string | null;
+        logoUrl?: string | null;
+        email?: string | null;
+        phone?: string | null;
+        website?: string | null;
+        status: SupplierStatus;
+        categoriesSupplied: Array<string>;
+        supplyItemCount: number;
+        createdAt?: any | null;
+        updatedAt?: any | null;
+        address?: {
+          __typename?: "Address";
+          id?: string | null;
+          address1?: string | null;
+          address2?: string | null;
+          province?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+        } | null;
+      };
+    }> | null;
+  } | null;
+};
+
+export type SupplyItemDetailQueryVariables = Exact<{
+  supplyItemDetailId: Scalars["String"]["input"];
+}>;
+
+export type SupplyItemDetailQuery = {
+  __typename?: "Query";
+  supplyItemDetail?: {
+    __typename?: "SupplyItem";
+    id?: string | null;
+    supplierId: string;
+    name: string;
+    shortDescription?: string | null;
+    description?: string | null;
+    category: SupplyItemCategory;
+    model?: string | null;
+    brand?: string | null;
+    manufacturer?: string | null;
+    price?: number | null;
+    currency?: string | null;
+    availability: SupplyAvailabilityStatus;
+    warranty?: string | null;
+    contactInfo?: string | null;
+    imageUrls: Array<string>;
+    documentUrls: Array<string>;
+    specifications?: any | null;
+    createdAt?: any | null;
+    updatedAt?: any | null;
+    supplier: {
+      __typename?: "Supplier";
+      id?: string | null;
+      organizationId: string;
+      name: string;
+      description?: string | null;
+      logoUrl?: string | null;
+      email?: string | null;
+      phone?: string | null;
+      website?: string | null;
+      status: SupplierStatus;
+      categoriesSupplied: Array<string>;
+      supplyItemCount: number;
+      createdAt?: any | null;
+      updatedAt?: any | null;
+      address?: {
+        __typename?: "Address";
+        id?: string | null;
+        address1?: string | null;
+        address2?: string | null;
+        province?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+      } | null;
+    };
+  } | null;
+};
+
+export type SuppliersQueryVariables = Exact<{
+  take: Scalars["Int"]["input"];
+  skip: Scalars["Int"]["input"];
+  where?: InputMaybe<SuppliersWhereInput>;
+}>;
+
+export type SuppliersQuery = {
+  __typename?: "Query";
+  suppliers?: {
+    __typename?: "Suppliers";
+    count: number;
+    data?: Array<{
+      __typename?: "Supplier";
+      id?: string | null;
+      organizationId: string;
+      name: string;
+      description?: string | null;
+      logoUrl?: string | null;
+      email?: string | null;
+      phone?: string | null;
+      website?: string | null;
+      status: SupplierStatus;
+      categoriesSupplied: Array<string>;
+      supplyItemCount: number;
+      createdAt?: any | null;
+      updatedAt?: any | null;
+      address?: {
+        __typename?: "Address";
+        id?: string | null;
+        address1?: string | null;
+        address2?: string | null;
+        province?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+      } | null;
+    }> | null;
+  } | null;
+};
+
+export type SupplierDetailQueryVariables = Exact<{
+  supplierDetailId: Scalars["String"]["input"];
+}>;
+
+export type SupplierDetailQuery = {
+  __typename?: "Query";
+  supplierDetail?: {
+    __typename?: "Supplier";
+    id?: string | null;
+    organizationId: string;
+    name: string;
+    description?: string | null;
+    logoUrl?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    website?: string | null;
+    status: SupplierStatus;
+    categoriesSupplied: Array<string>;
+    supplyItemCount: number;
+    createdAt?: any | null;
+    updatedAt?: any | null;
+    address?: {
+      __typename?: "Address";
+      id?: string | null;
+      address1?: string | null;
+      address2?: string | null;
+      province?: string | null;
+      latitude?: number | null;
+      longitude?: number | null;
+    } | null;
+  } | null;
+};
+
+export type SupplierSupplyItemsQueryVariables = Exact<{
+  supplierId: Scalars["String"]["input"];
+  take: Scalars["Int"]["input"];
+  skip: Scalars["Int"]["input"];
+}>;
+
+export type SupplierSupplyItemsQuery = {
+  __typename?: "Query";
+  supplierSupplyItems?: {
+    __typename?: "SupplyItems";
+    count: number;
+    data?: Array<{
+      __typename?: "SupplyItem";
+      id?: string | null;
+      supplierId: string;
+      name: string;
+      shortDescription?: string | null;
+      description?: string | null;
+      category: SupplyItemCategory;
+      model?: string | null;
+      brand?: string | null;
+      manufacturer?: string | null;
+      price?: number | null;
+      currency?: string | null;
+      availability: SupplyAvailabilityStatus;
+      warranty?: string | null;
+      contactInfo?: string | null;
+      imageUrls: Array<string>;
+      documentUrls: Array<string>;
+      specifications?: any | null;
+      createdAt?: any | null;
+      updatedAt?: any | null;
+      supplier: {
+        __typename?: "Supplier";
+        id?: string | null;
+        organizationId: string;
+        name: string;
+        description?: string | null;
+        logoUrl?: string | null;
+        email?: string | null;
+        phone?: string | null;
+        website?: string | null;
+        status: SupplierStatus;
+        categoriesSupplied: Array<string>;
+        supplyItemCount: number;
+        createdAt?: any | null;
+        updatedAt?: any | null;
+        address?: {
+          __typename?: "Address";
+          id?: string | null;
+          address1?: string | null;
+          address2?: string | null;
+          province?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+        } | null;
+      };
+    }> | null;
   } | null;
 };
 
@@ -1919,6 +3007,870 @@ export const CurrentUserDocument = {
     },
   ],
 } as unknown as DocumentNode<CurrentUserQuery, CurrentUserQueryVariables>;
+export const DashboardOverviewDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "DashboardOverview" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "dashboardOverview" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "role" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "admin" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "stats" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "growthSeries" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "key" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "color" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "points" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "value" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inventoryStatus" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "recentItems" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subtitle" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "meta" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "href" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "topHospitals" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "topPharmacies" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "alerts" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "severity" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "map" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "hospitals" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address2" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "province" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "opensAt" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "closesAt" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "latitude" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "longitude" },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "drugstores" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address2" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "province" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "opensAt" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "closesAt" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "latitude" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "longitude" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hospital" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "profile" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "email" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "phone" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "province" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "latitude" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "longitude" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "stats" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "activitySeries" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "key" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "color" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "points" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "value" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "equipmentStates" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "recentLogs" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subtitle" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "meta" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "href" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "upcomingBookings" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subtitle" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "meta" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "href" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nearbyPharmacies" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subtitle" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "meta" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "href" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "alerts" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "severity" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "pharmacy" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "profile" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "email" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "phone" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "province" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "latitude" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "longitude" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "stats" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "activitySeries" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "key" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "color" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "points" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "value" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inventoryStatus" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "value" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "helper" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "tone" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "topDrugs" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subtitle" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "meta" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "href" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "lowStockItems" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subtitle" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "meta" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "href" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "recentUpdates" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subtitle" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "meta" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "href" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "alerts" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "severity" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DashboardOverviewQuery,
+  DashboardOverviewQueryVariables
+>;
 export const AdminMapLocationsDocument = {
   kind: "Document",
   definitions: [
@@ -2748,6 +4700,8 @@ export const HospitalDetailDocument = {
                 { kind: "Field", name: { kind: "Name", value: "name" } },
                 { kind: "Field", name: { kind: "Name", value: "email" } },
                 { kind: "Field", name: { kind: "Name", value: "phone" } },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "address" },
@@ -2766,6 +4720,14 @@ export const HospitalDetailDocument = {
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "province" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "latitude" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "longitude" },
                       },
                     ],
                   },
@@ -2804,6 +4766,387 @@ export const HospitalOptionDocument = {
     },
   ],
 } as unknown as DocumentNode<HospitalOptionQuery, HospitalOptionQueryVariables>;
+export const DrugCreateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DrugCreate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DrugCreateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "drugCreate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DrugCreateMutation, DrugCreateMutationVariables>;
+export const DrugUpdateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DrugUpdate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "drugUpdateId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DrugCreateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "drugUpdate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "drugUpdateId" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DrugUpdateMutation, DrugUpdateMutationVariables>;
+export const DrugDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DrugDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "drugDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DrugDeleteMutation, DrugDeleteMutationVariables>;
+export const PharmacyDrugUpsertDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "PharmacyDrugUpsert" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "PharmacyDrugUpsertInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pharmacyDrugUpsert" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  PharmacyDrugUpsertMutation,
+  PharmacyDrugUpsertMutationVariables
+>;
+export const PharmacyDrugDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "PharmacyDrugDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "drugId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pharmacyDrugDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "drugId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "drugId" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  PharmacyDrugDeleteMutation,
+  PharmacyDrugDeleteMutationVariables
+>;
+export const DrugsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Drugs" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "take" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "DrugsWhereInput" },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "drugs" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "take" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "take" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "skip" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "skip" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "count" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "data" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "genericName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "dosageForm" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "strength" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "manufacturer" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "totalStock" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "startingPrice" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "availabilityCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DrugsQuery, DrugsQueryVariables>;
 export const PharmacyDrugsDocument = {
   kind: "Document",
   definitions: [
@@ -2944,6 +5287,153 @@ export const PharmacyDrugsDocument = {
     },
   ],
 } as unknown as DocumentNode<PharmacyDrugsQuery, PharmacyDrugsQueryVariables>;
+export const DrugDetailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "DrugDetail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "drugDetailId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "drugDetail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "drugDetailId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "genericName" } },
+                { kind: "Field", name: { kind: "Name", value: "dosageForm" } },
+                { kind: "Field", name: { kind: "Name", value: "strength" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "manufacturer" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "totalStock" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "startingPrice" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "availabilityCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "availability" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "pharmacyId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organizationId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "pharmacyName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "pharmacyEmail" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "pharmacyPhone" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "quantity" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "price" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "status" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address1" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address2" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "province" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "latitude" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "longitude" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DrugDetailQuery, DrugDetailQueryVariables>;
 export const PharmacyCreateDocument = {
   kind: "Document",
   definitions: [
@@ -3110,6 +5600,152 @@ export const PharmacyDeleteDocument = {
   PharmacyDeleteMutation,
   PharmacyDeleteMutationVariables
 >;
+export const PharmacyDetailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "PharmacyDetail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "pharmacyDetailId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pharmacyDetail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "pharmacyDetailId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "phone" } },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "inventoryCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "address" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address1" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address2" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "province" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "latitude" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "longitude" },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "inventory" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "quantity" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "price" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "status" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "drug" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "genericName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "dosageForm" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "strength" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "manufacturer" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PharmacyDetailQuery, PharmacyDetailQueryVariables>;
 export const UserCreateDocument = {
   kind: "Document",
   definitions: [
@@ -3516,3 +6152,1256 @@ export const UserDetailDocument = {
     },
   ],
 } as unknown as DocumentNode<UserDetailQuery, UserDetailQueryVariables>;
+export const SupplyItemCreateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SupplyItemCreate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SupplyItemCreateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplyItemCreate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplyItemCreateMutation,
+  SupplyItemCreateMutationVariables
+>;
+export const SupplyItemUpdateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SupplyItemUpdate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SupplyItemUpdateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplyItemUpdate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplyItemUpdateMutation,
+  SupplyItemUpdateMutationVariables
+>;
+export const SupplyItemDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SupplyItemDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplyItemDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplyItemDeleteMutation,
+  SupplyItemDeleteMutationVariables
+>;
+export const SupplierCreateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SupplierCreate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SupplierCreateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplierCreate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplierCreateMutation,
+  SupplierCreateMutationVariables
+>;
+export const SupplierUpdateDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SupplierUpdate" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SupplierUpdateInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplierUpdate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplierUpdateMutation,
+  SupplierUpdateMutationVariables
+>;
+export const SupplierDeleteDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SupplierDelete" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplierDelete" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplierDeleteMutation,
+  SupplierDeleteMutationVariables
+>;
+export const SupplyItemsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "SupplyItems" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "take" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "SupplyItemsWhereInput" },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplyItems" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "take" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "take" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "skip" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "skip" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "count" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "data" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "supplierId" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "shortDescription" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "category" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "model" } },
+                      { kind: "Field", name: { kind: "Name", value: "brand" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "manufacturer" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "price" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "currency" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "availability" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "warranty" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "contactInfo" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "imageUrls" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "documentUrls" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "specifications" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "supplier" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "organizationId" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "logoUrl" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "email" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "phone" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "website" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "status" },
+                            },
+                            {
+                              kind: "Field",
+                              name: {
+                                kind: "Name",
+                                value: "categoriesSupplied",
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "supplyItemCount" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "updatedAt" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address1" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address2" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "province" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "latitude" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "longitude" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SupplyItemsQuery, SupplyItemsQueryVariables>;
+export const SupplyItemDetailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "SupplyItemDetail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "supplyItemDetailId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplyItemDetail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "supplyItemDetailId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "supplierId" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "shortDescription" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "category" } },
+                { kind: "Field", name: { kind: "Name", value: "model" } },
+                { kind: "Field", name: { kind: "Name", value: "brand" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "manufacturer" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "price" } },
+                { kind: "Field", name: { kind: "Name", value: "currency" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "availability" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "warranty" } },
+                { kind: "Field", name: { kind: "Name", value: "contactInfo" } },
+                { kind: "Field", name: { kind: "Name", value: "imageUrls" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "documentUrls" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "specifications" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "supplier" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organizationId" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "logoUrl" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "email" } },
+                      { kind: "Field", name: { kind: "Name", value: "phone" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "website" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "status" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "categoriesSupplied" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "supplyItemCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address1" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address2" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "province" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "latitude" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "longitude" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplyItemDetailQuery,
+  SupplyItemDetailQueryVariables
+>;
+export const SuppliersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Suppliers" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "take" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "SuppliersWhereInput" },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "suppliers" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "take" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "take" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "skip" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "skip" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "count" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "data" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organizationId" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "logoUrl" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "email" } },
+                      { kind: "Field", name: { kind: "Name", value: "phone" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "website" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "status" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "categoriesSupplied" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "supplyItemCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address1" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address2" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "province" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "latitude" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "longitude" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SuppliersQuery, SuppliersQueryVariables>;
+export const SupplierDetailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "SupplierDetail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "supplierDetailId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplierDetail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "supplierDetailId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "organizationId" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "phone" } },
+                { kind: "Field", name: { kind: "Name", value: "website" } },
+                { kind: "Field", name: { kind: "Name", value: "status" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "categoriesSupplied" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "supplyItemCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "address" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address1" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "address2" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "province" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "latitude" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "longitude" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SupplierDetailQuery, SupplierDetailQueryVariables>;
+export const SupplierSupplyItemsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "SupplierSupplyItems" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "supplierId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "take" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "supplierSupplyItems" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "supplierId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "supplierId" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "take" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "take" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "skip" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "skip" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "count" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "data" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "supplierId" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "shortDescription" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "category" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "model" } },
+                      { kind: "Field", name: { kind: "Name", value: "brand" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "manufacturer" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "price" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "currency" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "availability" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "warranty" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "contactInfo" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "imageUrls" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "documentUrls" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "specifications" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "supplier" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "organizationId" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "logoUrl" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "email" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "phone" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "website" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "status" },
+                            },
+                            {
+                              kind: "Field",
+                              name: {
+                                kind: "Name",
+                                value: "categoriesSupplied",
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "supplyItemCount" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "updatedAt" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address1" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "address2" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "province" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "latitude" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "longitude" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SupplierSupplyItemsQuery,
+  SupplierSupplyItemsQueryVariables
+>;

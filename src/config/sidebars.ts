@@ -21,6 +21,9 @@ export type RoleKey =
   | "PHARMACY_OWNER"
   | "PHARMACY_MANAGER"
   | "PHARMACY_STAFF"
+  | "SUPPLIER_OWNER"
+  | "SUPPLIER_MANAGER"
+  | "SUPPLIER_STAFF"
   | "USER";
 
 export type SidebarItem = {
@@ -53,244 +56,354 @@ export const resolveRoleKey = (
     return "PHARMACY_STAFF";
   }
 
+  if (orgType === OrganizationType.Supplier) {
+    if (role === OrganizationRole.Owner) return "SUPPLIER_OWNER";
+    if (role === OrganizationRole.Manager) return "SUPPLIER_MANAGER";
+    return "SUPPLIER_STAFF";
+  }
+
   return "USER";
 };
 
 export const SIDEBARS: Record<RoleKey, SidebarItem[]> = {
   ADMIN: [
     {
-      label: "Хяналтын самбар",
+      label: "Dashboard",
       path: "/admin/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Admin_Dashboard",
     },
     {
-      label: "Эмнэлгүүд",
+      label: "Hospitals",
       path: "/admin/hospital",
       icon: LocalHospitalIcon,
       action: "read",
       subject: "Admin_Hospital",
     },
     {
-      label: "Эмийн сангууд",
+      label: "Pharmacies",
       path: "/admin/pharmacy",
       icon: LocalPharmacyIcon,
       action: "read",
       subject: "Admin_Pharmacy",
     },
     {
-      label: "Эм",
+      label: "Medicines",
       path: "/admin/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "Admin_Medicine",
     },
     {
-      label: "Ажилтнууд",
+      label: "Staff",
       path: "/admin/staff",
       icon: PeopleIcon,
       action: "read",
       subject: "Admin_Staff",
     },
     {
-      label: "Логууд",
+      label: "Logs",
       path: "/admin/log",
       icon: HistoryIcon,
       action: "read",
       subject: "Admin_EquipmentLog",
     },
+    {
+      label: "Хангамжийн удирдлага",
+      path: "/admin/supply-management",
+      icon: ConstructionIcon,
+      action: "read",
+      subject: "Supply_Management",
+    },
+    {
+      label: "Нийлүүлэгчийн удирдлага",
+      path: "/admin/supplier-management",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supplier_Management",
+    },
   ],
-
   HOSPITAL_OWNER: [
     {
-      label: "Хяналтын самбар",
+      label: "Dashboard",
       path: "/hospital/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Hospital_Dashboard",
     },
     {
-      label: "Ажилтнууд",
+      label: "Staff",
       path: "/hospital/staff",
       icon: PeopleIcon,
       action: "read",
       subject: "Hospital_Staff",
     },
     {
-      label: "Тоног төхөөрөмж",
+      label: "Equipment",
       path: "/hospital/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Hospital_Equipment",
     },
     {
-      label: "Логууд",
+      label: "Logs",
       path: "/hospital/log",
       icon: HistoryIcon,
       action: "read",
       subject: "Hospital_EquipmentLog",
     },
+    {
+      label: "Хангамж",
+      path: "/hospital/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
   ],
-
   HOSPITAL_MANAGER: [
     {
-      label: "Хяналтын самбар",
+      label: "Dashboard",
       path: "/hospital/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Hospital_Dashboard",
     },
     {
-      label: "Тоног төхөөрөмж",
+      label: "Equipment",
       path: "/hospital/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Hospital_Equipment",
     },
     {
-      label: "Логууд",
+      label: "Logs",
       path: "/hospital/log",
       icon: HistoryIcon,
       action: "read",
       subject: "Hospital_EquipmentLog",
     },
+    {
+      label: "Хангамж",
+      path: "/hospital/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
   ],
-
   HOSPITAL_STAFF: [
     {
-      label: "Тоног төхөөрөмж",
+      label: "Equipment",
       path: "/hospital/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Hospital_Equipment",
     },
     {
-      label: "Логууд",
+      label: "Logs",
       path: "/hospital/log",
       icon: HistoryIcon,
       action: "read",
       subject: "Hospital_EquipmentLog",
     },
+    {
+      label: "Хангамж",
+      path: "/hospital/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
   ],
-
   PHARMACY_OWNER: [
     {
-      label: "Хяналтын самбар",
+      label: "Dashboard",
       path: "/pharmacy/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Pharmacy_Dashboard",
     },
     {
-      label: "Ажилтнууд",
+      label: "Staff",
       path: "/pharmacy/staff",
       icon: PeopleIcon,
       action: "read",
       subject: "Pharmacy_Staff",
     },
     {
-      label: "Эм",
+      label: "Medicines",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "Pharmacy_Medicine",
     },
     {
-      label: "Тоног төхөөрөмж",
+      label: "Equipment",
       path: "/pharmacy/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Pharmacy_Equipment",
     },
     {
-      label: "Логууд",
+      label: "Logs",
       path: "/pharmacy/log",
       icon: HistoryIcon,
       action: "read",
       subject: "Pharmacy_EquipmentLog",
     },
+    {
+      label: "Хангамж",
+      path: "/pharmacy/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
   ],
-
   PHARMACY_MANAGER: [
     {
-      label: "Хяналтын самбар",
+      label: "Dashboard",
       path: "/pharmacy/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "Pharmacy_Dashboard",
     },
     {
-      label: "Эм",
+      label: "Medicines",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "Pharmacy_Medicine",
     },
     {
-      label: "Тоног төхөөрөмж",
+      label: "Equipment",
       path: "/pharmacy/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Pharmacy_Equipment",
     },
     {
-      label: "Логууд",
+      label: "Logs",
       path: "/pharmacy/log",
       icon: HistoryIcon,
       action: "read",
       subject: "Pharmacy_EquipmentLog",
     },
+    {
+      label: "Хангамж",
+      path: "/pharmacy/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
   ],
-
   PHARMACY_STAFF: [
     {
-      label: "Эм",
+      label: "Medicines",
       path: "/pharmacy/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "Pharmacy_Medicine",
     },
     {
-      label: "Тоног төхөөрөмж",
+      label: "Equipment",
       path: "/pharmacy/equipment",
       icon: ConstructionIcon,
       action: "read",
       subject: "Pharmacy_Equipment",
     },
+    {
+      label: "Хангамж",
+      path: "/pharmacy/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
   ],
-
+  SUPPLIER_OWNER: [
+    {
+      label: "Хангамж",
+      path: "/supplier/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
+    {
+      label: "Миний тоног төхөөрөмж",
+      path: "/supplier/supply-management",
+      icon: ConstructionIcon,
+      action: "read",
+      subject: "Supply_Management",
+    },
+    {
+      label: "Миний нийлүүлэгч",
+      path: "/supplier/supplier-management",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supplier_Management",
+    },
+  ],
+  SUPPLIER_MANAGER: [
+    {
+      label: "Хангамж",
+      path: "/supplier/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
+    {
+      label: "Миний тоног төхөөрөмж",
+      path: "/supplier/supply-management",
+      icon: ConstructionIcon,
+      action: "read",
+      subject: "Supply_Management",
+    },
+    {
+      label: "Миний нийлүүлэгч",
+      path: "/supplier/supplier-management",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supplier_Management",
+    },
+  ],
+  SUPPLIER_STAFF: [
+    {
+      label: "Хангамж",
+      path: "/supplier/supply",
+      icon: LocalPharmacyIcon,
+      action: "read",
+      subject: "Supply_Marketplace",
+    },
+  ],
   USER: [
     {
-      label: "Хяналтын самбар",
+      label: "Dashboard",
       path: "/user/dashboard",
       icon: HomeIcon,
       action: "read",
       subject: "User_Dashboard",
     },
     {
-      label: "Эмнэлгүүд",
+      label: "Hospitals",
       path: "/user/hospital",
       icon: LocalHospitalIcon,
       action: "read",
       subject: "User_Hospital",
     },
     {
-      label: "Эмийн сангууд",
+      label: "Pharmacies",
       path: "/user/pharmacy",
       icon: LocalPharmacyIcon,
       action: "read",
       subject: "User_Pharmacy",
     },
     {
-      label: "Эм",
+      label: "Medicines",
       path: "/user/medicine",
       icon: MedicationIcon,
       action: "read",
       subject: "User_Medicine",
     },
     {
-      label: "Профайл",
+      label: "Profile",
       path: "/profile",
       icon: PersonIcon,
       action: "read",
